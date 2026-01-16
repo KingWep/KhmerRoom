@@ -12,9 +12,8 @@
                 <h1 class="text-3xl lg:text-4xl font-black text-[#0e131b] ading-tight mb-2 font-khmer-title">ចុះឈ្មោះគណនីថ្មី</h1>
                 <p class="text-[#4e6d97]  text-base font-khmer-body">សូមបំពេញព័ត៌មានខាងក្រោម ដើម្បីបង្កើតគណនី</p>
             </div>
-            <form class="space-y-4" method="POST" action="">
+            <form class="space-y-4" method="POST" enctype=" multipart/form-data" action="{{ route('login') }}">
                 @csrf
-
                 <!-- Full Name -->
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[#0e131b]  text-sm font-semibold font-khmer-title">ឈ្មោះពេញ</label>
@@ -25,7 +24,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Email -->
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[#0e131b]  text-sm font-semibold font-khmer-title">អ៊ីមែល</label>
@@ -36,7 +34,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Password -->
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[#0e131b]  text-sm font-semibold font-khmer-title">ពាក្យសម្ងាត់</label>
@@ -47,7 +44,6 @@
                         </button>
                     </div>
                 </div>
-
                 <!-- Confirm Password -->
                 <div class="flex flex-col gap-1.5">
                     <label class="text-[#0e131b]  text-sm font-semibold font-khmer-title">បញ្ជាក់ពាក្យសម្ងាត់</label>
@@ -58,16 +54,15 @@
                         </button>
                     </div>
                 </div>
-
                 <!-- Register Button -->
                 <button type="submit" class="w-full h-12 bg-primary text-white font-bold rounded-lg shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all mt-6 font-khmer-title">
                     ចុះឈ្មោះ
-                </button>
+                </button>   
 
                 <div class="mt-8 text-center">
                     <p class="text-[#4e6d97]  text-sm font-khmer-body">
                         មានគណនីរួចហើយ? 
-                        <a class="text-primary font-bold ml-1 hover:underline" href="/login">ចូលគណនី</a>
+                        <a class="text-primary font-bold ml-1 hover:underline" href="{{ route('login') }}">ចូលគណនី</a>
                     </p>
                 </div>
             </form>
