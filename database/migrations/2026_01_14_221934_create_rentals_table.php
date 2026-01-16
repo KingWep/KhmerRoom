@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('rentals', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('room_id')->constrained();
+            $table->foreignId('room_id')->constrained()->cascadeOnDelete();
             $table->foreignId('tenant_id')->constrained()->cascadeOnDelete();
             $table->date('move_in_date');
             $table->date('move_out_date')->nullable();

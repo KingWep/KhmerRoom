@@ -14,10 +14,13 @@ return new class extends Migration
         Schema::create('rooms', function (Blueprint $table) {
             $table->id();
             $table->integer('room_number')->unique();
-            $table->string('floor');
+            $table->integer('floor');
             $table->decimal('price',10,2);
             $table->enum('status', ['available', 'occupied', 'maintenance'])->default('available');
+            $table->text('images')->nullable();
             $table->text('description')->nullable();
+            $table->decimal('size', 5, 2)->nullable();
+            $table->json('accessories')->nullable();
             $table->timestamps();
         });
     }

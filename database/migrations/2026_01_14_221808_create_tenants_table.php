@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('tenants', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('phone')->unique();
-            $table->text('address');
             $table->enum('gender', ['male', 'female', 'other']);
+            $table->text('address');
             $table->timestamps();
         });
     }
