@@ -28,17 +28,6 @@ class PublicController extends Controller
         return view('pages.ContactPage');
     }
 
-    // Login page
-    public function login()
-    {
-        return view('pages.LoginPage');
-    }
-
-    // Register page
-    public function register()
-    {
-        return view('pages.RegisterPage');
-    }
     public function profile()
     {
         return view('pages.ProfilePage');

@@ -40,6 +40,9 @@ class AuthController extends Controller
     public function ShowLogin(){
         return view('pages.LoginPage');
     }
+    public function showProfile(){
+        return view('pages.ProfilePage');
+    }
     public function login(Request $request){
         $credentials = $request->validate([
             'email'=>['required','email'],
@@ -55,5 +58,11 @@ class AuthController extends Controller
             return redirect()->intended(route('user.profile'));
         }
         return redirect()->route('login');;
+    }
+    public function logout(Request $request){
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('public.home')->with('message', 'អ្នកបានចាកចេញពីគណនីដោយជោគជ័យ!');
     }
 }

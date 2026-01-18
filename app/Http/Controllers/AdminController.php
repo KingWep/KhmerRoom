@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class AdminController extends Controller
+{
+    public function dashboard()
+    {
+        try {
+            return view('admin.TenantsPage');
+        } catch (\Throwable $th) {
+            return redirect()->route('public.home')->with('error', 'មិនអាចចូលទៅកាន់ Dashboard បានឡើយ!');
+        }
+    }
+}
