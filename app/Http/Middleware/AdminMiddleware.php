@@ -20,6 +20,6 @@ class AdminMiddleware
         return $next($request);
     }
     // ២. បើមិនមែនជា Admin ទេ ឱ្យរុញទៅកាន់ទំព័រដើម ជាមួយសារ Error
-    return redirect('public.home')->with('error', 'អ្នកមិនមានសិទ្ធិចូលទៅកាន់ទំព័រនេះទេ!');
+    return redirect()->route('public.home')->with('error', 'អ្នកមិនមានសិទ្ធិចូលទៅកាន់ទំព័រនេះទេ!');
 }
 }

@@ -20,7 +20,7 @@
                     <div class="flex flex-col gap-1.5">
                         <!-- Preview -->
                         <div class="flex justify-center">
-                            <img src="/images/profile.png" alt="Profile Preview" id="profilePreview"
+                            <img src="{{ asset('storage/images/profile.png') }}" alt="Profile Preview" id="profilePreview"
                                 class=" w-[200px] h-[200px] rounded-full mt-4 object-cover">
                         </div>
                         <!-- File Input -->
@@ -129,7 +129,7 @@
 
         </div>
     </main>
-{{-- 
+
     <!-- Password Toggle Script -->
     <script>
         function togglePassword(button) {
@@ -153,4 +153,4 @@
             }
         });
     </script>
-@endsection --}}
+@endsection

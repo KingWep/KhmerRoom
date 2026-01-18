@@ -54,7 +54,7 @@
                     <p class="text-[10px] text-[#658683] truncate max-w-[100px]">Admin</p>
                 </div>
 
-                <form action="{{ route('logout') }}" method="POST" class="ml-auto">
+                <form action="{{ route('public.home') }}" method="GET" class="ml-auto">
                     @csrf
                     <button type="submit"
                         class="flex items-center justify-center p-1 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors group">
@@ -62,15 +62,6 @@
                             class="material-symbols-outlined text-xl text-[#658683] group-hover:text-red-500">logout</span>
                     </button>
                 </form>
-            @else
-                <div class="size-10 rounded-full bg-gray-200 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-gray-500">person</span>
-                </div>
-                <div class="flex flex-col">
-                    <p class="text-xs font-bold dark:text-white">Guest</p>
-                    <a href="{{ route('login') }}" class="text-[10px] text-primary hover:underline">ចូលប្រើប្រាស់
-                        (Login)</a>
-                </div>
             @endauth
         </div>
     </div>

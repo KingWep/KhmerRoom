@@ -22,14 +22,14 @@ Route::middleware('guest')->group(function () {
 // 3. Authenticated Routes User (General User)
 Route::middleware(['auth','role:user'])->group(function () {
     Route::get('/my-profile', [UserController::class, 'index'])->name('user.profile');
-    Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/profile', [AuthController::class, 'showProfile'])->name('user.profile');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('user.logout');
 });
 
 // --- 3. Admin Routes (The "Admin Dashboard" Box) ---
 // I suggest using a prefix 'admin' to keep URLs clean
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    // Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile');
-    // Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/profile', [AuthController::class, 'showProfile'])->name('admin.profile');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
 });
