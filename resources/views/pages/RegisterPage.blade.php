@@ -14,7 +14,7 @@
                         ចុះឈ្មោះគណនីថ្មី</h1>
                     <p class="text-[#4e6d97]  text-base font-khmer-body">សូមបំពេញព័ត៌មានខាងក្រោម ដើម្បីបង្កើតគណនី</p>
                 </div>
-                <form class="space-y-4" method="POST" enctype=" multipart/form-data" action="{{ route('register.store') }}">
+                <form class="space-y-4" method="POST" enctype="multipart/form-data" action="{{ route('register.store') }}">
                     @csrf
                     <!-- Profile Image -->
                     <div class="flex flex-col gap-1.5">
@@ -40,6 +40,9 @@
                                 <span class="material-symbols-outlined">person</span>
                             </div>
                         </div>
+                        @error('name')
+                            <span class="text-red-500 text-xs font-khmer-body mt-1">{{ $message }}</span>
+                        @enderror
                     </div>
                     <!-- Email -->
                     <div class="flex flex-col gap-1.5">
@@ -52,6 +55,9 @@
                                 <span class="material-symbols-outlined">mail</span>
                             </div>
                         </div>
+                        @error('email')
+                            <span class="text-red-500 text-xs font-khmer-body mt-1">{{ $message }}</span>
+                        @enderror
                     </div>
                     <!-- Password -->
                     <div class="flex flex-col gap-1.5">
@@ -66,6 +72,9 @@
                                 <span class="material-symbols-outlined">visibility</span>
                             </button>
                         </div>
+                        @error('password')
+                            <span class="text-red-500 text-xs font-khmer-body mt-1">{{ $message }}</span>
+                        @enderror
                     </div>
                     <!-- Confirm Password -->
                     <div class="flex flex-col gap-1.5">
@@ -80,6 +89,10 @@
                                 <span class="material-symbols-outlined">visibility</span>
                             </button>
                         </div>
+                        @if($errors->has('password') && str_contains($errors->first('password'), 'confirmation'))
+                            <span
+                                class="text-red-500 text-xs font-khmer-body mt-1">ពាក្យសម្ងាត់មិនត្រឹមត្រូវតាមការបញ្ជាក់ទេ</span>
+                        @endif
                     </div>
                     <!-- Register Button -->
                     <button type="submit"
@@ -116,7 +129,7 @@
 
         </div>
     </main>
-
+{{-- 
     <!-- Password Toggle Script -->
     <script>
         function togglePassword(button) {
@@ -130,14 +143,14 @@
             }
         }
         const input = document.getElementById('profileInput');
-    const preview = document.getElementById('profilePreview');
+        const preview = document.getElementById('profilePreview');
 
-    input.addEventListener('change', function() {
-        if(this.files && this.files[0]){
-            preview.src = URL.createObjectURL(this.files[0]);
-        } else {
-            preview.src = '/images/default-profile.png'; // default image
-        }
-    });
+        input.addEventListener('change', function () {
+            if (this.files && this.files[0]) {
+                preview.src = URL.createObjectURL(this.files[0]);
+            } else {
+                preview.src = '/images/default-profile.png'; // default image
+            }
+        });
     </script>
-@endsection
+@endsection --}}

@@ -30,4 +30,6 @@ Route::middleware(['auth','role:user'])->group(function () {
 // I suggest using a prefix 'admin' to keep URLs clean
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    // Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile');
+    // Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });

@@ -38,10 +38,6 @@
                             <td class="py-2">{{ Auth::user()->email }}</td>
                         </tr>
                         <tr class="border-b">
-                            <td class="py-2 font-medium">Role</td>
-                            <td class="py-2">{{ ucfirst(Auth::user()->role ?? 'User') }}</td>
-                        </tr>
-                        <tr class="border-b">
                             <td class="py-2 font-medium">Account Created</td>
                             <td class="py-2">{{ Auth::user()->created_at->format('d M Y') }}</td>
                         </tr>

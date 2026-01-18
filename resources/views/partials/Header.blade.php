@@ -5,6 +5,9 @@
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <title>ផ្ទះជួលខ្មែរ - Khmer Rental Rooms</title>
+
+    {{-- jQuery --}}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <!-- Google Fonts -->
@@ -62,13 +65,48 @@
                     <a href="{{ route('public.contact') }}"
                         class="text-[#0d141b] text-sm font-medium hover:text-primary font-khmer-title">ទំនាក់ទំនង</a>
                 </nav>
-
-                <!-- Button Right -->
-                <a href="{{ route('login') }}"
-                    class="hidden md:flex min-w-[84px] h-10 items-center justify-center rounded-lg bg-primary hover:bg-blue-600 text-white text-sm font-bold font-khmer-title shadow-lg shadow-blue-500/20">
-                    ចូលគណនី
-                </a>
-
+                @auth
+                            <a id="auth-button" href="{{ route('profile') }}" class="hidden md:flex items-center justify-center">
+                                <div class="flex items-center gap-2">
+                                    {{-- Check if photo starts with http (like Gravatar) or needs the storage path --}}
+                                    <img src="{{ Str::startsWith(auth()->user()->profile_photo_url, ['http', 'https'])
+                    ? auth()->user()->profile_photo_url
+                    : asset('storage/' . auth()->user()->profile_photo_url) }}" alt="Profile"
+                                        class="size-9 rounded-full object-cover border-2 border-primary shadow-sm"
+                                        onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=random'">
+                                </div>
+                            </a>
+                @else
+                    <a href="{{ route('login') }}"
+                        class="hidden md:flex min-w-[84px] h-10 items-center justify-center rounded-lg bg-primary hover:bg-blue-600 text-white text-sm font-bold font-khmer-title shadow-lg shadow-blue-500/20">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2">
+                                <g stroke-dasharray="22">
+                                    <path d="M3 21v-1c0 -2.21 1.79 -4 4 -4h4c2.21 0 4 1.79 4 4v1">
+                                        <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="22;0" />
+                                    </path>
+                                    <path stroke-dashoffset="22"
+                                        d="M9 13c-1.66 0 -3 -1.34 -3 -3c0 -1.66 1.34 -3 3 -3c1.66 0 3 1.34 3 3c0 1.66 -1.34 3 -3 3Z">
+                                        <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.3s" dur="0.3s"
+                                            to="0" />
+                                    </path>
+                                </g>
+                                <g stroke-dasharray="8" stroke-dashoffset="8">
+                                    <path d="M15 6h6">
+                                        <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.7s" dur="0.2s"
+                                            to="0" />
+                                    </path>
+                                    <path d="M18 3v6">
+                                        <animate fill="freeze" attributeName="stroke-dashoffset" begin="0.9s" dur="0.2s"
+                                            to="0" />
+                                    </path>
+                                </g>
+                            </g>
+                        </svg>
+                        <span class="ml-2">គណនី</span>
+                    </a>
+                @endauth
                 <!-- Mobile Menu Icon -->
                 <button class="flex md:hidden items-center justify-center text-slate-700">
                     <span class="material-symbols-outlined">menu</span>
@@ -77,4 +115,5 @@
         </header>
     </div>
 </body>
+
 </html>
