@@ -23,7 +23,6 @@ class User extends Authenticatable
         'email',
         'password',
         'profile',
-        'status'
     ];
     public function tenants(){
         return $this->hasOne(Tenant::class);

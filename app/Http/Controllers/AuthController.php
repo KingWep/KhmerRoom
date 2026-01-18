@@ -17,7 +17,7 @@ class AuthController extends Controller
             'name'=>['required','string','min:3'],
             'email'=>['required','email','unique:users,email'],
             'password'=>['required','string','min:8','confirmed'],
-            'profile'=>['file','mimes:png,jpg,jpeg'],
+            'profile'=>['nullable','file','mimes:png,jpg,jpeg'],
         ]);
         $FileName = null;
         if($request->hasFile('profile')){
