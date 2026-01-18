@@ -2,18 +2,33 @@
 
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminController; // You'll need this
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
-// Public Pages (អ្នកណាក៏អាចមើលបាន មិនបាច់ Login)
-Route::get('/',[PublicController::class,'index'])->name('home');
-Route::get('/contact',[PublicController::class,'contact'])->name('contact');
-Route::get('/rooms', [PublicController::class, 'rooms'])->name('rooms');
-Route::get('/login', [PublicController::class, 'login'])->name('login');
-Route::get('/register', [PublicController::class, 'register'])->name('register');
+// 1. Public Routes
+Route::get('/', [PublicController::class, 'index'])->name('public.home');
+Route::get('/rooms', [PublicController::class, 'rooms'])->name('public.rooms');
+Route::get('/about', [PublicController::class, 'about'])->name('public.about');
+Route::get('/contact', [PublicController::class, 'contact'])->name('public.contact');
 
+//2. Guest Route only (Login/Register)
+Route::middleware('guest')->group(function () {
+    Route::get('/login',[AuthController::class, 'ShowLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/register', [AuthController::class, 'ShowRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register'])->name('register.store');
 
-Route::middleware(['auth',])->group(function(){
-    // សម្រាប់ Role ជា User
-    Route::get('/',[UserController:: class,'index'])->name('home');
+});
+// 3. Authenticated Routes User (General User)
+Route::middleware(['auth','role:user'])->group(function () {
+    Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
+    Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+});
 
+// --- 3. Admin Routes (The "Admin Dashboard" Box) ---
+// I suggest using a prefix 'admin' to keep URLs clean
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    // how admin can controll to all model
 });

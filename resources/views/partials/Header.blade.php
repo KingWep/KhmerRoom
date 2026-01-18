@@ -55,16 +55,16 @@
 
                 <!-- Desktop Menu Center -->
                 <nav class="hidden md:flex flex-1 justify-center gap-9">
-                    <a href="/"
+                    <a href="{{ route('public.home') }}"
                         class="text-[#0d141b] text-sm font-medium hover:text-primary font-khmer-title">ទំព័រដើម</a>
-                    <a href="/rooms"
+                    <a href="{{ route('public.rooms') }}"
                         class="text-[#0d141b] text-sm font-medium hover:text-primary font-khmer-title">ប្រភេទបន្ទប់</a>
-                    <a href="/contact"
+                    <a href="{{ route('public.contact') }}"
                         class="text-[#0d141b] text-sm font-medium hover:text-primary font-khmer-title">ទំនាក់ទំនង</a>
                 </nav>
 
                 <!-- Button Right -->
-                <a href="/login"
+                <a href="{{ route('login') }}"
                     class="hidden md:flex min-w-[84px] h-10 items-center justify-center rounded-lg bg-primary hover:bg-blue-600 text-white text-sm font-bold font-khmer-title shadow-lg shadow-blue-500/20">
                     ចូលគណនី
                 </a>

@@ -51,7 +51,7 @@
                 <div class="text-center mt-4">
                     <p class="text-sm text-text-secondary font-khmer">
                         មិនទាន់មានគណនីទេ?
-                        <a href="/register"
+                        <a href="{{ Route('register') }}"
                             class="text-primary font-bold underline hover:text-primary-dark">
                             ចុះឈ្មោះឥឡូវនេះ
                         </a>
@@ -59,7 +59,7 @@
                 </div>
 
                 <!-- REGISTER BUTTON -->
-                <a href="/register"
+                <a href="{{ Route('register') }}"
                     class="w-full h-12 mt-3 bg-gradient-to-r from-emerald-500 to-teal-500
                     hover:from-emerald-600 hover:to-teal-600
                     text-white font-bold rounded-lg flex items-center justify-center gap-2 shadow-md">

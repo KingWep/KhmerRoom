@@ -37,6 +37,10 @@ class UserController extends Controller
     {
         return view('pages.RegisterPage');
     }
+    public function profile()
+    {
+        return view('pages.ProfilePage');
+    }
 }
 use App\Http\Controllers\UserContoller;
 use Illuminate\Support\Facades\Route;

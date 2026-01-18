@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Testing\Fluent\Concerns\Has;
 
@@ -34,8 +35,25 @@ class AuthController extends Controller
         if($user){
             return redirect()->route('login')->with('message','Register successfully, please login');
         }
+        return view('pages.RegisterPage');
      }
     public function ShowLogin(){
         return view('pages.LoginPage');
+    }
+    public function login(Request $request){
+        $credentials = $request->validate([
+            'email'=>['required','email'],
+            'password'=>['required','string','min:8']
+        ]);
+        if(auth()->attempt($credentials)){
+            $request->session()->regenerate();
+            // 3. Logic to redirect based on role
+            $user = Auth::user();
+            if($user->role == 'admin'){
+                return redirect()->route('admin.dashboard');
+            }
+            return redirect()->intended(route('user.profile'));
+        }
+        return redirect()->route('login');;
     }
 }

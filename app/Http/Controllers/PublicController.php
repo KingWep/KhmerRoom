@@ -39,4 +39,8 @@ class PublicController extends Controller
     {
         return view('pages.RegisterPage');
     }
+    public function profile()
+    {
+        return view('pages.ProfilePage');
+    }
 }
