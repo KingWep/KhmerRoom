@@ -11,17 +11,17 @@
         </div>
         <nav class="flex flex-col gap-1">
             <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-background-light dark:hover:bg-[#233d3a] transition-colors group"
-                href="#">
+                href="{{ route('admin.dashboard') }}">
                 <span class="material-symbols-outlined text-[#658683] group-hover:text-primary">dashboard</span>
                 <span class="text-[#121717] dark:text-gray-200 text-sm font-medium">ផ្ទាំងគ្រប់គ្រង</span>
             </a>
             <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-background-light dark:hover:bg-[#233d3a] transition-colors group"
-                href="/tenants">
+                href="{{ route('admin.tenants') }}">
                 <span class="material-symbols-outlined text-[#658683] group-hover:text-primary">group</span>
                 <span class="text-[#121717] dark:text-gray-200 text-sm font-medium">បញ្ជីអ្នកជួល</span>
             </a>
             <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-background-light dark:hover:bg-[#233d3a] transition-colors group"
-                href="#">
+                href="{{ route('admin.rooms') }}">
                 <span class="material-symbols-outlined text-[#658683] group-hover:text-primary">meeting_room</span>
                 <span class="text-[#121717] dark:text-gray-200 text-sm font-medium">បន្ទប់</span>
             </a>

@@ -7,11 +7,8 @@
         </nav>
     </div>
     <div class="flex items-center gap-6">
-        <div class="relative w-72">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#658683] text-xl">search</span>
-            <input
-                class="w-full h-11 pl-10 pr-4 bg-background-light dark:bg-[#233d3a] border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/50 transition-all placeholder:text-[#658683]"
-                placeholder="ស្វែងរក..." type="text" />
+        <div class="relative">
+            <h3>សួស្តី, អ្នកគ្រប់គ្រង់</h3>
         </div>
         <button
             class="relative size-11 flex items-center justify-center bg-background-light dark:bg-[#233d3a] rounded-xl text-[#121717] dark:text-white">
