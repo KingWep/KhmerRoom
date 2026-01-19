@@ -24,6 +24,7 @@ Route::middleware(['auth','role:user'])->group(function () {
     Route::get('/my-profile', [UserController::class, 'index'])->name('user.profile');
     Route::get('/profile', [AuthController::class, 'showProfile'])->name('user.profile');
     Route::post('/logout', [AuthController::class, 'logout'])->name('user.logout');
+    Route::patch('/update-profile/{id}',[UserController::class,'update'])->name('user.update.profile');
 });
 
 // --- 3. Admin Routes (The "Admin Dashboard" Box) ---
@@ -32,4 +33,5 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/profile', [AuthController::class, 'showProfile'])->name('admin.profile');
     Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
+    Route::patch('/update-profile/{id}',[UserController::class,'update'])->name('admin.update.profile');
 });

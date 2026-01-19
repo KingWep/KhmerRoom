@@ -25,12 +25,14 @@ class AuthController extends Controller
             $file = $request->file('profile');
             $FileName = time()."_".$file->getClientOriginalName();
             $file->storeAs('images', $FileName, 'public');
+            $image_url = asset('storage/images/'.$FileName);
+
         }
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
-        $user->profile = $FileName;
+        $user->profile = $image_url;
         $user->save();
         if($user){
             return redirect()->route('login')->with('message','Register successfully, please login');
