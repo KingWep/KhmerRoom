@@ -6,8 +6,23 @@
     <main class="flex-1 flex items-center justify-center p-4 md:p-8 lg:p-12 w-full">
         <div
             class="w-full max-w-[1000px] bg-white  rounded-xl overflow-hidden shadow-2xl flex flex-col md:flex-row min-h-[650px] border border-zinc-100">
-
             <!-- Left Side: Registration Form -->
+            @if($errors->any())
+                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)"
+                    x-transition:leave="transition ease-in duration-500" x-transition:leave-start="opacity-100 scale-100"
+                    x-transition:leave-end="opacity-0 scale-95"
+                    class="mb-4 p-4 bg-red-100 text-red-700 rounded-2xl border border-red-200 shadow-sm flex flex-col">
+
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                clip-rule="evenodd"></path>
+                        </svg>
+                        <span class="font-bold text-sm">ការចុះឈ្មោះបរាជ័យ៖</span>
+                    </div>
+                </div>
+            @endif
             <div class="w-full md:w-1/2 p-8 lg:p-12 flex flex-col justify-center">
                 <div class="mb-8">
                     <h1 class="text-3xl lg:text-4xl font-black text-[#0e131b] ading-tight mb-2 font-khmer-title">

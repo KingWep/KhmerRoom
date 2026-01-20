@@ -71,7 +71,7 @@
                             href="{{ auth()->user()->role == 'admin' ? route('admin.profile') : route('user.profile') }}"
                             class="flex items-center justify-center focus:outline-none">
                             <div class="flex items-center gap-2">
-                                <img src="{{ Auth::user()->profile ? asset('storage/profiles/' . Auth::user()->profile) : asset('images/default.png') }}"
+                                <img src="{{ Auth::user()->profile ? Auth::user()->profile : asset('images/default.png') }}"
                                     class="size-9 rounded-full object-cover border-2 border-primary shadow-sm group-hover:border-blue-500 transition-all"
                                     onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name) }}&background=random'">
                             </div>

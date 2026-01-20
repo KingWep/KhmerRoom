@@ -4,7 +4,7 @@
     {{-- Wrap everything in one x-data to manage Modal and Image Preview together --}}
     <div class="min-h-screen bg-gray-50 py-12" x-data="{ 
                             openEditModal: false, 
-                            imagePreview: '{{ Auth::user()->profile ? asset('storage/profiles/' . Auth::user()->profile) : asset('images/default.png') }}',
+                            imagePreview: '{{ Auth::user()->profile ? Auth::user()->profile : asset('images/default.png') }}',
                             previewImage(event) {
                                 const file = event.target.files[0];
                                 if (file) { 
@@ -14,14 +14,6 @@
                          }">
 
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-
-            {{-- Alert Messages --}}
-            {{-- @if(session('message'))
-            <div class="mb-4 p-4 bg-green-100 text-green-700 rounded-2xl border border-green-200">
-                {{ session('message') }}
-            </div>
-            @endif --}}
-            {{-- Success Message with Auto-hide --}}
             @if(session('message'))
                 <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 2000)" {{-- 2000ms=2 seconds
                     --}} x-transition:leave="transition ease-in duration-500" x-transition:leave-start="opacity-100 scale-100"
@@ -61,8 +53,9 @@
                                     <div
                                         class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-[2rem] blur opacity-25 group-hover:opacity-50 transition duration-300">
                                     </div>
-                                    <img src="{{ Auth::user()->profile ? asset('storage/profiles/' . Auth::user()->profile) : asset('images/default.png') }}"
+                                    <img src="{{ Auth::user()->profile ? Auth::user()->profile : asset('images/default.png') }}"
                                         class="relative w-36 h-36 rounded-[2rem] border-4 border-white object-cover shadow-xl">
+                                        
                                 </div>
                             </div>
 

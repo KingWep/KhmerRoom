@@ -18,15 +18,13 @@ class AuthController extends Controller
             'name'=>['required','string','min:3'],
             'email'=>['required','email','unique:users,email'],
             'password'=>['required','string','min:8','confirmed'],
-            'profile'=>['nullable','file','mimes:png,jpg,jpeg'],
+            'profile'=>['nullable','file','mimes:png,jpg,jpeg','max:2048'],
         ]);
-        $FileName = null;
+        $image_url = null;
         if($request->hasFile('profile')){
             $file = $request->file('profile');
-            $FileName = time()."_".$file->getClientOriginalName();
-            $file->storeAs('images', $FileName, 'public');
-            $image_url = asset('storage/images/'.$FileName);
-
+            $uploadedFile = $file->storeOnCloudinary('profile_images');
+            $image_url = $uploadedFile->getSecurePath();
         }
         $user = new User;
         $user->name = $request->name;
