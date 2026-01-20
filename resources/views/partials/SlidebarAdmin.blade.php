@@ -26,27 +26,22 @@
                 <span class="text-[#121717] dark:text-gray-200 text-sm font-medium">បន្ទប់</span>
             </a>
             <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-background-light dark:hover:bg-[#233d3a] transition-colors group"
-                href="#">
+                href="{{ route('admin.payments') }}">
                 <span class="material-symbols-outlined text-[#658683] group-hover:text-primary">payments</span>
                 <span class="text-[#121717] dark:text-gray-200 text-sm font-medium">ការបង់ប្រាក់</span>
             </a>
             <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-background-light dark:hover:bg-[#233d3a] transition-colors group"
-                href="#">
+                href="{{ route('admin.reports') }}">
                 <span class="material-symbols-outlined text-[#658683] group-hover:text-primary">description</span>
                 <span class="text-[#121717] dark:text-gray-200 text-sm font-medium">របាយការណ៍</span>
             </a>
             <div class="my-4 border-t border-[#dce5e4] dark:border-[#2a4542]"></div>
-            <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-background-light dark:hover:bg-[#233d3a] transition-colors group"
-                href="#">
-                <span class="material-symbols-outlined text-[#658683] group-hover:text-primary">settings</span>
-                <span class="text-[#121717] dark:text-gray-200 text-sm font-medium">ការកំណត់</span>
-            </a>
         </nav>
     </div>
     <div class="mt-auto p-6">
         <div class="bg-background-light dark:bg-[#233d3a] rounded-xl p-4 flex items-center gap-3">
             @auth
-                <img src="{{ auth()->user()->profile_photo_url ?? 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name) }}"
+                <img src="{{ Auth::user()->profile ? Auth::user()->profile : asset('images/default.png') }}"
                     class="size-10 rounded-full object-cover border-2 border-primary shadow-sm" alt="User Profile">
 
                 <div class="flex flex-col">

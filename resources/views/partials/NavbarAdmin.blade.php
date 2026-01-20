@@ -15,10 +15,5 @@
             <span class="material-symbols-outlined">notifications</span>
             <span class="absolute top-3 right-3 size-2 bg-red-500 rounded-full border-2 border-white dark:border-[#233d3a]"></span>
         </button>
-        <button
-            class="bg-primary hover:bg-accent text-white h-11 px-6 rounded-xl font-bold text-sm transition-all flex items-center gap-2">
-            <span class="material-symbols-outlined text-lg">add</span>
-            បន្ថែម
-        </button>
     </div>
 </header>

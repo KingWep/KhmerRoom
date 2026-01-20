@@ -30,4 +30,20 @@ class AdminController extends Controller
             return redirect()->route('public.home')->with('error', 'មិនអាចចូលទៅកាន់ Dashboard បានឡើយ!');
         }
     }
+    public function payments()
+    {
+        try {
+            return view('admin.Payments');
+        } catch (\Throwable $th) {
+            return redirect()->route('public.home')->with('error', 'មិនអាចចូលទៅកាន់ Dashboard បានឡើយ!');
+        }
+    }
+    public function reports()
+    {
+        try {
+            return view('admin.ReportsPage');
+        } catch (\Throwable $th) {
+            return redirect()->route('public.home')->with('error', 'មិនអាចចូលទៅកាន់ Dashboard បានឡើយ!');
+        }
+    }
 }
