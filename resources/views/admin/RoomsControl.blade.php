@@ -90,74 +90,6 @@
     </style>
 
     <main class="flex-1 overflow-y-auto flex flex-col min-h-screen bg-[#F8F9FB]">
-
-        {{-- Modal Form --}}
-        {{-- <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <div class="modal-body">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label">Room Number</label>
-                                        <input type="text" name="room_number" class="form-control" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Floor</label>
-                                        <input type="number" name="floor" class="form-control" required>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <label class="form-label">Price ($)</label>
-                                        <input type="number" step="0.01" name="price" class="form-control" required>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">Size (sqm)</label>
-                                        <input type="text" name="size" class="form-control">
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <label class="form-label">Status</label>
-                                        <select name="status" class="form-select">
-                                            <option value="available">Available</option>
-                                            <option value="occupied">Occupied</option>
-                                            <option value="maintenance">Maintenance</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <label class="form-label">Description</label>
-                                        <textarea name="description" class="form-control" rows="2"></textarea>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <label class="form-label">Accessories (e.g. AC, TV, Wi-Fi)</label>
-                                        <input type="text" name="accessories" class="form-control"
-                                            placeholder="Comma separated">
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <label class="form-label">Room Images</label>
-                                        <input type="file" name="images[]" class="form-control" multiple>
-                                        <small class="text-muted">You can select multiple images.</small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Save Room</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content border-0 shadow-2xl rounded-3xl overflow-hidden">
@@ -176,8 +108,25 @@
                             data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
-                    <form action="" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.rooms.create') }}" method="POST" enctype="multipart/form-data">
                         @csrf
+                        @if ($errors->any())
+                            <div class="mx-6 mt-4 p-4 mb-4 text-sm text-red-800 rounded-xl bg-red-50 border border-red-200"
+                                role="alert">
+                                <div class="flex items-center mb-2">
+                                    <svg class="w-4 h-4 me-2" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                    </svg>
+                                    <span class="font-bold">សូមពិនិត្យកំហុសខាងក្រោម៖ (Please check errors)</span>
+                                </div>
+                                <ul class="list-disc list-inside">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <div class="modal-body p-6 bg-slate-50">
                             <div class="row g-4">
 
@@ -240,52 +189,26 @@
                                                 <option value="maintenance">🟠 កំពុងជួសជុល (Maintenance)</option>
                                             </select>
                                         </div>
-
-                                        {{-- <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-                                            <label class="form-label font-medium text-slate-700">សម្ភារៈបន្ទប់</label>
-                                            <input type="text" name="accessories"
-                                                class="form-control border-slate-300 rounded-xl mb-1"
-                                                placeholder="ម៉ាស៊ីនត្រជាក់, ទូរទស្សន៍...">
-                                            <p class="text-[11px] text-slate-400 italic mb-0">* ប្រើសញ្ញាក្បៀស (,)
-                                                ដើម្បីបំបែកមុខទំនិញ</p>
-                                        </div> --}}
                                         <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-sm">
                                             <label class="form-label font-bold text-slate-700 text-sm mb-3 block">
                                                 <i class="bi bi-box-seam me-1 text-blue-500"></i> សម្ភារៈបន្ទប់
                                             </label>
 
                                             <div class="grid grid-cols-2 gap-2">
-
                                                 <label class="relative cursor-pointer group">
                                                     <input type="checkbox" name="accessories[]" value="AC"
                                                         class="peer sr-only">
                                                     <div
                                                         class="flex items-center px-3 py-2 border border-slate-200 rounded-xl text-[13px] font-medium text-slate-600 bg-white transition-all peer-checked:bg-blue-50 peer-checked:text-blue-700 peer-checked:border-blue-500 hover:border-blue-300 shadow-sm">
                                                         <span
-                                                            class="me-2 transition-transform group-hover:scale-110">❄️</span>
+                                                            class="me-2 text-blue-500 transition-transform group-hover:scale-110">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                                viewBox="0 0 24 24">
+                                                                <path fill="currentColor"
+                                                                    d="M19 19H5V5h14M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2m-8 12h2v2h-2m-4-2h10V7H7m2 2h6v2H9z" />
+                                                            </svg>
+                                                        </span>
                                                         ម៉ាស៊ីនត្រជាក់
-                                                    </div>
-                                                </label>
-
-                                                <label class="relative cursor-pointer group">
-                                                    <input type="checkbox" name="accessories[]" value="TV"
-                                                        class="peer sr-only">
-                                                    <div
-                                                        class="flex items-center px-3 py-2 border border-slate-200 rounded-xl text-[13px] font-medium text-slate-600 bg-white transition-all peer-checked:bg-blue-50 peer-checked:text-blue-700 peer-checked:border-blue-500 hover:border-blue-300 shadow-sm">
-                                                        <span
-                                                            class="me-2 transition-transform group-hover:scale-110">📺</span>
-                                                        ទូរទស្សន៍
-                                                    </div>
-                                                </label>
-
-                                                <label class="relative cursor-pointer group">
-                                                    <input type="checkbox" name="accessories[]" value="WiFi"
-                                                        class="peer sr-only">
-                                                    <div
-                                                        class="flex items-center px-3 py-2 border border-slate-200 rounded-xl text-[13px] font-medium text-slate-600 bg-white transition-all peer-checked:bg-blue-50 peer-checked:text-blue-700 peer-checked:border-blue-500 hover:border-blue-300 shadow-sm">
-                                                        <span
-                                                            class="me-2 transition-transform group-hover:scale-110">📶</span>
-                                                        វ៉ាយហ្វាយ
                                                     </div>
                                                 </label>
 
@@ -295,8 +218,48 @@
                                                     <div
                                                         class="flex items-center px-3 py-2 border border-slate-200 rounded-xl text-[13px] font-medium text-slate-600 bg-white transition-all peer-checked:bg-blue-50 peer-checked:text-blue-700 peer-checked:border-blue-500 hover:border-blue-300 shadow-sm">
                                                         <span
-                                                            class="me-2 transition-transform group-hover:scale-110">🧊</span>
+                                                            class="me-2 text-blue-500 transition-transform group-hover:scale-110">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                                viewBox="0 0 24 24">
+                                                                <path fill="currentColor"
+                                                                    d="M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2m0 2v7h10V4zm0 9v7h10v-7zm1 1v3h2v-3zm0-5v2h2V9z" />
+                                                            </svg>
+                                                        </span>
                                                         ទូរទឹកកក
+                                                    </div>
+                                                </label>
+
+                                                <label class="relative cursor-pointer group">
+                                                    <input type="checkbox" name="accessories[]" value="WiFi"
+                                                        class="peer sr-only">
+                                                    <div
+                                                        class="flex items-center px-3 py-2 border border-slate-200 rounded-xl text-[13px] font-medium text-slate-600 bg-white transition-all peer-checked:bg-blue-50 peer-checked:text-blue-700 peer-checked:border-blue-500 hover:border-blue-300 shadow-sm">
+                                                        <span
+                                                            class="me-2 text-blue-500 transition-transform group-hover:scale-110">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                                viewBox="0 0 24 24">
+                                                                <path fill="currentColor"
+                                                                    d="M12 21.05L4.44 13.5c1.45-1.45 3.32-2.18 5.19-2.2c1.87-.03 3.75.64 5.2 2.05l2.73-2.73c-2.14-2.15-4.97-3.26-7.8-3.32c-2.84-.07-5.69.94-7.87 3.05L1.44 10.5C4.36 7.58 8.18 6.13 12 6.13c3.82 0 7.64 1.45 10.56 4.37l-2.45 2.45c-2.22-2.22-5.13-3.35-8.11-3.39c-2.99-.04-6 1.05-8.31 3.25L12 21.05Z" />
+                                                            </svg>
+                                                        </span>
+                                                        វ៉ាយហ្វាយ
+                                                    </div>
+                                                </label>
+
+                                                <label class="relative cursor-pointer group">
+                                                    <input type="checkbox" name="accessories[]" value="TV"
+                                                        class="peer sr-only">
+                                                    <div
+                                                        class="flex items-center px-3 py-2 border border-slate-200 rounded-xl text-[13px] font-medium text-slate-600 bg-white transition-all peer-checked:bg-blue-50 peer-checked:text-blue-700 peer-checked:border-blue-500 hover:border-blue-300 shadow-sm">
+                                                        <span
+                                                            class="me-2 text-blue-500 transition-transform group-hover:scale-110">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                                viewBox="0 0 24 24">
+                                                                <path fill="currentColor"
+                                                                    d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2m0 14H3V5h18z" />
+                                                            </svg>
+                                                        </span>
+                                                        ទូរទស្សន៍
                                                     </div>
                                                 </label>
 
@@ -306,7 +269,13 @@
                                                     <div
                                                         class="flex items-center px-3 py-2 border border-slate-200 rounded-xl text-[13px] font-medium text-slate-600 bg-white transition-all peer-checked:bg-blue-50 peer-checked:text-blue-700 peer-checked:border-blue-500 hover:border-blue-300 shadow-sm">
                                                         <span
-                                                            class="me-2 transition-transform group-hover:scale-110">🚿</span>
+                                                            class="me-2 text-blue-500 transition-transform group-hover:scale-110">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                                viewBox="0 0 24 24">
+                                                                <path fill="currentColor"
+                                                                    d="M13 3h-2c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h2c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 16h-2V5h2zM7 7h1v2H7zm0 4h1v2H7zm0 4h1v2H7zm10-8h-1v2h1zm0 4h-1v2h1zm0 4h-1v2h1z" />
+                                                            </svg>
+                                                        </span>
                                                         ទឹកក្តៅ
                                                     </div>
                                                 </label>
@@ -317,11 +286,16 @@
                                                     <div
                                                         class="flex items-center px-3 py-2 border border-slate-200 rounded-xl text-[13px] font-medium text-slate-600 bg-white transition-all peer-checked:bg-blue-50 peer-checked:text-blue-700 peer-checked:border-blue-500 hover:border-blue-300 shadow-sm">
                                                         <span
-                                                            class="me-2 transition-transform group-hover:scale-110">🛏️</span>
+                                                            class="me-2 text-blue-500 transition-transform group-hover:scale-110">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                                                viewBox="0 0 24 24">
+                                                                <path fill="currentColor"
+                                                                    d="M19 7h-8v7H3V5H1v15h2v-3h18v3h2v-9a4 4 0 0 0-4-4m-2 5h-4V9h4z" />
+                                                            </svg>
+                                                        </span>
                                                         គ្រែបន្ថែម
                                                     </div>
                                                 </label>
-
                                             </div>
                                         </div>
                                         <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
@@ -341,7 +315,7 @@
                                                         <label
                                                             class="relative cursor-pointer bg-white rounded-md font-semibold text-blue-600 hover:text-blue-500 focus-within:outline-none">
                                                             <span>បញ្ចូលរូបភាព</span>
-                                                            <input type="file" name="images[]" class="sr-only" multiple>
+                                                            <input type="file" name="images" class="sr-only" multiple>
                                                         </label>
                                                     </div>
                                                 </div>
@@ -403,6 +377,20 @@
                     </select>
                 </div>
             </div>
+            @if(session('message'))
+                <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 2000)" {{-- 2000ms=2 seconds
+                    --}} x-transition:leave="transition ease-in duration-500" x-transition:leave-start="opacity-100 scale-100"
+                    x-transition:leave-end="opacity-0 scale-95"
+                    class="mb-4 p-4 bg-green-100 text-green-700 rounded-2xl border border-green-200 shadow-sm flex items-center">
+
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                    {{ session('message') }}
+                </div>
+            @endif
 
             <div class="premium-card rounded-[2.5rem] overflow-hidden bg-white border-none shadow-xl">
                 <table class="w-full text-left">
