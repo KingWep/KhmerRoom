@@ -1,5 +1,5 @@
 @extends('layouts.LayoutsUser')
-@section('title','ផ្ទះជួលខ្មែរ - ទំនាក់ទំនង')
+@section('title', 'ផ្ទះជួលខ្មែរ - ទំនាក់ទំនង')
 @section('content')
     <!-- Main Content -->
     <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -12,15 +12,13 @@
             </p>
         </div>
         <!-- Filters Section -->
-        <div
-            class="bg-white  rounded-xl p-4 shadow-sm border border-slate-200 mb-8">
+        <div class="bg-white  rounded-xl p-4 shadow-sm border border-slate-200 mb-8">
             <div class="flex flex-col md:flex-row gap-4 items-start md:items-end justify-between">
                 <!-- Filter Groups -->
                 <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
                     <!-- Floor Filter -->
                     <div class="flex flex-col gap-1.5 w-full sm:w-48">
-                        <label
-                            class="text-xs font-semibold uppercase tracking-wide text-slate-500  ml-1">ជាន់
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500  ml-1">ជាន់
                             (Floor)</label>
                         <div class="relative">
                             <select
@@ -37,8 +35,7 @@
                     </div>
                     <!-- Status Filter -->
                     <div class="flex flex-col gap-1.5 w-full sm:w-48">
-                        <label
-                            class="text-xs font-semibold uppercase tracking-wide text-slate-500  ml-1">ស្ថានភាព
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500  ml-1">ស្ថានភាព
                             (Status)</label>
                         <div class="relative">
                             <select
@@ -67,7 +64,7 @@
                 </div>
             </div>
         </div>
-        <!-- Room Grid -->
+        {{-- <!-- Room Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-10">
             <!-- Card 1: Available -->
             <div
@@ -132,10 +129,11 @@
                         <span
                             class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200 0 ark:border-red-800">
                             <span class="size-1.5 rounded-full bg-red-600 </span>
-                            ជួលរួច
-                        </span>
-                    </div>
-                    <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60 to-transparent">
+                                            ជួលរួច
+                                        </span>
+                                    </div>
+                                    <div class=" absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60
+                                to-transparent">
                     </div>
                     <div class="absolute bottom-3 left-4 text-white font-display text-2xl font-bold tracking-tight">
                         បន្ទប់ 102
@@ -226,10 +224,11 @@
                         <span
                             class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200 0 ark:border-red-800">
                             <span class="size-1.5 rounded-full bg-red-600 </span>
-                            ជួលរួច
-                        </span>
-                    </div>
-                    <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60 to-transparent">
+                                            ជួលរួច
+                                        </span>
+                                    </div>
+                                    <div class=" absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60
+                                to-transparent">
                     </div>
                     <div class="absolute bottom-3 left-4 text-white font-display text-2xl font-bold tracking-tight">
                         បន្ទប់ 202
@@ -359,10 +358,11 @@
                         <span
                             class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200 0 ark:border-red-800">
                             <span class="size-1.5 rounded-full bg-red-600 </span>
-                            ជួលរួច
-                        </span>
-                    </div>
-                    <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60 to-transparent">
+                                            ជួលរួច
+                                        </span>
+                                    </div>
+                                    <div class=" absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60
+                                to-transparent">
                     </div>
                     <div class="absolute bottom-3 left-4 text-white font-display text-2xl font-bold tracking-tight">
                         បន្ទប់ 401
@@ -433,9 +433,88 @@
                     </div>
                 </div>
             </div>
+        </div> --}}
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            @foreach($rooms as $room)
+                <div
+                    class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-slate-100 flex flex-col h-full">
+
+                    <div class="relative aspect-[4/3] overflow-hidden">
+
+                        <div class="absolute w-[300px] h-[200px] ">
+                            @if($room->images)
+                                <img src="{{ $room->images }}" alt="Room {{ $room->room_number }}"
+                                    class="w-full h-full object-cover rounded-lg">
+                            @else
+                                <p>No image available</p>
+                            @endif
+                        </div>
+                        <div class="absolute top-4 left-4">
+                            @if($room->status == 'available')
+                                <span
+                                    class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-emerald-500 text-white shadow-lg shadow-emerald-500/30">
+                                    ទំនេរ
+                                </span>
+                            @else
+                                <span
+                                    class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-rose-500 text-white shadow-lg shadow-rose-500/30">
+                                    មិនទំនេរ
+                                </span>
+                            @endif
+                        </div>
+
+                        <div class="absolute bottom-4 left-4 right-4">
+                            <h3 class="text-white text-xl font-bold leading-tight drop-shadow-md">
+                                {{ $room->name }}
+                            </h3>
+                        </div>
+                    </div>
+
+                    <div class="p-5 flex flex-col flex-grow">
+                        <div class="flex items-center gap-4 mb-5 text-slate-500">
+                            <div class="flex items-center gap-1.5">
+                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-10V4m0 10V4m-4 10h.01M9 17h.01M9 14h.01M12 17h.01M12 14h.01M15 17h.01M15 14h.01">
+                                    </path>
+                                </svg>
+                                <span class="text-xs">ជាន់ទី {{ $room->floor ?? '1' }}</span>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4">
+                                    </path>
+                                </svg>
+                                <span class="text-xs">{{ $room->size ?? '25' }} m²</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-auto border-t border-slate-100 pt-4 flex items-center justify-between">
+                            <div>
+                                <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">តម្លៃស្នាក់នៅ</p>
+                                <p class="text-xl font-black text-primary">
+                                    ${{ number_format($room->price, 0) }}<span
+                                        class="text-xs text-slate-400 font-normal">/ខែ</span>
+                                </p>
+                            </div>
+
+                            <a href="#"
+                                class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-100 text-slate-600 group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
         </div>
+
         <!-- Pagination -->
-        <div class="flex justify-center items-center gap-2 mb-12">
+        <div class="flex justify-center items-center gap-2 mt-5 mb-12">
             <button
                 class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white  text-slate-500  hover:border-primary hover:text-primary transition-colors disabled:opacity-50"
                 disabled="">

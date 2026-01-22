@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 // 1. Public Routes
 Route::get('/', [PublicController::class, 'index'])->name('public.home');
 Route::get('/rooms', [PublicController::class, 'rooms'])->name('public.rooms');
+Route::get('/rooms', [RoomController::class, 'rooms'])->name('public.rooms');
 Route::get('/about', [PublicController::class, 'about'])->name('public.about');
 Route::get('/contact', [PublicController::class, 'contact'])->name('public.contact');
 //2. Guest Route only (Login/Register)
@@ -19,7 +20,6 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login.store');
     Route::get('/register', [AuthController::class, 'ShowRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->name('register.store');
-
 });
 // 3. Authenticated Routes User (General User)
 Route::middleware(['auth','role:user'])->group(function () {
@@ -48,5 +48,5 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     //Rooms Management
     Route::post('/rooms',[RoomController::class,'create'])->name('admin.rooms.create');
     Route::get('/rooms', [RoomController::class, 'index'])->name('admin.rooms.index');
-    Route::patch('/rooms/{id}',[RoomController::class,'edit'])->name('admin.rooms.edit');
+    Route::patch('/rooms/{id}',[RoomController::class,'update'])->name('admin.rooms.update'); // optional if using modal
 });

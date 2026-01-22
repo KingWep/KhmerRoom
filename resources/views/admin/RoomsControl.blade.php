@@ -43,7 +43,7 @@
     </style>
 
     <main class="flex-1 overflow-y-auto flex flex-col min-h-screen bg-[#F8F9FB]">
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
+        <div class="modal fade"  id="exampleModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content border-0 shadow-2xl rounded-3xl overflow-hidden">
 
@@ -61,6 +61,7 @@
                     <form action="{{ route('admin.rooms.create') }}" id="editRoomModal" method="POST"
                         enctype="multipart/form-data">
                         @csrf
+                        @method('PATCH')
                         @if ($errors->any())
                             <div class="mx-6 mt-4 p-4 mb-4 text-sm text-red-800 rounded-xl bg-red-50 border border-red-200"
                                 role="alert">
@@ -419,15 +420,11 @@
                                     <td class="px-4 py-3">
                                         <div class="flex justify-end gap-2">
                                             <button type="button"
-                                                class="btn-edit-room p-2 text-gray-400 transition-colors bg-white border border-gray-200 rounded-xl hover:text-blue-600 hover:border-blue-200"
-                                                data-id="{{ $room->id }}" data-room_number="{{ $room->room_number }}"
-                                                data-floor="{{ $room->floor }}" data-price="{{ $room->price }}"
-                                                data-size="{{ $room->size }}" data-description="{{ $room->description }}"
-                                                data-status="{{ $room->status }}" data-accessories='@json($room->accessories)'>
+                                                class="edit-room-btn p-2 text-gray-400 transition-colors bg-white border border-gray-200 rounded-xl hover:text-blue-600"
+                                                data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                                data-room="{{ json_encode($room) }}">
                                                 <span class="material-symbols-outlined text-[20px]">edit</span>
                                             </button>
-
-
                                             <button
                                                 class="p-2 text-gray-400 transition-colors bg-white border border-gray-200 rounded-xl hover:text-red-600 hover:border-red-200">
                                                 <span class="material-symbols-outlined text-[20px]">delete</span>
@@ -460,29 +457,54 @@
     }
 </script>
 <script>
-    $(document).on('click', '.btn-edit-room', function () {
+document.addEventListener('DOMContentLoaded', function() {
+    const addRoomBtn = document.getElementById('add-room-btn');
+    const editButtons = document.querySelectorAll('.edit-room-btn');
+    const form = document.getElementById('editRoomModal');
+    const modalTitle = document.getElementById('modal-title');
 
-        let id = $(this).data('id');
-
-        // set form action
-        $('#editRoomForm').attr('action', '/admin/rooms/' + id);
-
-        // fill inputs
-        $('#edit_room_number').val($(this).data('room_number'));
-        $('#edit_floor').val($(this).data('floor'));
-        $('#edit_price').val($(this).data('price'));
-        $('#edit_size').val($(this).data('size'));
-        $('#edit_description').val($(this).data('description'));
-        $('#edit_status').val($(this).data('status'));
-
-        // accessories
-        let accessories = $(this).data('accessories') || [];
-        $('input[name="accessories[]"]').prop('checked', false);
-        accessories.forEach(item => {
-            $('input[name="accessories[]"][value="' + item + '"]').prop('checked', true);
-        });
-
-        // show modal
-        $('#editRoomModal').modal('show');
+    // ----------------
+    // ADD ROOM
+    // ----------------
+    addRoomBtn.addEventListener('click', function() {
+        form.reset(); // clear inputs
+        form.action = "{{ route('admin.rooms.create') }}"; // create route
+        form.querySelector('input[name="_method"]').value = 'POST'; // method POST
+        form.querySelectorAll('input[name="accessories[]"]').forEach(cb => cb.checked = false);
+        modalTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                              </svg> បន្ថែមបន្ទប់ថ្មី`; // title
     });
+    
+    editButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const room = JSON.parse(this.getAttribute('data-room'));
+            form.action = `/admin/rooms/${room.id}`;
+            form.querySelector('input[name="_method"]').value = 'PATCH';
+
+            // Fill form inputs
+            document.getElementById('edit_room_number').value = room.room_number;
+            document.getElementById('edit_floor').value = room.floor;
+            document.getElementById('edit_price').value = room.price;
+            document.getElementById('edit_size').value = room.size;
+            form.querySelector('textarea[name="description"]').value = room.description || '';
+            document.getElementById('edit_description').value = room.status;
+
+            // Fill checkboxes
+            const roomAccessories = room.accessories || [];
+            form.querySelectorAll('input[name="accessories[]"]').forEach(cb => {
+                cb.checked = roomAccessories.includes(cb.value);
+            });
+
+            // Change modal title
+            modalTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 13l4 4L19 7" />
+                              </svg> កែប្រែព័ត៌មានបន្ទប់`; // title for edit
+        });
+    });
+});
 </script>

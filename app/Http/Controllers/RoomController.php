@@ -10,6 +10,15 @@ class RoomController extends Controller
     /**
      * Display a listing of the resource.
         */
+    public function rooms(){
+        try {
+            $rooms = Room::all();
+            return view('pages.RoomsPage', compact('rooms'));
+        } catch (\Throwable $th) {
+            return redirect()->route('public.home')->with('error', 'មានបញ្ហា៖ ' . $th->getMessage());
+        }
+    }
+
     public function index(Request $request)
     {
         try {
@@ -85,7 +94,7 @@ class RoomController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($id, Request $request) 
+    public function update($id, Request $request) 
     {
         try {
             $room = Room::findOrFail($id);
@@ -113,10 +122,6 @@ class RoomController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Room $room)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
