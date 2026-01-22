@@ -46,7 +46,6 @@
         <div class="modal fade"  id="exampleModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content border-0 shadow-2xl rounded-3xl overflow-hidden">
-
                     <div class="bg-gradient-to-r from-cyan-600 to-blue-700 px-5 py-3 flex justify-between items-center">
                         <h5 class="text-white font-bold text-xl mb-0 flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
@@ -57,11 +56,9 @@
                             បន្ថែមបន្ទប់ថ្មី
                         </h5>
                     </div>
-
-                    <form action="{{ route('admin.rooms.create') }}" id="editRoomModal" method="POST"
+                    <form action="{{ route('admin.rooms.create') }}" method="POST"
                         enctype="multipart/form-data">
                         @csrf
-                        @method('PATCH')
                         @if ($errors->any())
                             <div class="mx-6 mt-4 p-4 mb-4 text-sm text-red-800 rounded-xl bg-red-50 border border-red-200"
                                 role="alert">
@@ -90,13 +87,13 @@
                                         <div class="row g-3">
                                             <div class="col-md-6">
                                                 <label class="form-label font-medium text-slate-700">លេខបន្ទប់</label>
-                                                <input type="text" id="edit_room_number" name="room_number"
+                                                <input type="text" name="room_number"
                                                     class="form-control border-slate-300 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all"
                                                     placeholder="ឧទាហរណ៍: A-101" required>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label font-medium text-slate-700">ជាន់</label>
-                                                <input type="number" id="edit_floor" min="0" max="4" name="floor"
+                                                <input type="number"  min="0" max="4" name="floor"
                                                     class="form-control border-slate-300 rounded-xl" placeholder="0"
                                                     required>
                                             </div>
@@ -106,14 +103,14 @@
                                                 <div class="input-group">
                                                     <span
                                                         class="input-group-text bg-slate-100 border-slate-300 text-slate-500 rounded-l-xl">$</span>
-                                                    <input type="number" id="edit_price" min="0" step="0.01" name="price"
+                                                    <input type="number"  min="0" step="0.01" name="price"
                                                         class="form-control border-slate-300 rounded-r-xl" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label font-medium text-slate-700">ទំហំបន្ទប់</label>
                                                 <div class="input-group">
-                                                    <input type="text" id="edit_size" name="size"
+                                                    <input type="text"  name="size"
                                                         class="form-control border-slate-300 rounded-l-xl"
                                                         placeholder="ឧទាហរណ៍: 25">
                                                     <span
@@ -134,7 +131,7 @@
                                     <div class="space-y-4">
                                         <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                                             <label class="form-label font-medium text-slate-700">ស្ថានភាពបន្ទប់</label>
-                                            <select id="edit_description" name="status"
+                                            <select  name="status"
                                                 class="form-select border-slate-300 rounded-xl cursor-pointer">
                                                 <option value="available">🟢 ទំនេរ (Available)</option>
                                                 <option value="occupied">🔴 មានភ្ញៀវ (Occupied)</option>
@@ -420,9 +417,7 @@
                                     <td class="px-4 py-3">
                                         <div class="flex justify-end gap-2">
                                             <button type="button"
-                                                class="edit-room-btn p-2 text-gray-400 transition-colors bg-white border border-gray-200 rounded-xl hover:text-blue-600"
-                                                data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                                data-room="{{ json_encode($room) }}">
+                                                class="edit-room-btn p-2 text-gray-400 transition-colors bg-white border border-gray-200 rounded-xl hover:text-blue-600">
                                                 <span class="material-symbols-outlined text-[20px]">edit</span>
                                             </button>
                                             <button
@@ -455,56 +450,4 @@
             input.form.submit();
         }, 500); // 0.5 second
     }
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const addRoomBtn = document.getElementById('add-room-btn');
-    const editButtons = document.querySelectorAll('.edit-room-btn');
-    const form = document.getElementById('editRoomModal');
-    const modalTitle = document.getElementById('modal-title');
-
-    // ----------------
-    // ADD ROOM
-    // ----------------
-    addRoomBtn.addEventListener('click', function() {
-        form.reset(); // clear inputs
-        form.action = "{{ route('admin.rooms.create') }}"; // create route
-        form.querySelector('input[name="_method"]').value = 'POST'; // method POST
-        form.querySelectorAll('input[name="accessories[]"]').forEach(cb => cb.checked = false);
-        modalTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                              </svg> បន្ថែមបន្ទប់ថ្មី`; // title
-    });
-    
-    editButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const room = JSON.parse(this.getAttribute('data-room'));
-            form.action = `/admin/rooms/${room.id}`;
-            form.querySelector('input[name="_method"]').value = 'PATCH';
-
-            // Fill form inputs
-            document.getElementById('edit_room_number').value = room.room_number;
-            document.getElementById('edit_floor').value = room.floor;
-            document.getElementById('edit_price').value = room.price;
-            document.getElementById('edit_size').value = room.size;
-            form.querySelector('textarea[name="description"]').value = room.description || '';
-            document.getElementById('edit_description').value = room.status;
-
-            // Fill checkboxes
-            const roomAccessories = room.accessories || [];
-            form.querySelectorAll('input[name="accessories[]"]').forEach(cb => {
-                cb.checked = roomAccessories.includes(cb.value);
-            });
-
-            // Change modal title
-            modalTitle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M5 13l4 4L19 7" />
-                              </svg> កែប្រែព័ត៌មានបន្ទប់`; // title for edit
-        });
-    });
-});
 </script>

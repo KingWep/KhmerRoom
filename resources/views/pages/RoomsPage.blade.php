@@ -30,7 +30,7 @@
                                 <option>ជាន់ទី ៤ (4th Floor)</option>
                             </select>
                             <span
-                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-[20px]">keyboard_arrow_down</span>
+                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-[20px]"></span>
                         </div>
                     </div>
                     <!-- Status Filter -->
@@ -45,7 +45,7 @@
                                 <option>ជួលរួច (Rented)</option>
                             </select>
                             <span
-                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-[20px]">keyboard_arrow_down</span>
+                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-[20px]"></span>
                         </div>
                     </div>
                 </div>
@@ -64,454 +64,94 @@
                 </div>
             </div>
         </div>
-        {{-- <!-- Room Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-10">
-            <!-- Card 1: Available -->
-            <div
-                class="group bg-white  rounded-xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md hover:border-primary/50 transition-all duration-300 flex flex-col">
-                <div class="relative h-40 bg-slate-100  overflow-hidden">
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                        data-alt="Bright modern apartment room interior"
-                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD5FMlLAk8Lav46ONIB9gWVRfxNvLKxc53oMYuDPrd8BV-12opOj407oFLwsYdMtLBUd03uABPBd4khdViuzmRuuFpiXqNHfcQheBFD6UZvmCXhumIx8A3OIDkEjnYXkRaVxDTJcsbtWY7LCzQqrBq8Hq9cN0PiIgXLwWjaKFwQCNyxFvaU9aIXThPGLeHV3IHhGp2TQusIFfTD1sEUd9vWGOSP5cUUPPyK4LJL7z81Q8ggHGwDi0BhVtcr_cpsZVMJMRNrzS2Ap0k");'>
-                    </div>
-                    <div class="absolute top-3 right-3">
-                        <span
-                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200 /30 ">
-                            <span class="size-1.5 rounded-full bg-green-600 "></span>
-                            ទំនេរ
+        <!-- Rooms Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        @foreach($rooms as $room)
+            <div class="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border border-slate-100 flex flex-col h-full">
+                
+                <div class="relative aspect-[5/3] overflow-hidden">
+                    @if($room->images)
+                        <img src="{{ $room->images }}" alt="Room {{ $room->room_number }}" 
+                            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                    @else
+                        <div class="w-full h-full bg-slate-200 flex items-center justify-center text-slate-400">គ្មានរូបភាព</div>
+                    @endif
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80"></div>
+                    <div class="absolute top-4 left-4">
+                        <span class="inline-flex items-center px-3 py-1 rounded-xl text-[10px] font-bold uppercase tracking-widest backdrop-blur-md {{ $room->status == 'available' ? 'bg-emerald-500/90 text-white' : 'bg-rose-500/90 text-white' }}">
+                            <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse me-2"></span>
+                            {{ $room->status == 'available' ? 'ទំនេរ' : 'មិនទំនេរ' }}
                         </span>
                     </div>
-                    <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60 to-transparent">
-                    </div>
-                    <div class="absolute bottom-3 left-4 text-white font-display text-2xl font-bold tracking-tight">
-                        បន្ទប់ 101
-                    </div>
-                </div>
-                <div class="p-4 flex flex-col gap-3 flex-1">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-xs text-slate-500  font-medium uppercase tracking-wide">
-                                តម្លៃជួល</p>
-                            <p class="text-primary text-xl font-bold font-display">$80 <span
-                                    class="text-sm text-slate-500  font-normal">/ ខែ</span></p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs text-slate-500  font-medium uppercase tracking-wide">
-                                ជាន់ទី</p>
-                            <p class="text-slate-700  font-bold">1</p>
-                        </div>
-                    </div>
-                    <div class="mt-auto pt-3 border-t border-slate-100 flex gap-2">
-                        <div class="flex items-center gap-1.5 text-slate-500  text-xs">
-                            <span class="material-symbols-outlined text-[16px]">bed</span>
-                            <span>1 គ្រែ</span>
-                        </div>
-                        <div class="flex items-center gap-1.5 text-slate-500  text-xs">
-                            <span class="material-symbols-outlined text-[16px]">wc</span>
-                            <span>បន្ទប់ទឹកក្នុង</span>
-                        </div>
-                        <div class="flex items-center gap-1.5 text-slate-500  text-xs">
-                            <span class="material-symbols-outlined text-[16px]">ac_unit</span>
-                            <span>ម៉ាស៊ីនត្រជាក់</span>
+
+                    <div class="absolute bottom-4 left-5 right-5">
+                        <h3 class="text-white text-xl font-bold tracking-tight">
+                            {{ $room->name }}
+                        </h3>
+                        <div class="flex items-center gap-2 mt-1 text-slate-300 text-xs">
+                            <span>ជាន់ទី {{ $room->floor ?? '1' }}</span>
+                            <span class="w-1 h-1 rounded-full bg-slate-500"></span>
+                            <span>{{ $room->size ?? '25' }} m²</span>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- Card 2: Rented -->
-            <div
-                class="group bg-white  rounded-xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col opacity-90 hover:opacity-100">
-                <div class="relative h-40 bg-slate-100  overflow-hidden">
-                    <div class="absolute inset-0 bg-cover bg-center grayscale-[50%] group-hover:grayscale-0 transition-all duration-500"
-                        data-alt="Cozy apartment bedroom with soft lighting"
-                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDghItKxsMC59gRZyW7wWODQDQdeCPMEU-00SIYP5uVng_kARKV8-N09QVjexcgN3i6WuUQEj_vbLzlkxgfNlf4SRPiHc6i89t0r2r76JmuHrnfscHOCB61h-Vfr3YPHkq24Jp3Ta-cMB0ZW17fedN474jwSR44wuFxv9nUKVr-7e_evZi5zxXlQL4q6LajS8EVdLW_tiVCcT7wWqxPrPFs8V2DhD8C53Q8BD3IVMyRwiMKdMqUARYbkfWeUHhC4YHAKsxQ5KjpzPA");'>
-                    </div>
-                    <div class="absolute top-3 right-3">
-                        <span
-                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200 0 ark:border-red-800">
-                            <span class="size-1.5 rounded-full bg-red-600 </span>
-                                            ជួលរួច
-                                        </span>
+
+                <div class="p-6 flex flex-col flex-grow">
+                    <p class="text-md font-bold text-slate-400 uppercase  mb-4">សម្ភារៈក្នុងបន្ទប់</p>
+                    <div class="grid grid-cols-2 gap-y-3 mb-6">
+                        @if($room->accessories)
+                            @foreach($room->accessories as $item)
+                                <div class="flex items-center group/item">
+                                    <div class="w-5 h-5 rounded-lg bg-slate-50 flex items-center justify-center text-blue-500 group-hover/item:bg-blue-50 group-hover/item:text-blue-600 transition-colors">
+                                        @if($item == 'AC')
+                                            <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M19 19H5V5h14M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2m-8 12h2v2h-2m-4-2h10V7H7m2 2h6v2H9z" /></svg>
+                                        @elseif($item == 'WiFi')
+                                            <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21.05L4.44 13.5c1.45-1.45 3.32-2.18 5.19-2.2c1.87-.03 3.75.64 5.2 2.05l2.73-2.73c-2.14-2.15-4.97-3.26-7.8-3.32c-2.84-.07-5.69.94-7.87 3.05L1.44 10.5C4.36 7.58 8.18 6.13 12 6.13c3.82 0 7.64 1.45 10.56 4.37l-2.45 2.45c-2.22-2.22-5.13-3.35-8.11-3.39c-2.99-.04-6 1.05-8.31 3.25L12 21.05Z" /></svg>
+                                        @elseif($item == 'ExtraBed')
+                                            <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M19 7h-8v7H3V5H1v15h2v-3h18v3h2v-9a4 4 0 0 0-4-4m-2 5h-4V9h4z" /></svg>
+                                        @elseif($item == 'Fridge')
+                                            <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2m0 2v7h10V4zm0 9v7h10v-7zm1 1v3h2v-3zm0-5v2h2V9z" /></svg>
+                                        @elseif($item == 'TV')
+                                            <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 1.99-.9 1.99-2L23 5c0-1.1-.9-2-2-2m0 14H3V5h18z" /></svg>
+                                        @elseif($item == 'WaterHeater')
+                                            <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="currentColor" d="M13 3h-2c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h2c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2m0 16h-2V5h2zM7 7h1v2H7zm0 4h1v2H7zm0 4h1v2H7zm10-8h-1v2h1zm0 4h-1v2h1zm0 4h-1v2h1z" /></svg>
+                                        @endif
                                     </div>
-                                    <div class=" absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60
-                                to-transparent">
-                    </div>
-                    <div class="absolute bottom-3 left-4 text-white font-display text-2xl font-bold tracking-tight">
-                        បន្ទប់ 102
-                    </div>
-                </div>
-                <div class="p-4 flex flex-col gap-3 flex-1">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-xs text-slate-500  font-medium uppercase tracking-wide">
-                                តម្លៃជួល</p>
-                            <p class="text-slate-700  text-xl font-bold font-display">$80 <span
-                                    class="text-sm text-slate-500  font-normal">/ ខែ</span></p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs text-slate-500  font-medium uppercase tracking-wide">
-                                ជាន់ទី</p>
-                            <p class="text-slate-700  font-bold">1</p>
-                        </div>
-                    </div>
-                    <div class="mt-auto pt-3 border-t border-slate-100 flex gap-2">
-                        <div class="flex items-center gap-1.5 text-slate-500  text-xs">
-                            <span class="material-symbols-outlined text-[16px]">bed</span>
-                            <span>1 គ្រែ</span>
-                        </div>
-                        <div class="flex items-center gap-1.5 text-slate-500  text-xs">
-                            <span class="material-symbols-outlined text-[16px]">wc</span>
-                            <span>បន្ទប់ទឹកក្នុង</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Card 3: Available -->
-            <div
-                class="group bg-white  rounded-xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md hover:border-primary/50 transition-all duration-300 flex flex-col">
-                <div class="relative h-40 bg-slate-100  overflow-hidden">
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                        data-alt="Clean minimal apartment interior design"
-                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAPdgYqSLW7Ud9q6onJQ0c_NZs6lyF19ABfLecbPG-LeQ5AXJB-nziD_PsqvJ9vWFr8mMBtA_Y8i1z9n2X4cJethPUnlFFBe5nyBFCBckW4BkVc4dLN89WdTuxV1Yq1rP9Rgx0LqCkDfN2qk-iUROjd63Ff3F26XZ86e9enzs58zaE-RlDnnFrf6WepAaExyKeTWZ5AYNQbLZ9BUj-k9BpoxFgLDFmSffFLh1JIs6n6IuziTWWijGliDT_EAWbT2RJQDiAiR8Yo-ws");'>
-                    </div>
-                    <div class="absolute top-3 right-3">
-                        <span
-                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200 /30 ">
-                            <span class="size-1.5 rounded-full bg-green-600 "></span>
-                            ទំនេរ
-                        </span>
-                    </div>
-                    <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60 to-transparent">
-                    </div>
-                    <div class="absolute bottom-3 left-4 text-white font-display text-2xl font-bold tracking-tight">
-                        បន្ទប់ 201
-                    </div>
-                </div>
-                <div class="p-4 flex flex-col gap-3 flex-1">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-xs text-slate-500  font-medium uppercase tracking-wide">
-                                តម្លៃជួល</p>
-                            <p class="text-primary text-xl font-bold font-display">$95 <span
-                                    class="text-sm text-slate-500  font-normal">/ ខែ</span></p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs text-slate-500  font-medium uppercase tracking-wide">
-                                ជាន់ទី</p>
-                            <p class="text-slate-700  font-bold">2</p>
-                        </div>
-                    </div>
-                    <div class="mt-auto pt-3 border-t border-slate-100 flex gap-2">
-                        <div class="flex items-center gap-1.5 text-slate-500  text-xs">
-                            <span class="material-symbols-outlined text-[16px]">balcony</span>
-                            <span>រានហាល</span>
-                        </div>
-                        <div class="flex items-center gap-1.5 text-slate-500  text-xs">
-                            <span class="material-symbols-outlined text-[16px]">wifi</span>
-                            <span>WiFi</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Card 4: Rented -->
-            <div
-                class="group bg-white  rounded-xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col opacity-90 hover:opacity-100">
-                <div class="relative h-40 bg-slate-100  overflow-hidden">
-                    <div class="absolute inset-0 bg-cover bg-center grayscale-[50%] group-hover:grayscale-0 transition-all duration-500"
-                        data-alt="Modern living room with sofa"
-                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDCiLJZfbOCmnNYBiNbnDNLu6D_ncFm6gj6sNwVQmzIkvurBmFK0mCeDh_Mk63fVhVsA4CCjSXKS3VTEROTBYM6s4dKdcMtRAT-35lQEwAQ315aRabp0N5NwhGvcFcSmWG-JMEsjplFpZ8VYO3anedX_cvMOwgUizq10i-JENqK4hjHroRrardyo7ny-zGavO0dIQ27iiPvEXPr_97sooh_isgYTrFF2ZmXXTdvPuUR5tMAPVU5PlD6nAzS2dMMcDiq-la_-I4ezKU");'>
-                    </div>
-                    <div class="absolute top-3 right-3">
-                        <span
-                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200 0 ark:border-red-800">
-                            <span class="size-1.5 rounded-full bg-red-600 </span>
-                                            ជួលរួច
-                                        </span>
-                                    </div>
-                                    <div class=" absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60
-                                to-transparent">
-                    </div>
-                    <div class="absolute bottom-3 left-4 text-white font-display text-2xl font-bold tracking-tight">
-                        បន្ទប់ 202
-                    </div>
-                </div>
-                <div class="p-4 flex flex-col gap-3 flex-1">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-xs text-slate-500  font-medium uppercase tracking-wide">
-                                តម្លៃជួល</p>
-                            <p class="text-slate-700  text-xl font-bold font-display">$90 <span
-                                    class="text-sm text-slate-500  font-normal">/ ខែ</span></p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs text-slate-500  font-medium uppercase tracking-wide">
-                                ជាន់ទី</p>
-                            <p class="text-slate-700  font-bold">2</p>
-                        </div>
-                    </div>
-                    <div class="mt-auto pt-3 border-t border-slate-100 flex gap-2">
-                        <div class="flex items-center gap-1.5 text-slate-500  text-xs">
-                            <span class="material-symbols-outlined text-[16px]">wifi</span>
-                            <span>WiFi</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Card 5: Available -->
-            <div
-                class="group bg-white  rounded-xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md hover:border-primary/50 transition-all duration-300 flex flex-col">
-                <div class="relative h-40 bg-slate-100  overflow-hidden">
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                        data-alt="Small studio apartment room"
-                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAxF4vaTJlzwhE7cTFjSUV-DPdLg0-U9VpZdQWd24Sn37zptypImsHK0BiNjT_uPORm4kj1Ek8ublliHG44aBTAL0PnygccIUaU5mEqSoo0recvVkb6ODGnC2bCd0x9JSt30og3oPwfra4La399-WbHCwztloacOUE25Rog8M2rbdVmaADb7w618qBTddnxSIhplmZf-oNxRjWyB0J4PY0SIH2K0ZfnzIIJfeaC5bP6HayhzSRyanF1zmIV_jRD17GyPl3ITPLtwB0");'>
-                    </div>
-                    <div class="absolute top-3 right-3">
-                        <span
-                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200 /30 ">
-                            <span class="size-1.5 rounded-full bg-green-600 "></span>
-                            ទំនេរ
-                        </span>
-                    </div>
-                    <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60 to-transparent">
-                    </div>
-                    <div class="absolute bottom-3 left-4 text-white font-display text-2xl font-bold tracking-tight">
-                        បន្ទប់ 301
-                    </div>
-                </div>
-                <div class="p-4 flex flex-col gap-3 flex-1">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-xs text-slate-500  font-medium uppercase tracking-wide">
-                                តម្លៃជួល</p>
-                            <p class="text-primary text-xl font-bold font-display">$75 <span
-                                    class="text-sm text-slate-500  font-normal">/ ខែ</span></p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs text-slate-500  font-medium uppercase tracking-wide">
-                                ជាន់ទី</p>
-                            <p class="text-slate-700  font-bold">3</p>
-                        </div>
-                    </div>
-                    <div class="mt-auto pt-3 border-t border-slate-100 flex gap-2">
-                        <div class="flex items-center gap-1.5 text-slate-500  text-xs">
-                            <span class="material-symbols-outlined text-[16px]">stairs</span>
-                            <span>ជាន់ខ្ពស់</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Card 6: Available -->
-            <div
-                class="group bg-white  rounded-xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md hover:border-primary/50 transition-all duration-300 flex flex-col">
-                <div class="relative h-40 bg-slate-100  overflow-hidden">
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                        data-alt="Corner view of apartment"
-                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDinSfKcUV5jF87gpuakYuLDUVDHlWx6_fgnQAmK_PmQM3nQPwKhsNtkK3Ibi7EjY25Hsbk0lD6vRGOKK42BdbA_HrFmXuuU0KoOT88LlwN2I4tqlxZ6x54oWI0XwFgfng0llNXZkfRLRG1Hqdl-QIs4AynK4GbhHljUQePWgtjs2nb-FixO3iI-3zj0ToC6QuJZRQu43_pRq-czuvlOJiASoxb8LO-P0k0ueDh6fVwO4mK2wQLIlcFSoOkZyhH-w9pCuMVOO6hY38");'>
-                    </div>
-                    <div class="absolute top-3 right-3">
-                        <span
-                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200 /30 ">
-                            <span class="size-1.5 rounded-full bg-green-600 "></span>
-                            ទំនេរ
-                        </span>
-                    </div>
-                    <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60 to-transparent">
-                    </div>
-                    <div class="absolute bottom-3 left-4 text-white font-display text-2xl font-bold tracking-tight">
-                        បន្ទប់ 302
-                    </div>
-                </div>
-                <div class="p-4 flex flex-col gap-3 flex-1">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-xs text-slate-500  font-medium uppercase tracking-wide">
-                                តម្លៃជួល</p>
-                            <p class="text-primary text-xl font-bold font-display">$75 <span
-                                    class="text-sm text-slate-500  font-normal">/ ខែ</span></p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs text-slate-500  font-medium uppercase tracking-wide">
-                                ជាន់ទី</p>
-                            <p class="text-slate-700  font-bold">3</p>
-                        </div>
-                    </div>
-                    <div class="mt-auto pt-3 border-t border-slate-100 flex gap-2">
-                        <div class="flex items-center gap-1.5 text-slate-500  text-xs">
-                            <span class="material-symbols-outlined text-[16px]">stairs</span>
-                            <span>ជាន់ខ្ពស់</span>
-                        </div>
-                        <div class="flex items-center gap-1.5 text-slate-500  text-xs">
-                            <span class="material-symbols-outlined text-[16px]">local_parking</span>
-                            <span>ចំណតម៉ូតូ</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Card 7: Rented -->
-            <div
-                class="group bg-white  rounded-xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col opacity-90 hover:opacity-100">
-                <div class="relative h-40 bg-slate-100  overflow-hidden">
-                    <div class="absolute inset-0 bg-cover bg-center grayscale-[50%] group-hover:grayscale-0 transition-all duration-500"
-                        data-alt="Simple bedroom setup"
-                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDhPGPhDNJrqTDw_1-B_AGUP-dRo1FHOiaXSvca4ytYTHKA_rUR0QZTISSbuGdovMdBgEbBt1Eob32zH-6xHyTRRM0uGtEQ52PJsfNVi84fG2NKyJtEnx6qOb_-l0AxY0li7ZLBx8y5TvUefGnWWpP4eZPaVPGhhSndTMTqaWrpS2hFn32TcuGJ-AsvUfhYPmIwVB6Af9OA8tkGm40BLq1cZmxUyaG_LbGImPJwvUeiO_ioIzEajhb5EjHPdZK2C1QHTm-aX_JcsZ8");'>
-                    </div>
-                    <div class="absolute top-3 right-3">
-                        <span
-                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200 0 ark:border-red-800">
-                            <span class="size-1.5 rounded-full bg-red-600 </span>
-                                            ជួលរួច
-                                        </span>
-                                    </div>
-                                    <div class=" absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60
-                                to-transparent">
-                    </div>
-                    <div class="absolute bottom-3 left-4 text-white font-display text-2xl font-bold tracking-tight">
-                        បន្ទប់ 401
-                    </div>
-                </div>
-                <div class="p-4 flex flex-col gap-3 flex-1">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-xs text-slate-500  font-medium uppercase tracking-wide">
-                                តម្លៃជួល</p>
-                            <p class="text-slate-700  text-xl font-bold font-display">$65 <span
-                                    class="text-sm text-slate-500  font-normal">/ ខែ</span></p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs text-slate-500  font-medium uppercase tracking-wide">
-                                ជាន់ទី</p>
-                            <p class="text-slate-700  font-bold">4</p>
-                        </div>
-                    </div>
-                    <div class="mt-auto pt-3 border-t border-slate-100 flex gap-2">
-                        <div class="flex items-center gap-1.5 text-slate-500  text-xs">
-                            <span class="material-symbols-outlined text-[16px]">wb_sunny</span>
-                            <span>មានពន្លឺ</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Card 8: Available -->
-            <div
-                class="group bg-white  rounded-xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-md hover:border-primary/50 transition-all duration-300 flex flex-col">
-                <div class="relative h-40 bg-slate-100  overflow-hidden">
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                        data-alt="Modern interior room"
-                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDd55FfmaiIdKPZ9oaUphN1eCFtxGQFK-Go48AVTYQArtgvya-ee5Q_DYtr0GHtFjZmWKsJ-CwLyUci2b9kBTe-bmy7xDuI3pn-6bJ4FU8QwDTUV8ed54zabLQhrk0CjpFyodHA7jxfog4lK77kYkTUiyUyLnJsM1W9IlhXd0MnZZ6N3jve8sYJbjVpjYAHQsXQ4yrjS_npTSE8oXNpotNjlj_2OVJikLISO-5Yp0peHEPEVBN0rBOcw6MlnliTzjn69TEHrFSfzUo");'>
-                    </div>
-                    <div class="absolute top-3 right-3">
-                        <span
-                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200 /30 ">
-                            <span class="size-1.5 rounded-full bg-green-600 "></span>
-                            ទំនេរ
-                        </span>
-                    </div>
-                    <div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/60 to-transparent">
-                    </div>
-                    <div class="absolute bottom-3 left-4 text-white font-display text-2xl font-bold tracking-tight">
-                        បន្ទប់ 402
-                    </div>
-                </div>
-                <div class="p-4 flex flex-col gap-3 flex-1">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <p class="text-xs text-slate-500  font-medium uppercase tracking-wide">
-                                តម្លៃជួល</p>
-                            <p class="text-primary text-xl font-bold font-display">$65 <span
-                                    class="text-sm text-slate-500  font-normal">/ ខែ</span></p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-xs text-slate-500  font-medium uppercase tracking-wide">
-                                ជាន់ទី</p>
-                            <p class="text-slate-700  font-bold">4</p>
-                        </div>
-                    </div>
-                    <div class="mt-auto pt-3 border-t border-slate-100 flex gap-2">
-                        <div class="flex items-center gap-1.5 text-slate-500  text-xs">
-                            <span class="material-symbols-outlined text-[16px]">roofing</span>
-                            <span>ដំបូល</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            @foreach($rooms as $room)
-                <div
-                    class="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border border-slate-100 flex flex-col h-full">
-
-                    <div class="relative aspect-[4/3] overflow-hidden">
-
-                        <div class="absolute w-[300px] h-[200px] ">
-                            @if($room->images)
-                                <img src="{{ $room->images }}" alt="Room {{ $room->room_number }}"
-                                    class="w-full h-full object-cover rounded-lg">
-                            @else
-                                <p>No image available</p>
-                            @endif
-                        </div>
-                        <div class="absolute top-4 left-4">
-                            @if($room->status == 'available')
-                                <span
-                                    class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-emerald-500 text-white shadow-lg shadow-emerald-500/30">
-                                    ទំនេរ
-                                </span>
-                            @else
-                                <span
-                                    class="inline-flex items-center px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider bg-rose-500 text-white shadow-lg shadow-rose-500/30">
-                                    មិនទំនេរ
-                                </span>
-                            @endif
-                        </div>
-
-                        <div class="absolute bottom-4 left-4 right-4">
-                            <h3 class="text-white text-xl font-bold leading-tight drop-shadow-md">
-                                {{ $room->name }}
-                            </h3>
-                        </div>
+                                    <span class="ms-3 text-xs font-semibold text-slate-600">
+                                        @switch($item)
+                                            @case('AC') ម៉ាស៊ីនត្រជាក់ @break
+                                            @case('WiFi') វ៉ាយហ្វាយ @break
+                                            @case('ExtraBed') គ្រែបន្ថែម @break
+                                            @case('Fridge') ទូរទឹកកក @break
+                                            @case('TV') ទូរទស្សន៍ @break
+                                            @case('WaterHeater') ទឹកក្តៅ @break
+                                            @default {{ $item }}
+                                        @endswitch
+                                    </span>
+                                </div>
+                            @endforeach
+                        @endif
                     </div>
 
-                    <div class="p-5 flex flex-col flex-grow">
-                        <div class="flex items-center gap-4 mb-5 text-slate-500">
-                            <div class="flex items-center gap-1.5">
-                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-10V4m0 10V4m-4 10h.01M9 17h.01M9 14h.01M12 17h.01M12 14h.01M15 17h.01M15 14h.01">
-                                    </path>
-                                </svg>
-                                <span class="text-xs">ជាន់ទី {{ $room->floor ?? '1' }}</span>
-                            </div>
-                            <div class="flex items-center gap-1.5">
-                                <svg class="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4">
-                                    </path>
-                                </svg>
-                                <span class="text-xs">{{ $room->size ?? '25' }} m²</span>
+                    <div class="mt-auto pt-2 border-t border-slate-100 flex items-center justify-between">
+                        <div>
+                            <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">តម្លៃស្នាក់នៅ</span>
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-2xl font-black text-blue-600">${{ number_format($room->price, 0) }}</span>
+                                <span class="text-xs font-medium text-slate-400">/ខែ</span>
                             </div>
                         </div>
 
-                        <div class="mt-auto border-t border-slate-100 pt-4 flex items-center justify-between">
-                            <div>
-                                <p class="text-[10px] uppercase tracking-widest text-slate-400 font-bold">តម្លៃស្នាក់នៅ</p>
-                                <p class="text-xl font-black text-primary">
-                                    ${{ number_format($room->price, 0) }}<span
-                                        class="text-xs text-slate-400 font-normal">/ខែ</span>
-                                </p>
-                            </div>
-
-                            <a href="#"
-                                class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-100 text-slate-600 group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                                </svg>
-                            </a>
-                        </div>
+                        <a href="#" class="h-12 w-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-blue-300 transition-all duration-300 group-hover:rotate-12">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                            </svg>
+                        </a>
                     </div>
                 </div>
-            @endforeach
-        </div>
+            </div>
+        @endforeach
+    </div>
 
         <!-- Pagination -->
         <div class="flex justify-center items-center gap-2 mt-5 mb-12">

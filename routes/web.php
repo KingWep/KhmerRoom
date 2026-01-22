@@ -46,7 +46,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/reports', [AdminController::class, 'reports'])->name('admin.reports');
 
     //Rooms Management
-    Route::post('/rooms',[RoomController::class,'create'])->name('admin.rooms.create');
-    Route::get('/rooms', [RoomController::class, 'index'])->name('admin.rooms.index');
+    // Route::post('/rooms',[RoomController::class,'create'])->name('admin.rooms.create');
+    // Route::get('/rooms', [RoomController::class, 'index'])->name('admin.rooms.index');
+    Route::get('/admin/rooms', [RoomController::class, 'index'])->name('admin.rooms.index');
+    Route::post('/admin/rooms', [RoomController::class, 'create'])->name('admin.rooms.create');
     Route::patch('/rooms/{id}',[RoomController::class,'update'])->name('admin.rooms.update'); // optional if using modal
 });
