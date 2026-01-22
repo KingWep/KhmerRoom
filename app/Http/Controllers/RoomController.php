@@ -9,15 +9,28 @@ class RoomController extends Controller
 {
     /**
      * Display a listing of the resource.
-     */
-    public function index()
+        */
+    public function index(Request $request)
     {
         try {
-            $rooms = new Room();
-            $rooms = Room::all();
-            return view('pages.RoomsPage', compact('rooms'));
-        } catch (\Throwable $th) {
-            // return redirect()->route('')
+            $query = Room::query();
+            // Use a grouped where for search to avoid conflicting with other filters
+            if ($request->filled('search')) {
+                $search = $request->search;
+                $query->where(function($q) use ($search) {
+                    $q->where('room_number', 'LIKE', "%{$search}%")
+                    ->orWhere('description', 'LIKE', "%{$search}%");
+                });
+            }
+            if ($request->filled('floor')) {
+                $query->where('floor', $request->floor);
+            }
+            // Use paginate instead of get() for better performance
+            $rooms = $query->latest()->paginate(15); 
+            return view('admin.RoomsControl', compact('rooms'));
+        } catch (\Exception $e) {    
+            // Provide a fallback so the view doesn't crash if you redirect back to it
+            return view('admin.RoomsControl', ['rooms' => collect([]), 'error' => $e->getMessage()]);
         }
     }
 
@@ -33,7 +46,7 @@ class RoomController extends Controller
             'status'=>['required','in:available,occupied,maintenance'],
             'images'=>['nullable','file','mimes:png,jpg,jpeg','max:2048'],
             'description'=>['nullable','string'],
-            'size'=>['nullable','numeric'],
+            'size'=>['required','numeric'],
             'accessories'=>['nullable','array'],
         ]);
         try {
@@ -53,20 +66,12 @@ class RoomController extends Controller
             $room->size = $request->size;
             $room->accessories = $request->accessories;
             $room->save();
-            return redirect()->route('admin.rooms')->with('message', 'Room created successfully');
+            return redirect()->route('admin.rooms.index')->with('message', 'Room created successfully');
         } catch (\Exception $e) {
             // Log the actual error so you can find it in storage/logs/laravel.log
-            \Log::error("Room Creation Error: " . $e->getMessage());
+            // \Log::error("Room Creation Error: " . $e->getMessage());
             return redirect()->back()->withInput()->with('error', 'Database Error: ' . $e->getMessage());
         }
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
@@ -80,9 +85,29 @@ class RoomController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Room $room)
+    public function edit($id, Request $request) 
     {
-        //
+        try {
+            $room = Room::findOrFail($id);
+            $ValidateData = $request->validate([
+                'room_number'=>['sometimes','integer','unique:rooms,room_number'],
+                'floor'=>['sometimes','integer'],
+                'price'=>['sometimes','numeric'],
+                'status'=>['sometimes','in:available,occupied,maintenance'],
+                'images'=>['nullable','file','mimes:png,jpg,jpeg','max:2048'],
+                'description'=>['nullable','string'],
+                'size'=>['sometimes','numeric'],
+                'accessories'=>['nullable','array'], 
+            ]);
+            if($request->hasFile('images')){
+                $image = $request->file('images')->storeOnCloudinary('room_images');
+                $ValidateData['images'] = $image->getSecurePath();
+            }
+            $room->update($ValidateData);
+            return redirect()->route('admin.rooms.index')->with('message', 'Room updated successfully');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'Error updating room: ' . $th->getMessage());
+        }
     }
 
     /**

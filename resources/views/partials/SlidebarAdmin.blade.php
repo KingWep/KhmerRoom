@@ -21,7 +21,7 @@
                 <span class="text-[#121717] dark:text-gray-200 text-sm font-medium">បញ្ជីអ្នកជួល</span>
             </a>
             <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-background-light dark:hover:bg-[#233d3a] transition-colors group"
-                href="{{ route('admin.rooms') }}">
+                href="{{ route('admin.rooms.index') }}">
                 <span class="material-symbols-outlined text-[#658683] group-hover:text-primary">meeting_room</span>
                 <span class="text-[#121717] dark:text-gray-200 text-sm font-medium">បន្ទប់</span>
             </a>

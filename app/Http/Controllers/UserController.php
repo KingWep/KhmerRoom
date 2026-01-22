@@ -31,17 +31,14 @@ class UserController extends Controller
             // គ្រប់គ្រងការប្តូរ Password
             if (!empty($request->password)) {
                 $validatedData['password'] = bcrypt($request->password);
-            } else {
+            } else { 
                 unset($validatedData['password']); 
             }
+            
         // គ្រប់គ្រងការ Upload រូបភាពទៅ Cloudinary
         if ($request->hasFile('profile')) {
-            // ១. បញ្ជូនរូបភាពទៅ Cloudinary ក្នុង Folder "profile_images" (ដូចក្នុង register)
             $uploadedFile = $request->file('profile')->storeOnCloudinary('profile_images');   
-            // ២. ទាញយក Secure URL ដើម្បីរក្សាទុកក្នុង Database
             $validatedData['profile'] = $uploadedFile->getSecurePath(); 
-            // ចំណាំ៖ កូដចាស់ដែលប្រើ Storage::disk('public') ត្រូវបានលុបចោល 
-            // ព្រោះយើងឈប់ប្រើ storage ក្នុងម៉ាស៊ីនទៀតហើយ
         }
         $user->update($validatedData);
         return redirect()->back()->with('message', 'ព័ត៌មានត្រូវបានផ្លាស់ប្តូរដោយជោគជ័យ!');

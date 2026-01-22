@@ -32,17 +32,21 @@ Route::middleware(['auth','role:user'])->group(function () {
 // --- 3. Admin Routes (The "Admin Dashboard" Box) ---
 // I suggest using a prefix 'admin' to keep URLs clean
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    // Profile & Auth
     Route::get('/profile', [AuthController::class, 'showProfile'])->name('admin.profile');
     Route::post('/logout', [AuthController::class, 'logout'])->name('admin.logout');
     Route::patch('/update-profile/{id}',[UserController::class,'update'])->name('admin.update.profile');
 
-    // User Management
+    // Core Admin Pages
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
     Route::get('/tenants', [AdminController::class, 'tenants'])->name('admin.tenants');
     Route::get('/rooms', [AdminController::class, 'rooms'])->name('admin.rooms');
+    
     Route::get('/payments', [AdminController::class, 'payments'])->name('admin.payments');
     Route::get('/reports', [AdminController::class, 'reports'])->name('admin.reports');
 
     //Rooms Management
     Route::post('/rooms',[RoomController::class,'create'])->name('admin.rooms.create');
+    Route::get('/rooms', [RoomController::class, 'index'])->name('admin.rooms.index');
+    Route::patch('/rooms/{id}',[RoomController::class,'edit'])->name('admin.rooms.edit');
 });

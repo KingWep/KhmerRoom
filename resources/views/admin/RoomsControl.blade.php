@@ -4,53 +4,6 @@
 
 @section('content')
 
-    @php
-        // Define fake data directly in the front-end
-        $fakeRooms = collect([
-            (object) [
-                'id' => 1,
-                'roomNumber' => '101',
-                'floor' => 1,
-                'price' => 180,
-                'status' => 'available',
-                'description' => 'ម៉ាស៊ីនត្រជាក់, គ្រែឈើ, ទូទឹកកក...'
-            ],
-            (object) [
-                'id' => 2,
-                'roomNumber' => '102',
-                'floor' => 1,
-                'price' => 150,
-                'status' => 'occupied',
-                'description' => 'កង្ហារ, គ្រែ, បន្ទប់ទឹកក្នុង...'
-            ],
-            (object) [
-                'id' => 3,
-                'roomNumber' => '201',
-                'floor' => 2,
-                'price' => 200,
-                'status' => 'maintenance',
-                'description' => 'កំពុងលាបថ្នាំថ្មី និងដូរអំពូល'
-            ],
-            (object) [
-                'id' => 4,
-                'roomNumber' => '202',
-                'floor' => 2,
-                'price' => 180,
-                'status' => 'available',
-                'description' => 'បន្ទប់ធំទូលាយ មានបង្អួចចំហៀង'
-            ],
-        ]);
-
-        // Simple search filter logic on the front-end
-        $search = request('search');
-        if ($search) {
-            $fakeRooms = $fakeRooms->filter(function ($room) use ($search) {
-                return str_contains(strtolower($room->roomNumber), strtolower($search)) ||
-                    str_contains(strtolower($room->description), strtolower($search));
-            });
-        }
-    @endphp
-
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link
@@ -103,12 +56,10 @@
                             </svg>
                             បន្ថែមបន្ទប់ថ្មី
                         </h5>
-                        <button type="button"
-                            class="btn-close btn-close-white opacity-80 hover:opacity-100 transition-opacity"
-                            data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
-                    <form action="{{ route('admin.rooms.create') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('admin.rooms.create') }}" id="editRoomModal" method="POST"
+                        enctype="multipart/form-data">
                         @csrf
                         @if ($errors->any())
                             <div class="mx-6 mt-4 p-4 mb-4 text-sm text-red-800 rounded-xl bg-red-50 border border-red-200"
@@ -138,13 +89,13 @@
                                         <div class="row g-3">
                                             <div class="col-md-6">
                                                 <label class="form-label font-medium text-slate-700">លេខបន្ទប់</label>
-                                                <input type="text" name="room_number"
+                                                <input type="text" id="edit_room_number" name="room_number"
                                                     class="form-control border-slate-300 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all"
                                                     placeholder="ឧទាហរណ៍: A-101" required>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label font-medium text-slate-700">ជាន់</label>
-                                                <input type="number" min="0" name="floor"
+                                                <input type="number" id="edit_floor" min="0" max="4" name="floor"
                                                     class="form-control border-slate-300 rounded-xl" placeholder="0"
                                                     required>
                                             </div>
@@ -154,14 +105,14 @@
                                                 <div class="input-group">
                                                     <span
                                                         class="input-group-text bg-slate-100 border-slate-300 text-slate-500 rounded-l-xl">$</span>
-                                                    <input type="number" min="0" step="0.01" name="price"
+                                                    <input type="number" id="edit_price" min="0" step="0.01" name="price"
                                                         class="form-control border-slate-300 rounded-r-xl" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label font-medium text-slate-700">ទំហំបន្ទប់</label>
                                                 <div class="input-group">
-                                                    <input type="text" name="size"
+                                                    <input type="text" id="edit_size" name="size"
                                                         class="form-control border-slate-300 rounded-l-xl"
                                                         placeholder="ឧទាហរណ៍: 25">
                                                     <span
@@ -182,7 +133,7 @@
                                     <div class="space-y-4">
                                         <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                                             <label class="form-label font-medium text-slate-700">ស្ថានភាពបន្ទប់</label>
-                                            <select name="status"
+                                            <select id="edit_description" name="status"
                                                 class="form-select border-slate-300 rounded-xl cursor-pointer">
                                                 <option value="available">🟢 ទំនេរ (Available)</option>
                                                 <option value="occupied">🔴 មានភ្ញៀវ (Occupied)</option>
@@ -359,24 +310,33 @@
                 </button>
             </div>
 
-            <div class="premium-card rounded-3xl mb-10 flex flex-col md:flex-row gap-4 items-center bg-white">
-                <form action="" method="GET" class="relative flex-1 w-full">
-                    <span
-                        class="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-[24px]">search</span>
-                    <input type="text" name="search" value="{{ request('search') }}"
-                        placeholder="ស្វែងរកលេខបន្ទប់ ឬការបរិយាយ..."
-                        class="w-full pl-14 pr-6 py-3 bg-transparent border-none text-lg focus:ring-0 outline-none font-light">
-                </form>
+            {{-- <div class="premium-card rounded-3xl mb-10 flex flex-col md:flex-row gap-4 items-center bg-white"> --}}
+                <form action="{{ request()->url() }}" method="GET"
+                    class="premium-card rounded-3xl mb-10 flex flex-col md:flex-row gap-4 items-center bg-white shadow-sm border border-gray-100 p-2">
+                    <div class="relative flex-1 w-full">
+                        <span
+                            class="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-[24px]">search</span>
+                        <input type="text" name="search" value="{{ request('search') }}"
+                            placeholder="ស្វែងរកលេខបន្ទប់ ឬការបរិយាយ..." oninput="debounceSearch(this)"
+                            class="w-full pl-14 pr-6 py-3 bg-transparent border-none text-lg focus:ring-0 outline-none font-light">
 
-                <div class="flex items-center gap-3 pr-3">
-                    <select
-                        class="bg-gray-50 border-none text-base text-gray-700 rounded-2xl px-8 py-2 outline-none font-medium cursor-pointer">
-                        <option>គ្រប់ជាន់</option>
-                        <option>ជាន់ទី ១</option>
-                        <option>ជាន់ទី ២</option>
-                    </select>
-                </div>
-            </div>
+                    </div>
+                    <div class="flex items-center gap-3 pr-3">
+                        <select name="floor" onchange="this.form.submit()"
+                            class="bg-gray-50 border-none text-base text-gray-700 rounded-2xl px-8 py-2 outline-none font-medium cursor-pointer focus:ring-2 focus:ring-blue-500">
+                            <option value="">គ្រប់ជាន់ (All)</option>
+                            <option value="1" {{ request('floor') == '1' ? 'selected' : '' }}>ជាន់ទី ១</option>
+                            <option value="2" {{ request('floor') == '2' ? 'selected' : '' }}>ជាន់ទី ២</option>
+                            <option value="3" {{ request('floor') == '3' ? 'selected' : '' }}>ជាន់ទី ៣</option>
+                            <option value="4" {{ request('floor') == '4' ? 'selected' : '' }}>ជាន់ទី 4</option>
+                        </select>
+                        <button type="submit" class="px-6 py-2 bg-blue-500 text-white rounded-2xl font-medium">
+                            Search
+                        </button>
+                    </div>
+                </form>
+                {{--
+            </div> --}}
             @if(session('message'))
                 <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 2000)" {{-- 2000ms=2 seconds
                     --}} x-transition:leave="transition ease-in duration-500" x-transition:leave-start="opacity-100 scale-100"
@@ -391,79 +351,138 @@
                     {{ session('message') }}
                 </div>
             @endif
+            <div class="overflow-hidden bg-white border border-gray-100 shadow-sm rounded-3xl">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class=" bg-blue-500 ">
+                                <th class="px-4 py-3 text-md font-bold tracking-wider text-white uppercase">ព័ត៌មានបន្ទប់
+                                </th>
+                                <th class="px-4 py-3 text-md font-bold tracking-wider text-white uppercase">តម្លៃប្រចាំខែ
+                                </th>
+                                <th class="px-4 py-3 text-md font-bold tracking-wider text-white uppercase">
+                                    ស្ថានភាពបច្ចុប្បន្ន</th>
+                                <th class="px-4 py-3 text-md font-bold tracking-wider text-white uppercase">បរិយាយ
+                                </th>
+                                <th class="px-4 py-3 text-xs font-bolmdtracking-wider text-right text-white uppercase">
+                                    សកម្មភាព</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            @forelse($rooms as $room)
+                                <tr class="transition-colors hover:bg-gray-50/50">
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center gap-4">
+                                            <div
+                                                class="flex items-center justify-center w-12 h-12 text-blue-700 bg-blue-100 rounded-2xl">
+                                                <span class="font-bold">#</span>
+                                            </div>
+                                            <div>
+                                                <p class="text-base font-bold text-gray-900">Room {{ $room->room_number }}</p>
+                                                <p class="text-sm text-gray-500">Floor {{ $room->floor }}</p>
+                                            </div>
+                                        </div>
+                                    </td>
 
-            <div class="premium-card rounded-[2.5rem] overflow-hidden bg-white border-none shadow-xl">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="bg-gray-50/50 border-b border-gray-100/80">
-                            <th class="px-10 py-7 text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">ព័ត៌មានបន្ទប់
-                            </th>
-                            <th class="px-10 py-7 text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">តម្លៃប្រចាំខែ
-                            </th>
-                            <th class="px-10 py-7 text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">
-                                ស្ថានភាពបច្ចុប្បន្ន</th>
-                            <th class="px-10 py-7 text-xs font-bold text-gray-400 uppercase tracking-[0.2em]">បរិយាយ</th>
-                            <th class="px-10 py-7 text-xs font-bold text-gray-400 uppercase tracking-[0.2em] text-right">
-                                សកម្មភាព</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-50">
-                        @forelse($fakeRooms as $room)
-                            <tr class="hover:bg-blue-50/30 transition-all duration-300 group row-fade-in">
-                                <td class="px-8 py-6">
-                                    <div class="flex flex-col gap-1">
-                                        <span class="text-xl font-bold text-gray-900 italic">Room {{ $room->roomNumber }}</span>
-                                        <span class="text-sm text-gray-500 font-medium">ជាន់ទី {{ $room->floor }}</span>
-                                    </div>
-                                </td>
-                                <td class="px-8 py-6">
-                                    <div class="text-xl font-bold text-[#121826] font-sans">
-                                        ${{ number_format($room->price, 2) }}
-                                    </div>
-                                </td>
-                                <td class="px-8 py-6">
-                                    @if($room->status === 'available')
-                                        <span
-                                            class="inline-flex items-center gap-2.5 px-5 py-2 rounded-xl text-sm font-bold bg-green-100/50 text-green-600 border border-green-200/30">
-                                            <span class="size-2 bg-green-500 rounded-full"></span> ទំនេរ
+                                    <td class="px-4 py-3">
+                                        <span class="text-lg font-bold text-gray-900">
+                                            ${{ number_format($room->price, 2) }}
                                         </span>
-                                    @elseif($room->status === 'occupied')
+                                    </td>
+
+                                    <td class="px-4 py-3">
+                                        @php
+                                            $statusClasses = [
+                                                'available' => 'bg-emerald-50 text-emerald-700 border-emerald-100',
+                                                'occupied' => 'bg-rose-50 text-rose-700 border-rose-100',
+                                                'maintenance' => 'bg-amber-50 text-amber-700 border-amber-100'
+                                            ];
+                                            $statusLabels = [
+                                                'available' => 'ទំនេរ',
+                                                'occupied' => 'មានអ្នកជួល',
+                                                'maintenance' => 'ជួសជុល'
+                                            ];
+                                            $currentClass = $statusClasses[$room->status] ?? 'bg-gray-50 text-gray-600';
+                                        @endphp
                                         <span
-                                            class="inline-flex items-center gap-2.5 px-5 py-2 rounded-xl text-sm font-bold bg-red-100/50 text-red-500 border border-red-200/30">
-                                            <span class="size-2 bg-red-500 rounded-full"></span> មានអ្នកជួល
+                                            class="inline-flex items-center px-3 py-1 text-sm font-semibold border rounded-lg {{ $currentClass }}">
+                                            {{ $statusLabels[$room->status] ?? $room->status }}
                                         </span>
-                                    @else
-                                        <span
-                                            class="inline-flex items-center gap-2.5 px-5 py-2 rounded-xl text-sm font-bold bg-amber-100/50 text-amber-600 border border-amber-200/30">
-                                            <span class="size-2 bg-amber-500 rounded-full"></span> ជួសជុល
-                                        </span>
-                                    @endif
-                                </td>
-                                <td class="px-8 py-6 text-base text-gray-400 font-light max-w-[300px] truncate">
-                                    {{ $room->description }}
-                                </td>
-                                <td class="px-8 py-6 text-right">
-                                    <div
-                                        class="flex justify-end gap-4 opacity-0 group-hover:opacity-100 transition-all duration-300">
-                                        <button
-                                            class="size-12 flex items-center justify-center bg-white text-blue-600 rounded-2xl shadow-sm border border-gray-100 hover:bg-blue-600 hover:text-white transition-all">
-                                            <span class="material-symbols-outlined text-[22px]">edit</span>
-                                        </button>
-                                        <button
-                                            class="size-12 flex items-center justify-center bg-white text-red-500 rounded-2xl shadow-sm border border-gray-100 hover:bg-red-500 hover:text-white transition-all">
-                                            <span class="material-symbols-outlined text-[22px]">delete</span>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="px-10 py-20 text-center text-gray-400">រកមិនឃើញទិន្នន័យ...</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                                    </td>
+
+                                    <td class="px-4 py-3">
+                                        <p class="text-sm text-gray-600 max-w-[200px] line-clamp-2">
+                                            {{ $room->description ?: 'No description provided' }}
+                                        </p>
+                                    </td>
+
+                                    <td class="px-4 py-3">
+                                        <div class="flex justify-end gap-2">
+                                            <button type="button"
+                                                class="btn-edit-room p-2 text-gray-400 transition-colors bg-white border border-gray-200 rounded-xl hover:text-blue-600 hover:border-blue-200"
+                                                data-id="{{ $room->id }}" data-room_number="{{ $room->room_number }}"
+                                                data-floor="{{ $room->floor }}" data-price="{{ $room->price }}"
+                                                data-size="{{ $room->size }}" data-description="{{ $room->description }}"
+                                                data-status="{{ $room->status }}" data-accessories='@json($room->accessories)'>
+                                                <span class="material-symbols-outlined text-[20px]">edit</span>
+                                            </button>
+
+
+                                            <button
+                                                class="p-2 text-gray-400 transition-colors bg-white border border-gray-200 rounded-xl hover:text-red-600 hover:border-red-200">
+                                                <span class="material-symbols-outlined text-[20px]">delete</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="py-12 text-center text-gray-400">
+                                        រកមិនឃើញទិន្នន័យ...
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </main>
 @endsection
+
+<script>
+    let timeout = null;
+    function debounceSearch(input) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            input.form.submit();
+        }, 500); // 0.5 second
+    }
+</script>
+<script>
+    $(document).on('click', '.btn-edit-room', function () {
+
+        let id = $(this).data('id');
+
+        // set form action
+        $('#editRoomForm').attr('action', '/admin/rooms/' + id);
+
+        // fill inputs
+        $('#edit_room_number').val($(this).data('room_number'));
+        $('#edit_floor').val($(this).data('floor'));
+        $('#edit_price').val($(this).data('price'));
+        $('#edit_size').val($(this).data('size'));
+        $('#edit_description').val($(this).data('description'));
+        $('#edit_status').val($(this).data('status'));
+
+        // accessories
+        let accessories = $(this).data('accessories') || [];
+        $('input[name="accessories[]"]').prop('checked', false);
+        accessories.forEach(item => {
+            $('input[name="accessories[]"][value="' + item + '"]').prop('checked', true);
+        });
+
+        // show modal
+        $('#editRoomModal').modal('show');
+    });
+</script>
