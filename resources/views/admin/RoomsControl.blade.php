@@ -9,7 +9,6 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Khmer:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-
     <style>
         body {
             font-family: 'Inter', 'Noto Sans Khmer', sans-serif;
@@ -43,11 +42,11 @@
     </style>
 
     <main class="flex-1 overflow-y-auto flex flex-col min-h-screen bg-[#F8F9FB]">
-        <div class="modal fade"  id="exampleModal" tabindex="-1" aria-hidden="true">
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content border-0 shadow-2xl rounded-3xl overflow-hidden">
                     <div class="bg-gradient-to-r from-cyan-600 to-blue-700 px-5 py-3 flex justify-between items-center">
-                        <h5 class="text-white font-bold text-xl mb-0 flex items-center gap-2">
+                        <h5 id="modalTitle" class="text-white font-bold text-xl mb-0 flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -56,9 +55,10 @@
                             បន្ថែមបន្ទប់ថ្មី
                         </h5>
                     </div>
-                    <form action="{{ route('admin.rooms.create') }}" method="POST"
+                    <form id="roomForm" action="{{ route('admin.rooms.create') }}" method="POST"
                         enctype="multipart/form-data">
                         @csrf
+                        <input type="hidden" name="_method" id="formMethod" value="POST">
                         @if ($errors->any())
                             <div class="mx-6 mt-4 p-4 mb-4 text-sm text-red-800 rounded-xl bg-red-50 border border-red-200"
                                 role="alert">
@@ -93,7 +93,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label font-medium text-slate-700">ជាន់</label>
-                                                <input type="number"  min="0" max="4" name="floor"
+                                                <input type="number" min="0" max="4" name="floor"
                                                     class="form-control border-slate-300 rounded-xl" placeholder="0"
                                                     required>
                                             </div>
@@ -103,14 +103,14 @@
                                                 <div class="input-group">
                                                     <span
                                                         class="input-group-text bg-slate-100 border-slate-300 text-slate-500 rounded-l-xl">$</span>
-                                                    <input type="number"  min="0" step="0.01" name="price"
+                                                    <input type="number" min="0" step="0.01" name="price"
                                                         class="form-control border-slate-300 rounded-r-xl" required>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label font-medium text-slate-700">ទំហំបន្ទប់</label>
                                                 <div class="input-group">
-                                                    <input type="text"  name="size"
+                                                    <input type="text" name="size"
                                                         class="form-control border-slate-300 rounded-l-xl"
                                                         placeholder="ឧទាហរណ៍: 25">
                                                     <span
@@ -131,7 +131,7 @@
                                     <div class="space-y-4">
                                         <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                                             <label class="form-label font-medium text-slate-700">ស្ថានភាពបន្ទប់</label>
-                                            <select  name="status"
+                                            <select name="status"
                                                 class="form-select border-slate-300 rounded-xl cursor-pointer">
                                                 <option value="available">🟢 ទំនេរ (Available)</option>
                                                 <option value="occupied">🔴 មានភ្ញៀវ (Occupied)</option>
@@ -279,7 +279,7 @@
                             <button type="button"
                                 class="px-5 py-2.5 text-slate-500 font-medium hover:text-slate-800 transition-colors"
                                 data-bs-dismiss="modal">បោះបង់</button>
-                            <button type="submit"
+                            <button id="submitBtn" type="submit"
                                 class="px-8 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-blue-200 transition-all transform active:scale-95">
                                 រក្សាទុកទិន្នន័យ
                             </button>
@@ -416,12 +416,15 @@
 
                                     <td class="px-4 py-3">
                                         <div class="flex justify-end gap-2">
-                                            <button type="button"
-                                                class="edit-room-btn p-2 text-gray-400 transition-colors bg-white border border-gray-200 rounded-xl hover:text-blue-600">
-                                                <span class="material-symbols-outlined text-[20px]">edit</span>
+                                            <button type="button" class="btn btn-warning btn-edit-room"
+                                                data-id="{{ $room->id }}" data-room_number="{{ $room->room_number }}"
+                                                data-floor="{{ $room->floor }}" data-price="{{ $room->price }}"
+                                                data-size="{{ $room->size }}" data-status="{{ $room->status }}"
+                                                data-description="{{ $room->description }}"
+                                                data-accessories='@json($room->accessories)'>
+                                                កែប្រែ
                                             </button>
-                                            <button
-                                                class="p-2 text-gray-400 transition-colors bg-white border border-gray-200 rounded-xl hover:text-red-600 hover:border-red-200">
+                                            <button class="btn btn-danger btn-delete-room">
                                                 <span class="material-symbols-outlined text-[20px]">delete</span>
                                             </button>
                                         </div>
@@ -441,13 +444,41 @@
         </div>
     </main>
 @endsection
+@push('scripts')
+    <script>
+        let timeout = null;
+        function debounceSearch(input) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                input.form.submit();
+            }, 500);
+        }
 
-<script>
-    let timeout = null;
-    function debounceSearch(input) {
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-            input.form.submit();
-        }, 500); // 0.5 second
-    }
-</script>
+        $(document).on('click', '.btn-edit-room', function (e) {
+            e.preventDefault();
+            let id = $(this).data('id');
+            $('#roomForm').attr('action', `/admin/admin/rooms/${id}`);
+            $('#formMethod').val('PATCH');
+
+
+            $('#modalTitle').html('✏️ កែប្រែបន្ទប់');
+            $('#submitBtn').text('កែប្រែ');
+
+            $('input[name="room_number"]').val($(this).data('room_number'));
+            $('input[name="floor"]').val($(this).data('floor'));
+            $('input[name="price"]').val($(this).data('price'));
+            $('input[name="size"]').val($(this).data('size'));
+            $('select[name="status"]').val($(this).data('status'));
+            $('textarea[name="description"]').val($(this).data('description'));
+
+            let accessories = $(this).data('accessories') || [];
+            $('input[name="accessories[]"]').prop('checked', false);
+            accessories.forEach(item => {
+                $(`input[value="${item}"]`).prop('checked', true);
+            });
+
+            const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+            modal.show();
+        });
+    </script>
+@endpush

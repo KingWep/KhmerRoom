@@ -9,9 +9,11 @@ use App\Models\Room;
 use Illuminate\Support\Facades\Route;
 
 // 1. Public Routes
-Route::get('/', [PublicController::class, 'index'])->name('public.home');
+// Route::get('/', [PublicController::class, 'index'])->name('public.home');
+Route::get('/',[RoomController::class,'homeRooms'])->name('public.home');
 Route::get('/rooms', [PublicController::class, 'rooms'])->name('public.rooms');
-Route::get('/rooms', [RoomController::class, 'rooms'])->name('public.rooms');
+Route::get('/rooms', [RoomController::class, 'roomsRooms'])->name('public.rooms');
+
 Route::get('/about', [PublicController::class, 'about'])->name('public.about');
 Route::get('/contact', [PublicController::class, 'contact'])->name('public.contact');
 //2. Guest Route only (Login/Register)
@@ -50,5 +52,6 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // Route::get('/rooms', [RoomController::class, 'index'])->name('admin.rooms.index');
     Route::get('/admin/rooms', [RoomController::class, 'index'])->name('admin.rooms.index');
     Route::post('/admin/rooms', [RoomController::class, 'create'])->name('admin.rooms.create');
-    Route::patch('/rooms/{id}',[RoomController::class,'update'])->name('admin.rooms.update'); // optional if using modal
+    Route::patch('/admin/rooms/{id}', [RoomController::class, 'update'])->name('admin.rooms.update');
+
 });

@@ -80,7 +80,7 @@
                     <div class="absolute top-4 left-4">
                         <span class="inline-flex items-center px-3 py-1 rounded-xl text-[10px] font-bold uppercase tracking-widest backdrop-blur-md {{ $room->status == 'available' ? 'bg-emerald-500/90 text-white' : 'bg-rose-500/90 text-white' }}">
                             <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse me-2"></span>
-                            {{ $room->status == 'available' ? 'ទំនេរ' : 'មិនទំនេរ' }}
+                            {{ $room->status == 'available' ? 'ទំនេរ' : ($room->status =='occupied' ? 'មានអ្នកស្នាក់នៅ' : 'កំពុងជួសជុល' )}}
                         </span>
                     </div>
 
@@ -89,9 +89,9 @@
                             {{ $room->name }}
                         </h3>
                         <div class="flex items-center gap-2 mt-1 text-slate-300 text-xs">
-                            <span>ជាន់ទី {{ $room->floor ?? '1' }}</span>
+                            <span>ជាន់ទី {{ $room->floor ?? 'other' }}</span>
                             <span class="w-1 h-1 rounded-full bg-slate-500"></span>
-                            <span>{{ $room->size ?? '25' }} m²</span>
+                            <span>{{ $room->size }} m²</span>
                         </div>
                     </div>
                 </div>
@@ -172,4 +172,3 @@
             </button>
         </div>
     </main>
-@endsection

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Controllers\Admin\RoomController;
 use App\Models\Room;
 use Illuminate\Http\Request;
 
