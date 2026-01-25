@@ -53,5 +53,5 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/admin/rooms', [RoomController::class, 'index'])->name('admin.rooms.index');
     Route::post('/admin/rooms', [RoomController::class, 'create'])->name('admin.rooms.create');
     Route::patch('/admin/rooms/{id}', [RoomController::class, 'update'])->name('admin.rooms.update');
-
+    Route::delete('/admin/rooms/{id}', [RoomController::class, 'destroy'])->name('admin.rooms.delete');
 });

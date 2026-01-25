@@ -20,17 +20,6 @@ class RoomController extends Controller
         }
     }
 
-    // Show to home page
-    // public function homeRooms(){
-    //     try {
-    //         $rooms = Room::whereBetween('size',[3.5,6])->where('price','<=70')->limit(6)->get();
-    //         return view('pages.HomePage',compact('rooms'));
-    //     } catch (\Throwable $th) {
-    //         // return redirect()->route('public.home')->with('error', 'មានបញ្ហា៖ ' . $th->getMessage());
-    //         return view('pages.HomePage', ['rooms' => collect([]), 'error' => $th->getMessage()]);
-    //     }
-    // }
-
     public function homeRooms() {
         try {
             // ទាញយកបន្ទប់ដែលមានតម្លៃសមរម្យ (ក្រោម ៧០ដុល្លារ) ចំនួន ៦ បន្ទប់
@@ -112,11 +101,9 @@ class RoomController extends Controller
             $room->size = $request->size;
             $room->accessories = $request->accessories;
             $room->save();
-            return redirect()->route('admin.rooms.index')->with('message', 'Room created successfully');
+            return redirect()->route('admin.rooms.index')->with('message', 'បន្ទប់ត្រូវបានបង្កើតដោយជោគជ័យ ');
         } catch (\Exception $e) {
-            // Log the actual error so you can find it in storage/logs/laravel.log
-            // \Log::error("Room Creation Error: " . $e->getMessage());
-            return redirect()->back()->withInput()->with('error', 'Database Error: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'មានកំហុសក្នុងការបង្កើតបន្ទប់​​ ' . $e->getMessage());
         }
     }
 
@@ -127,37 +114,9 @@ class RoomController extends Controller
     {
         //
     }
-
     /**
      * Show the form for editing the specified resource.
      */
-    // public function update(Request $request, $id) 
-    // {
-    //     try {
-    //         $room = Room::findOrFail($id);
-    //         $ValidateData = $request->validate([
-    //             'room_number'=>['sometimes','integer','unique:rooms,room_number' . $id],
-    //             'floor'=>['sometimes','integer'],
-    //             'price'=>['sometimes','numeric'],
-    //             'status'=>['sometimes','in:available,occupied,maintenance'],
-    //             'images'=>['sometimes','nullable','file','mimes:png,jpg,jpeg','max:2048'],
-    //             'description'=>['sometimes','nullable','string'],
-    //             'size'=>['sometimes','numeric'],
-    //             'accessories'=>['sometimes','nullable','array'], 
-    //         ]);
-    //         if($request->hasFile('images')){
-    //             $image = $request->file('images')->storeOnCloudinary('room_images');
-    //             $ValidateData['images'] = $image->getSecurePath();
-    //         }
-    //         $room->update($ValidateData);
-    //         return redirect()->route('admin.rooms.index')->with('message', 'Room updated successfully');
-    //     } catch (\Throwable $th) {
-    //         return redirect()->back()->with('error', 'Error updating room: ' . $th->getMessage());
-    //     }
-    // }
-
-    
-
 public function update(Request $request, $id) 
 {
     try {
@@ -180,17 +139,23 @@ public function update(Request $request, $id)
 
         $room->update($ValidateData);
 
-        return redirect()->route('admin.rooms.index')->with('message', 'Room updated successfully');
+        return redirect()->route('admin.rooms.index')->with('message', 'បន្ទប់ត្រូវបានធ្វើបច្ចុប្បន្នភាពដោយជោគជ័យ');
     } catch (\Throwable $th) {
-        return redirect()->back()->with('error', 'Error updating room: ' . $th->getMessage());
+        return redirect()->back()->with('error', 'មានកំហុសក្នុងការធ្វើបច្ចុប្បន្នភាព: ' . $th->getMessage());
     }
 }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Room $room)
+    public function destroy(Request $request, $id)
     {
-        //
+       try {
+        $room = Room::findOrFail($id);
+        $room = Room::destroy($id);
+        return redirect()->route('admin.admin.rooms.delete')->with('message', 'បន្ទប់ត្រូវបានលុបដោយជោគជ័យ');
+       } catch (\Throwable $th) {
+        return redirect()->back()->with('error', 'មានកំហុសក្នុងការលុបបន្ទប់: ' . $th->getMessage());
+       }
     }
 }

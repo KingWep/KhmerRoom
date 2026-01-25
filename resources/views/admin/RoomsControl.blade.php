@@ -47,13 +47,17 @@
                 <div class="modal-content border-0 shadow-2xl rounded-3xl overflow-hidden">
                     <div class="bg-gradient-to-r from-cyan-600 to-blue-700 px-5 py-3 flex justify-between items-center">
                         <h5 id="modalTitle" class="text-white font-bold text-xl mb-0 flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                            </svg>
                             បន្ថែមបន្ទប់ថ្មី
                         </h5>
+
+                        <button  data-bs-dismiss="modal" type="button" class="text-white/80 hover:text-white transition-colors"
+                            onclick="closeModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
                     <form id="roomForm" action="{{ route('admin.rooms.create') }}" method="POST"
                         enctype="multipart/form-data">
@@ -424,9 +428,14 @@
                                                 data-accessories='@json($room->accessories)'>
                                                 កែប្រែ
                                             </button>
-                                            <button class="btn btn-danger btn-delete-room">
-                                                <span class="material-symbols-outlined text-[20px]">delete</span>
-                                            </button>
+                                            <form action="{{ route('admin.rooms.delete', $room->id) }}" method="POST"
+                                                class="delete-form inline-block">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="button" class="btn btn-danger delete-btn">
+                                                    <span class="material-symbols-outlined text-[20px]">delete</span>
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
@@ -445,40 +454,77 @@
     </main>
 @endsection
 @push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // Debounce search input
         let timeout = null;
         function debounceSearch(input) {
             clearTimeout(timeout);
             timeout = setTimeout(() => {
-                input.form.submit();
+                if (input.form) input.form.submit();
             }, 500);
         }
-
+        // Open edit modal
         $(document).on('click', '.btn-edit-room', function (e) {
             e.preventDefault();
             let id = $(this).data('id');
+            // Set form action and method
             $('#roomForm').attr('action', `/admin/admin/rooms/${id}`);
             $('#formMethod').val('PATCH');
-
-
-            $('#modalTitle').html('✏️ កែប្រែបន្ទប់');
+            // Set modal title & submit button
+            $('#modalTitle').html('កែប្រែបន្ទប់');
             $('#submitBtn').text('កែប្រែ');
-
+            // Fill inputs
             $('input[name="room_number"]').val($(this).data('room_number'));
             $('input[name="floor"]').val($(this).data('floor'));
             $('input[name="price"]').val($(this).data('price'));
             $('input[name="size"]').val($(this).data('size'));
             $('select[name="status"]').val($(this).data('status'));
             $('textarea[name="description"]').val($(this).data('description'));
-
+            // Fill checkboxes
             let accessories = $(this).data('accessories') || [];
             $('input[name="accessories[]"]').prop('checked', false);
             accessories.forEach(item => {
-                $(`input[value="${item}"]`).prop('checked', true);
+                $(`input[name="accessories[]"][value="${item}"]`).prop('checked', true);
             });
-
+            // Show modal
             const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
             modal.show();
+        });
+        // Reset modal on close
+        $(document).ready(function () {
+            $('#exampleModal').on('hidden.bs.modal', function () {
+                // Reset form
+                $('#roomForm')[0].reset();
+                $('#roomForm select').prop('selectedIndex', 0);
+                $('input[name="accessories[]"]').prop('checked', false);
+                // Reset action & method
+                $('#roomForm').attr('action', "{{ route('admin.rooms.create') }}");
+                $('#formMethod').val('POST');
+                // Reset title & submit button
+                $('#modalTitle').html('បន្ថែមបន្ទប់ថ្មី');
+                $('#submitBtn').text('រក្សាទុកទិន្នន័យ');
+            });
+        });
+        // Delete button with SweetAlert2
+        $(document).on('click', '.delete-btn', function (e) {
+            e.preventDefault();
+            const form = $(this).closest('.delete-form');
+            Swal.fire({
+                title: 'តើអ្នកប្រាកដទេ?',
+                text: "ទិន្នន័យនេះនឹងត្រូវលុបជាអចិន្ត្រៃយ៍!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'បាទ/ចាស លុបវា!',
+                cancelButtonText: 'បោះបង់',
+                reverseButtons: true,
+                showClass: { popup: 'animate__animated animate__fadeInDown' },
+                hideClass: { popup: 'animate__animated animate__fadeOutUp' }
+            }).then((result) => {
+                if (result.isConfirmed) form.submit();
+            });
         });
     </script>
 @endpush
