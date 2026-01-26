@@ -9,11 +9,15 @@ class Tenant extends Model
 {
     use HasFactory;
     protected $table = 'tenants';
-    protected $fillable = ['user_id', 'phone','gender', 'address'];
-    public function users(){
+    protected $fillable = ['user_id','name', 'phone','gender', 'address'];
+    public function user(){
         return $this->belongsTo(User::class);
     }
     public function rentals(){
         return $this->hasMany(Rental::class);
+    }
+    public function activeRental()
+    {
+        return $this->hasOne(Rental::class)->where('status', 'active');
     }
 }

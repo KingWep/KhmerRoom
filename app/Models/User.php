@@ -21,10 +21,11 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'phone',
         'password',
         'profile',
     ];
-    public function tenants(){
+    public function tenant(){
         return $this->hasOne(Tenant::class);
     }
     /**

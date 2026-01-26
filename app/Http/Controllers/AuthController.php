@@ -17,6 +17,7 @@ class AuthController extends Controller
         $request->validate([
             'name'=>['required','string','min:3'],
             'email'=>['required','email','unique:users,email'],
+            'phone'=>['nullable','string','unique:users,phone'],
             'password'=>['required','string','min:8','confirmed'],
             'profile'=>['nullable','file','mimes:png,jpg,jpeg','max:2048'],
         ]);
@@ -29,6 +30,7 @@ class AuthController extends Controller
         $user = new User;
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->phone = $request->phone;
         $user->password = Hash::make($request->password);
         $user->profile = $image_url;
         $user->save();

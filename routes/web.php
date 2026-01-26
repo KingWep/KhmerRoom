@@ -4,6 +4,7 @@ use App\Http\Controllers\PublicController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController; // You'll need this
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RentalController;
 use App\Http\Controllers\RoomController;
 use App\Models\Room;
 use Illuminate\Support\Facades\Route;
@@ -54,4 +55,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/admin/rooms', [RoomController::class, 'create'])->name('admin.rooms.create');
     Route::patch('/admin/rooms/{id}', [RoomController::class, 'update'])->name('admin.rooms.update');
     Route::delete('/admin/rooms/{id}', [RoomController::class, 'destroy'])->name('admin.rooms.delete');
+
+    // Tenants Management
+    Route::get('/admin/tenants', [AdminController::class, 'tenants'])->name('admin.tenants');
+    Route::post('admin/rentals', [RentalController::class, 'store'])->name('admin.rentals.store');
+
 });

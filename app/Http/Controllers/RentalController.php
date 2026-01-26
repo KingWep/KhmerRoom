@@ -3,34 +3,75 @@
 namespace App\Http\Controllers;
 
 use App\Models\Rental;
+use App\Models\Room;
+use App\Models\Tenant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class RentalController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+     public function index()
     {
-        //
-    }
+        // សម្រាប់បង្ហាញ available rooms នៅ modal
+        $availableRooms = Room::whereDoesntHave('rental', function($q){
+            $q->where('status', 'active');
+        })->get();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        // ទៅ tenants page
+        $tenants = Rental::with('room', 'user')->get(); // optional ប្រសិនបើអ្នកចង់បង្ហាញ tenant list
 
-    /**
-     * Store a newly created resource in storage.
-     */
+        return view('admin.TenantsPage', compact('availableRooms', 'tenants'));
+    }
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            // 'user_id'      => ['nullable'],
+            'name'         => ['required', 'string', 'max:30'],
+            'gender'       => ['required', 'in:male,female,other'],
+            'phone'        => ['required', 'string', 'max:20'],
+            'address'      => ['required', 'string'],
+            'room_id'      => [
+                'required',
+                'exists:rooms,id',
+                function($attribute, $value, $fail) {
+                    // ការកែតម្រូវ៖ ពិនិត្យមើលស្ថានភាពបន្ទប់ក្នុង Table RENTALS
+                    $roomOccupied = Rental::where('room_id', $value)
+                        ->where('status', 'active')
+                        ->exists();
+                    if ($roomOccupied) {
+                        $fail('បច្ចុប្បន្នបន្ទប់នេះមានអ្នកស្នាក់នៅរួចហើយ (Room is already occupied).');
+                    }
+                }
+            ],
+            'rent_amount'   => ['required', 'numeric', 'min:0'],
+            'move_in_date' => ['required', 'date'],
+            'move_out_date'=> ['nullable', 'date', 'after_or_equal:move_in_date'],
+            'status'       => ['required', 'in:active,inactive'],
+        ]);
 
+        DB::transaction(function() use ($request) {
+            // ១. បង្កើត ឬធ្វើបច្ចុប្បន្នភាពព័ត៌មានអ្នកជួល
+            $tenant = Tenant::create([
+                'user_id' => null,
+                'name'    => $request->name,
+                'gender'  => $request->gender,
+                'phone'   => $request->phone,
+                'address' => $request->address,
+            ]);
+
+            // ២. បង្កើតទិន្នន័យការជួល
+            Rental::create([
+                'tenant_id'     => $tenant->id,
+                'room_id'       => $request->room_id,
+                'rent_amount'    => $request->rent_amount,
+                'move_in_date'  => $request->move_in_date,
+                'move_out_date' => $request->move_out_date,
+                'status'        => 'completed',
+            ]);
+        });
+
+        return redirect()->route('admin.tenants')->with('success', 'ចុះឈ្មោះអ្នកជួលបានជោគជ័យ!');
+    }
     /**
      * Display the specified resource.
      */
