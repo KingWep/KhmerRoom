@@ -13,14 +13,9 @@ class RentalController extends Controller
      public function index()
     {
         // សម្រាប់បង្ហាញ available rooms នៅ modal
-        $availableRooms = Room::whereDoesntHave('rental', function($q){
-            $q->where('status', 'active');
-        })->get();
-
+        $availableRooms = Room::where('status', 'available')->get();
         // ទៅ tenants page
-        $tenants = Rental::with('room', 'user')->get(); // optional ប្រសិនបើអ្នកចង់បង្ហាញ tenant list
-
-        return view('admin.TenantsPage', compact('availableRooms', 'tenants'));
+        return view('admin.TenantsPage', compact('availableRooms'));
     }
     public function store(Request $request)
     {
@@ -43,10 +38,11 @@ class RentalController extends Controller
                     }
                 }
             ],
-            'rent_amount'   => ['required', 'numeric', 'min:0'],
+            'rent_amount'  => ['required', 'numeric', 'min:0'],
             'move_in_date' => ['required', 'date'],
             'move_out_date'=> ['nullable', 'date', 'after_or_equal:move_in_date'],
-            'status'       => ['required', 'in:active,inactive'],
+            'status'       => ['required', 'in:ongoing,completed,cancelled'],
+
         ]);
 
         DB::transaction(function() use ($request) {
@@ -66,11 +62,14 @@ class RentalController extends Controller
                 'rent_amount'    => $request->rent_amount,
                 'move_in_date'  => $request->move_in_date,
                 'move_out_date' => $request->move_out_date,
-                'status'        => 'completed',
+                'status'        => 'ongoing',
             ]);
+            Room::where('id', $request->room_id)->update([
+                'status' => 'occupied',
+            ]); 
         });
 
-        return redirect()->route('admin.tenants')->with('success', 'ចុះឈ្មោះអ្នកជួលបានជោគជ័យ!');
+        return redirect()->route('admintenants')->with('success', 'ចុះឈ្មោះអ្នកជួលបានជោគជ័យ!');
     }
     /**
      * Display the specified resource.

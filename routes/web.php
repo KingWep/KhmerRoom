@@ -57,7 +57,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::delete('/admin/rooms/{id}', [RoomController::class, 'destroy'])->name('admin.rooms.delete');
 
     // Tenants Management
-    Route::get('/admin/tenants', [AdminController::class, 'tenants'])->name('admin.tenants');
-    Route::post('admin/rentals', [RentalController::class, 'store'])->name('admin.rentals.store');
-
+    Route::get('/tenants', [AdminController::class, 'tenants'])->name('admin.tenants');
+    Route::post('/admin/rentals', [RentalController::class, 'store'])->name('admin.rentals.store');
+    Route::get('/tenants', [RentalController::class, 'index'])->name('admin.tenants');
+    // Route::post('/rentals', [RentalController::class, 'store'])->name('admin.rentals.store');
 });

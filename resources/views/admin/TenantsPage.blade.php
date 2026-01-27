@@ -273,7 +273,7 @@
                                             @if(isset($availableRooms))
                                                 @foreach($availableRooms as $room)
                                                     <option value="{{ $room->id }}" {{ old('room_id') == $room->id ? 'selected' : '' }}>
-                                                        បន្ទប់លេខ {{ $room->number }} (ជាន់ទី {{ $room->floor }})
+                                                        បន្ទប់លេខ {{ $room->room_number }} (ជាន់ទី {{ $room->floor }})
                                                     </option>
                                                 @endforeach
                                             @endif
