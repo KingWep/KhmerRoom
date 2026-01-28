@@ -16,7 +16,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-[#658683] text-sm mb-1">បន្ទប់សរុប</p>
-                        <p class="text-3xl font-black text-[#121717]">48</p>
+                        <p class="text-3xl font-black text-[#121717]">{{ $totalRooms }}</p>
                     </div>
                     <div class="size-14 rounded-full bg-primary/10 flex items-center justify-center text-primary">
                         <span class="material-symbols-outlined text-3xl">domain</span>
@@ -28,7 +28,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-green-600 text-sm mb-1 font-bold">បន្ទប់ទំនេរ</p>
-                        <p class="text-3xl font-black text-green-700">12</p>
+                        <p class="text-3xl font-black text-green-700">{{ $availableRooms ?? 0 }}</p>
                     </div>
                     <div class="size-14 rounded-full bg-green-100 flex items-center justify-center text-green-600">
                         <span class="material-symbols-outlined text-3xl">meeting_room</span>
@@ -40,7 +40,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-red-600 text-sm mb-1 font-bold">បន្ទប់មានអ្នកជួល</p>
-                        <p class="text-3xl font-black text-red-700">34</p>
+                        <p class="text-3xl font-black text-red-700">{{ $occupiedRooms ?? 0 }}</p>
                     </div>
                     <div class="size-14 rounded-full bg-red-100 flex items-center justify-center text-red-600">
                         <span class="material-symbols-outlined text-3xl">group</span>
@@ -52,7 +52,7 @@
                 <div class="flex items-center justify-between">
                     <div>
                         <p class="text-amber-600 text-sm mb-1 font-bold">កំពុងជួសជុល</p>
-                        <p class="text-3xl font-black text-amber-700">2</p>
+                        <p class="text-3xl font-black text-amber-700">{{ $maintenanceRooms ?? 0 }}</p>
                     </div>
                     <div class="size-14 rounded-full bg-amber-100 flex items-center justify-center text-amber-600">
                         <span class="material-symbols-outlined text-3xl">build</span>
@@ -92,14 +92,6 @@
                 <span class="material-symbols-outlined">grid_view</span> ស្ថានភាពបន្ទប់
             </h3>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                @php
-                    $rooms = [
-                        ['no' => '101', 'floor' => '1', 'status' => 'available'],
-                        ['no' => '102', 'floor' => '1', 'status' => 'occupied'],
-                        ['no' => '103', 'floor' => '1', 'status' => 'maintenance'],
-                        ['no' => '104', 'floor' => '1', 'status' => 'occupied'],
-                    ];
-                @endphp
                 @foreach($rooms as $room)
                     <div class="p-5 rounded-2xl border-2 text-center transition-all hover:shadow-md 
                         {{ $room['status'] == 'available' ? 'border-green-100 bg-green-50/50' : 

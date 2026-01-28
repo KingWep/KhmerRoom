@@ -93,5 +93,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::prefix('rentals')->name('rentals.')->group(function () {
         Route::get('/', [RentalController::class, 'index'])->name('index');
         Route::post('/', [RentalController::class, 'store'])->name('store');
+        Route::get('/{rental}', [RentalController::class, 'show'])->name('show');
+        Route::patch('/{rental}', [RentalController::class, 'update'])->name('update');
     });
 });

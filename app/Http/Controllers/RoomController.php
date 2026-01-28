@@ -10,74 +10,40 @@ class RoomController extends Controller
     /**
      * Display a listing of the resource.
         */
-    // Show to rooms page with search, filters, and pagination
-    // public function roomsRooms(Request $request){
-    //     try {
-    //         $query = Room::query();
-            
-    //         // Search by room number
-    //         if ($request->filled('search')) {
-    //             $search = $request->search;
-    //             $query->where('room_number', 'LIKE', "%{$search}%");
-    //         }
-            
-    //         // Filter by floor
-    //         if ($request->filled('floor') && $request->floor !== 'all') {
-    //             $query->where('floor', $request->floor);
-    //         }
-            
-    //         // Filter by status
-    //         if ($request->filled('status') && $request->status !== 'all') {
-    //             $query->where('status', $request->status);
-    //         }
-            
-    //         // Get paginated results (9 per page for 3x3 grid)
-    //         $rooms = $query->latest()->paginate(9)->withQueryString();
-            
-    //         // Get unique floors for filter dropdown
-    //         $floors = Room::select('floor')->distinct()->orderBy('floor')->pluck('floor');
-            
-    //         return view('pages.RoomsPage', compact('rooms', 'floors'));
-    //     } catch (\Throwable $th) {
-    //         return redirect()->route('public.home')->with('error', 'មានបញ្ហា៖ ' . $th->getMessage());
-    //     }
-    // }
     public function roomsRooms(Request $request)
-{
-    try {
-        $query = Room::query();
+    {
+        try {
+            $query = Room::query();
+            // 🔍 Search (room number + name)
+            if ($request->filled('search')) {
+                $search = $request->search;
+                $query->where(function ($q) use ($search) {
+                    $q->where('room_number', 'LIKE', "%{$search}%")
+                    ->orWhere('name', 'LIKE', "%{$search}%");
+                });
+            }
+            // 🏢 Filter by floor
+            if ($request->filled('floor') && $request->floor !== 'all') {
+                $query->where('floor', $request->floor);
+            }
 
-        // 🔍 Search (room number + name)
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('room_number', 'LIKE', "%{$search}%")
-                  ->orWhere('name', 'LIKE', "%{$search}%");
-            });
+            // 📌 Filter by status
+            if ($request->filled('status') && $request->status !== 'all') {
+                $query->where('status', $request->status);
+            }
+
+            $rooms = $query->latest()
+                            ->withQueryString()
+                            ->paginate(9);
+
+            $floors = Room::select('floor')->distinct()->orderBy('floor')->pluck('floor');
+
+            return view('pages.RoomsPage', compact('rooms', 'floors'));
+        } catch (\Throwable $th) {
+            return redirect()->route('public.home')
+                ->with('error', 'មានបញ្ហា៖ ' . $th->getMessage());
         }
-
-        // 🏢 Filter by floor
-        if ($request->filled('floor') && $request->floor !== 'all') {
-            $query->where('floor', $request->floor);
-        }
-
-        // 📌 Filter by status
-        if ($request->filled('status') && $request->status !== 'all') {
-            $query->where('status', $request->status);
-        }
-
-        $rooms = $query->latest()
-                       ->paginate(9)
-                       ->withQueryString();
-
-        $floors = Room::select('floor')->distinct()->orderBy('floor')->pluck('floor');
-
-        return view('pages.RoomsPage', compact('rooms', 'floors'));
-    } catch (\Throwable $th) {
-        return redirect()->route('public.home')
-            ->with('error', 'មានបញ្ហា៖ ' . $th->getMessage());
     }
-}
 
     public function homeRooms() {
         try {
@@ -95,6 +61,30 @@ class RoomController extends Controller
 
         } catch (\Throwable $th) {
             return view('pages.HomePage', [
+                'rooms' => collect([]), 
+                'totalRooms' => 0, 
+                'availableRooms' => 0, 
+                'minPrice' => 0,
+                'error' => $th->getMessage()
+            ]);
+        }
+    }
+    public function DashboardRooms() {
+        try {
+            // ទាញយកបន្ទប់ដែលមានតម្លៃសមរម្យ (ក្រោម ៧០ដុល្លារ) ចំនួន ៦ បន្ទប់
+            $rooms = Room::where('price', '<=', 70)
+                         ->limit(6)
+                         ->get();
+
+            // ទាញយកទិន្នន័យស្ថិតិសរុប
+            $totalRooms = Room::count();
+            $availableRooms = Room::where('status', 'available')->count();
+            $minPrice = Room::min('price') ?? 0;
+
+            return view('admin.Dashboard', compact('rooms', 'totalRooms', 'availableRooms', 'minPrice'));
+
+        } catch (\Throwable $th) {
+            return view('admin.Dashboard', [
                 'rooms' => collect([]), 
                 'totalRooms' => 0, 
                 'availableRooms' => 0, 
@@ -176,33 +166,33 @@ class RoomController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-public function update(Request $request, $id) 
-{
-    try {
-        $room = Room::findOrFail($id);
-        $ValidateData = $request->validate([
-            'room_number' => ['sometimes','integer', Rule::unique('rooms','room_number')->ignore($id)],
-            'floor' => ['sometimes','integer'],
-            'price' => ['sometimes','numeric'],
-            'status' => ['sometimes','in:available,occupied,maintenance'],
-            'images' => ['sometimes','nullable','file','mimes:png,jpg,jpeg','max:2048'],
-            'description' => ['sometimes','nullable','string'],
-            'size' => ['sometimes','numeric'],
-            'accessories' => ['sometimes','nullable','array'], 
-        ]);
+    public function update(Request $request, $id) 
+    {
+        try {
+            $room = Room::findOrFail($id);
+            $ValidateData = $request->validate([
+                'room_number' => ['sometimes','integer', Rule::unique('rooms','room_number')->ignore($id)],
+                'floor' => ['sometimes','integer'],
+                'price' => ['sometimes','numeric'],
+                'status' => ['sometimes','in:available,occupied,maintenance'],
+                'images' => ['sometimes','nullable','file','mimes:png,jpg,jpeg','max:2048'],
+                'description' => ['sometimes','nullable','string'],
+                'size' => ['sometimes','numeric'],
+                'accessories' => ['sometimes','nullable','array'], 
+            ]);
 
-        if ($request->hasFile('images')) {
-            $image = $request->file('images')->storeOnCloudinary('room_images');
-            $ValidateData['images'] = $image->getSecurePath();
+            if ($request->hasFile('images')) {
+                $image = $request->file('images')->storeOnCloudinary('room_images');
+                $ValidateData['images'] = $image->getSecurePath();
+            }
+
+            $room->update($ValidateData);
+
+            return redirect()->route('admin.rooms.index')->with('message', 'បន្ទប់ត្រូវបានធ្វើបច្ចុប្បន្នភាពដោយជោគជ័យ');
+        } catch (\Throwable $th) {
+            return redirect()->back()->with('error', 'មានកំហុសក្នុងការធ្វើបច្ចុប្បន្នភាព: ' . $th->getMessage());
         }
-
-        $room->update($ValidateData);
-
-        return redirect()->route('admin.rooms.index')->with('message', 'បន្ទប់ត្រូវបានធ្វើបច្ចុប្បន្នភាពដោយជោគជ័យ');
-    } catch (\Throwable $th) {
-        return redirect()->back()->with('error', 'មានកំហុសក្នុងការធ្វើបច្ចុប្បន្នភាព: ' . $th->getMessage());
     }
-}
 
     /**
      * Remove the specified resource from storage.
@@ -211,8 +201,8 @@ public function update(Request $request, $id)
     {
        try {
         $room = Room::findOrFail($id);
-        $room = Room::destroy($id);
-        return redirect()->route('admin.admin.rooms.delete')->with('message', 'បន្ទប់ត្រូវបានលុបដោយជោគជ័យ');
+        $room->delete();
+        return redirect()->route('admin.rooms.index')->with('message', 'បន្ទប់ត្រូវបានលុបដោយជោគជ័យ');
        } catch (\Throwable $th) {
         return redirect()->back()->with('error', 'មានកំហុសក្នុងការលុបបន្ទប់: ' . $th->getMessage());
        }

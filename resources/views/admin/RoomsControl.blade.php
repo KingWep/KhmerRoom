@@ -530,7 +530,7 @@
             e.preventDefault();
             let id = $(this).data('id');
             // Set form action and method
-            $('#roomForm').attr('action', `/admin/admin/rooms/${id}`);
+            $('#roomForm').attr('action', `/admin/rooms/${id}`);
             $('#formMethod').val('PATCH');
             // Set modal title & submit button
             $('#modalTitle').html('កែប្រែបន្ទប់');
