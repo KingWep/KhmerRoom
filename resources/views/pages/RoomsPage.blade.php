@@ -12,59 +12,68 @@
             </p>
         </div>
         <!-- Filters Section -->
-        <div class="bg-white  rounded-xl p-4 shadow-sm border border-slate-200 mb-8">
+        <form method="GET" action="{{ route('public.rooms') }}" class="bg-white rounded-xl p-4 shadow-sm border border-slate-200 mb-8">
             <div class="flex flex-col md:flex-row gap-4 items-start md:items-end justify-between">
                 <!-- Filter Groups -->
                 <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
                     <!-- Floor Filter -->
                     <div class="flex flex-col gap-1.5 w-full sm:w-48">
-                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500  ml-1">ជាន់
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500 ml-1">ជាន់
                             (Floor)</label>
                         <div class="relative">
-                            <select
-                                class="w-full pl-3 pr-10 py-2.5 bg-slate-50  border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none cursor-pointer text-slate-700  font-medium">
-                                <option>ទាំងអស់ (All Floors)</option>
-                                <option>ជាន់ទី ១ (1st Floor)</option>
-                                <option>ជាន់ទី ២ (2nd Floor)</option>
-                                <option>ជាន់ទី ៣ (3rd Floor)</option>
-                                <option>ជាន់ទី ៤ (4th Floor)</option>
+                            <select name="floor" onchange="this.form.submit()"
+                                class="w-full pl-3 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none cursor-pointer text-slate-700 font-medium">
+                                <option value="all" {{ request('floor') == 'all' || !request('floor') ? 'selected' : '' }}>ទាំងអស់ (All Floors)</option>
+                                @foreach($floors as $floor)
+                                    <option value="{{ $floor }}" {{ request('floor') == $floor ? 'selected' : '' }}>
+                                        ជាន់ទី {{ $floor }} (Floor {{ $floor }})
+                                    </option>
+                                @endforeach
                             </select>
                             <span
-                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-[20px]"></span>
+                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-[20px]">expand_more</span>
                         </div>
                     </div>
                     <!-- Status Filter -->
                     <div class="flex flex-col gap-1.5 w-full sm:w-48">
-                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500  ml-1">ស្ថានភាព
+                        <label class="text-xs font-semibold uppercase tracking-wide text-slate-500 ml-1">ស្ថានភាព
                             (Status)</label>
                         <div class="relative">
-                            <select
-                                class="w-full pl-3 pr-10 py-2.5 bg-slate-50  border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none cursor-pointer text-slate-700  font-medium">
-                                <option>ទាំងអស់ (All Status)</option>
-                                <option>ទំនេរ (Available)</option>
-                                <option>ជួលរួច (Rented)</option>
+                            <select name="status" onchange="this.form.submit()"
+                                class="w-full pl-3 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary appearance-none cursor-pointer text-slate-700 font-medium">
+                                <option value="all" {{ request('status') == 'all' || !request('status') ? 'selected' : '' }}>ទាំងអស់ (All Status)</option>
+                                <option value="available" {{ request('status') == 'available' ? 'selected' : '' }}>ទំនេរ (Available)</option>
+                                <option value="occupied" {{ request('status') == 'occupied' ? 'selected' : '' }}>មានអ្នកស្នាក់នៅ (Occupied)</option>
+                                <option value="maintenance" {{ request('status') == 'maintenance' ? 'selected' : '' }}>កំពុងជួសជុល (Maintenance)</option>
                             </select>
                             <span
-                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-[20px]"></span>
+                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-[20px]">expand_more</span>
                         </div>
                     </div>
                 </div>
                 <!-- Search/Summary -->
                 <div class="w-full md:w-auto flex items-center justify-between md:justify-end gap-3">
-                    <div class="hidden md:block text-sm text-slate-500  font-medium text-right">
-                        បង្ហាញ <span class="text-slate-900 font-bold">12</span> បន្ទប់
+                    <div class="hidden md:block text-sm text-slate-500 font-medium text-right">
+                        បង្ហាញ <span class="text-slate-900 font-bold">{{ $rooms->total() }}</span> បន្ទប់
                     </div>
                     <div class="relative w-full md:w-64">
-                        <input
-                            class="w-full pl-10 pr-4 py-2.5 bg-slate-50  border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary text-slate-700  placeholder:text-slate-400"
+                        <input name="search" value="{{ request('search') }}"
+                            class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary text-slate-700 placeholder:text-slate-400"
                             placeholder="ស្វែងរកលេខបន្ទប់..." type="text" />
                         <span
                             class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">search</span>
+                        @if(request('search'))
+                            <button type="button" onclick="document.querySelector('input[name=search]').value=''; this.form.submit();"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
+                                <span class="material-symbols-outlined text-[20px]">close</span>
+                            </button>
+                        @endif
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
         <!-- Rooms Grid -->
+        @if($rooms->count() > 0)
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @foreach($rooms as $room)
             <div class="group bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 border border-slate-100 flex flex-col h-full">
@@ -151,24 +160,68 @@
                 </div>
             </div>
         @endforeach
-    </div>
+        </div>
+        @else
+        <!-- Empty State -->
+        <div class="flex flex-col items-center justify-center py-16 px-4">
+            <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mb-6">
+                <span class="material-symbols-outlined text-slate-400 text-5xl">search_off</span>
+            </div>
+            <h3 class="text-2xl font-bold text-slate-900 mb-2">រកមិនឃើញបន្ទប់</h3>
+            <p class="text-slate-500 text-center max-w-md mb-6">
+                សូមអភ័យទោស! យើងរកមិនឃើញបន្ទប់ដែលត្រូវនឹងលក្ខខណ្ឌស្វែងរករបស់អ្នកទេ។ សូមព្យាយាមប្រើតម្រងផ្សេងទៀត។
+            </p>
+            <a href="{{ route('public.rooms') }}"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">refresh</span>
+                <span>កំណត់ឡើងវិញ</span>
+            </a>
+        </div>
+        @endif
 
         <!-- Pagination -->
-        <div class="flex justify-center items-center gap-2 mt-5 mb-12">
-            <button
-                class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white  text-slate-500  hover:border-primary hover:text-primary transition-colors disabled:opacity-50"
-                disabled="">
-                <span class="material-symbols-outlined text-[18px]">chevron_left</span>
-            </button>
-            <button
-                class="flex items-center justify-center size-9 rounded-lg border border-primary bg-primary text-white font-bold text-sm">1</button>
-            <button
-                class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white  text-slate-700  hover:border-primary hover:text-primary transition-colors text-sm">2</button>
-            <button
-                class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white  text-slate-700  hover:border-primary hover:text-primary transition-colors text-sm">3</button>
-            <button
-                class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white  text-slate-500  hover:border-primary hover:text-primary transition-colors">
-                <span class="material-symbols-outlined text-[18px]">chevron_right</span>
-            </button>
+        @if($rooms->hasPages())
+        <div class="flex justify-center items-center gap-2 mt-8 mb-12">
+            {{-- Previous Page Link --}}
+            @if ($rooms->onFirstPage())
+                <button disabled
+                    class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white text-slate-300 cursor-not-allowed">
+                    <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                </button>
+            @else
+                <a href="{{ $rooms->previousPageUrl() }}"
+                    class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white text-slate-500 hover:border-primary hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                </a>
+            @endif
+
+            {{-- Pagination Elements --}}
+            @foreach ($rooms->getUrlRange(1, $rooms->lastPage()) as $page => $url)
+                @if ($page == $rooms->currentPage())
+                    <button
+                        class="flex items-center justify-center size-9 rounded-lg border border-primary bg-primary text-white font-bold text-sm">
+                        {{ $page }}
+                    </button>
+                @else
+                    <a href="{{ $url }}"
+                        class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white text-slate-700 hover:border-primary hover:text-primary transition-colors text-sm">
+                        {{ $page }}
+                    </a>
+                @endif
+            @endforeach
+
+            {{-- Next Page Link --}}
+            @if ($rooms->hasMorePages())
+                <a href="{{ $rooms->nextPageUrl() }}"
+                    class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white text-slate-500 hover:border-primary hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                </a>
+            @else
+                <button disabled
+                    class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white text-slate-300 cursor-not-allowed">
+                    <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                </button>
+            @endif
         </div>
+        @endif
     </main>

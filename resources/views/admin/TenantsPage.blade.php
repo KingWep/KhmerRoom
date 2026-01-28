@@ -5,6 +5,24 @@
 @section('content')
     <main class="flex-1 overflow-y-auto flex flex-col min-h-screen">
         <div class="p-8 max-w-[1440px] mx-auto w-full">
+            
+            @if(session('success'))
+                <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-lg">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined">check_circle</span>
+                        <p class="font-semibold">{{ session('success') }}</p>
+                    </div>
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 text-red-700 rounded-lg">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined">error</span>
+                        <p class="font-semibold">{{ session('error') }}</p>
+                    </div>
+                </div>
+            @endif
 
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                 <div>
@@ -31,10 +49,10 @@
                         <div class="size-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                             <span class="material-symbols-outlined">groups</span>
                         </div>
-                        <span class="text-xs font-bold text-green-500 bg-green-500/10 px-2 py-1 rounded-full">+12%</span>
+                        <span class="text-xs font-bold text-green-500 bg-green-500/10 px-2 py-1 rounded-full">សរុប</span>
                     </div>
                     <p class="text-[#658683] text-sm mb-1">អ្នកជួលសរុប</p>
-                    <p class="text-2xl font-black dark:text-white">1,284</p>
+                    <p class="text-2xl font-black dark:text-white">{{ $tenants->count() ?? 0 }}</p>
                 </div>
 
                 <div
@@ -46,7 +64,7 @@
                         <span class="text-xs font-bold text-blue-500 bg-blue-500/10 px-2 py-1 rounded-full">សកម្ម</span>
                     </div>
                     <p class="text-[#658683] text-sm mb-1">អ្នកជួលសកម្ម</p>
-                    <p class="text-2xl font-black dark:text-white">1,120</p>
+                    <p class="text-2xl font-black dark:text-white">{{ $tenants->where('status', 'active')->count() ?? 0 }}</p>
                 </div>
 
                 <div
@@ -55,10 +73,10 @@
                         <div class="size-12 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500">
                             <span class="material-symbols-outlined">person_off</span>
                         </div>
-                        <span class="text-xs font-bold text-orange-500 bg-orange-500/10 px-2 py-1 rounded-full">អតីត</span>
+                        <span class="text-xs font-bold text-orange-500 bg-orange-500/10 px-2 py-1 rounded-full">បញ្ចប់</span>
                     </div>
                     <p class="text-[#658683] text-sm mb-1">អ្នកជួលចាកចេញ</p>
-                    <p class="text-2xl font-black dark:text-white">164</p>
+                    <p class="text-2xl font-black dark:text-white">{{ $tenants->where('status', 'completed')->count() ?? 0 }}</p>
                 </div>
 
                 <div
@@ -67,10 +85,10 @@
                         <div class="size-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500">
                             <span class="material-symbols-outlined">pending_actions</span>
                         </div>
-                        <span class="text-xs font-bold text-red-500 bg-red-500/10 px-2 py-1 rounded-full">ជិតដល់ថ្ងៃ</span>
+                        <span class="text-xs font-bold text-red-500 bg-red-500/10 px-2 py-1 rounded-full">បោះបង់</span>
                     </div>
-                    <p class="text-[#658683] text-sm mb-1">កិច្ចសន្យាជិតផុតកំណត់</p>
-                    <p class="text-2xl font-black dark:text-white">42</p>
+                    <p class="text-[#658683] text-sm mb-1">កិច្ចសន្យាបោះបង់</p>
+                    <p class="text-2xl font-black dark:text-white">{{ $tenants->where('status', 'cancelled')->count() ?? 0 }}</p>
                 </div>
             </div>
 
@@ -115,43 +133,59 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-[#dce5e4] dark:divide-[#2a4542]">
-                            <tr class="hover:bg-gray-50 dark:hover:bg-[#233d3a]/50 transition-colors">
-                                <td class="px-6 py-4">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                                            ក</div>
-                                        <div>
-                                            <p class="font-bold text-[#121717] dark:text-white">កែវ សុខា</p>
-                                            <p class="text-xs text-[#658683]">ID: T-2024-001</p>
+                            @forelse($tenants ?? [] as $rental)
+                                <tr class="hover:bg-gray-50 dark:hover:bg-[#233d3a]/50 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div
+                                                class="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                                                {{ strtoupper(substr($rental->tenant->name ?? 'N', 0, 1)) }}</div>
+                                            <div>
+                                                <p class="font-bold text-[#121717] dark:text-white">{{ $rental->tenant->name ?? 'N/A' }}</p>
+                                                <p class="text-xs text-[#658683]">ID: T-{{ str_pad($rental->tenant->id ?? 0, 4, '0', STR_PAD_LEFT) }}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <p class="text-sm dark:text-gray-300">012 345 678</p>
-                                    <p class="text-xs text-[#658683]">sokha.keo@gmail.com</p>
-                                </td>
-                                <td class="px-6 py-4 font-bold dark:text-white">A-102</td>
-                                <td class="px-6 py-4 text-sm dark:text-gray-300">12 មករា 2024</td>
-                                <td class="px-6 py-4">
-                                    <span
-                                        class="px-3 py-1 rounded-full text-[10px] font-bold bg-green-500/10 text-green-600 uppercase">សកម្ម</span>
-                                </td>
-                                <td class="px-6 py-4 text-right">
-                                    <div class="flex items-center justify-end gap-2">
-                                        <button
-                                            class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-[#658683] transition-colors"
-                                            title="View Detail">
-                                            <span class="material-symbols-outlined text-[20px]">visibility</span>
-                                        </button>
-                                        <button
-                                            class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-blue-500 transition-colors"
-                                            title="Edit">
-                                            <span class="material-symbols-outlined text-[20px]">edit</span>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <p class="text-sm dark:text-gray-300">{{ $rental->tenant->phone ?? 'N/A' }}</p>
+                                        <p class="text-xs text-[#658683]">{{ $rental->tenant->user->email ?? 'N/A' }}</p>
+                                    </td>
+                                    <td class="px-6 py-4 font-bold dark:text-white">{{ $rental->room->room_number ?? 'N/A' }}</td>
+                                    <td class="px-6 py-4 text-sm dark:text-gray-300">{{ \Carbon\Carbon::parse($rental->move_in_date)->format('d M Y') }}</td>
+                                    <td class="px-6 py-4">
+                                        @if($rental->status == 'active')
+                                            <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-green-500/10 text-green-600 uppercase">សកម្ម</span>
+                                        @elseif($rental->status == 'completed')
+                                            <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-orange-500/10 text-orange-600 uppercase">បញ្ចប់</span>
+                                        @else
+                                            <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-red-500/10 text-red-600 uppercase">បោះបង់</span>
+                                        @endif
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex items-center justify-end gap-2">
+                                            <button
+                                                class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-[#658683] transition-colors"
+                                                title="View Detail">
+                                                <span class="material-symbols-outlined text-[20px]">visibility</span>
+                                            </button>
+                                            <button
+                                                class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-blue-500 transition-colors"
+                                                title="Edit">
+                                                <span class="material-symbols-outlined text-[20px]">edit</span>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="px-6 py-8 text-center text-[#658683]">
+                                        <div class="flex flex-col items-center gap-2">
+                                            <span class="material-symbols-outlined text-4xl">person_off</span>
+                                            <p>មិនមានអ្នកជួលនៅឡើយទេ (No tenants found)</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -188,11 +222,7 @@
                 </div>
                 <form id="rentalForm" action="{{ route('admin.rentals.store') }}" method="POST"
                     class="bg-white rounded-xl shadow-lg overflow-hidden">
-                    @csrf
-
-                    <input type="hidden" name="tenant_type" value="guest"> <input type="hidden" name="status"
-                        value="active">
-
+                   @csrf
                     <div class="p-6">
                         @if ($errors->any())
                             <div class="mb-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-700">

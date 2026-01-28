@@ -254,8 +254,23 @@
                                         <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
                                             <label
                                                 class="form-label font-medium text-slate-700 text-sm">រូបភាពបន្ទប់</label>
-                                            <div
-                                                class="mt-1 flex justify-center px-4 py-4 border-2 border-slate-300 border-dashed rounded-xl hover:border-blue-400 transition-colors">
+                                            
+                                            <!-- Image Preview Container -->
+                                            <div id="imagePreviewContainer" class="hidden mb-3">
+                                                <div class="relative rounded-xl overflow-hidden border-2 border-blue-400 shadow-md">
+                                                    <img id="imagePreview" src="" alt="Preview" class="w-full h-48 object-cover">
+                                                    <button type="button" onclick="clearImagePreview()"
+                                                        class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full p-2 shadow-lg transition-all">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- File Upload Area -->
+                                            <div id="uploadArea"
+                                                class="mt-1 flex justify-center px-4 py-4 border-2 border-slate-300 border-dashed rounded-xl hover:border-blue-400 transition-colors cursor-pointer">
                                                 <div class="space-y-1 text-center">
                                                     <svg class="mx-auto h-8 w-8 text-slate-400" stroke="currentColor"
                                                         fill="none" viewBox="0 0 48 48">
@@ -268,9 +283,10 @@
                                                         <label
                                                             class="relative cursor-pointer bg-white rounded-md font-semibold text-blue-600 hover:text-blue-500 focus-within:outline-none">
                                                             <span>បញ្ចូលរូបភាព</span>
-                                                            <input type="file" name="images" class="sr-only" multiple>
+                                                            <input type="file" id="roomImageInput" name="images" class="sr-only" accept="image/*" onchange="previewImage(event)">
                                                         </label>
                                                     </div>
+                                                    <p class="text-xs text-slate-500">PNG, JPG, JPEG up to 10MB</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -456,6 +472,51 @@
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
+        // Image Preview Functions
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                // Validate file size (10MB max)
+                if (file.size > 10 * 1024 * 1024) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ឯកសារធំពេក!',
+                        text: 'សូមជ្រើសរើសរូបភាពតូចជាង 10MB',
+                        confirmButtonText: 'យល់ព្រម'
+                    });
+                    event.target.value = '';
+                    return;
+                }
+                
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ប្រភេទឯកសារមិនត្រឹមត្រូវ!',
+                        text: 'សូមជ្រើសរើសរូបភាពប៉ុណ្ណោះ (PNG, JPG, JPEG)',
+                        confirmButtonText: 'យល់ព្រម'
+                    });
+                    event.target.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('imagePreview').src = e.target.result;
+                    document.getElementById('imagePreviewContainer').classList.remove('hidden');
+                    document.getElementById('uploadArea').classList.add('hidden');
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+        
+        function clearImagePreview() {
+            document.getElementById('roomImageInput').value = '';
+            document.getElementById('imagePreview').src = '';
+            document.getElementById('imagePreviewContainer').classList.add('hidden');
+            document.getElementById('uploadArea').classList.remove('hidden');
+        }
+        
         // Debounce search input
         let timeout = null;
         function debounceSearch(input) {
@@ -504,6 +565,8 @@
                 // Reset title & submit button
                 $('#modalTitle').html('បន្ថែមបន្ទប់ថ្មី');
                 $('#submitBtn').text('រក្សាទុកទិន្នន័យ');
+                // Clear image preview
+                clearImagePreview();
             });
         });
         // Delete button with SweetAlert2

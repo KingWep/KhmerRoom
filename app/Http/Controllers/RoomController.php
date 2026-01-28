@@ -10,15 +10,74 @@ class RoomController extends Controller
     /**
      * Display a listing of the resource.
         */
-    // Show to rooms page
-    public function roomsRooms(){
-        try {
-            $rooms = Room::all();
-            return view('pages.RoomsPage', compact('rooms'));
-        } catch (\Throwable $th) {
-            return redirect()->route('public.home')->with('error', 'មានបញ្ហា៖ ' . $th->getMessage());
+    // Show to rooms page with search, filters, and pagination
+    // public function roomsRooms(Request $request){
+    //     try {
+    //         $query = Room::query();
+            
+    //         // Search by room number
+    //         if ($request->filled('search')) {
+    //             $search = $request->search;
+    //             $query->where('room_number', 'LIKE', "%{$search}%");
+    //         }
+            
+    //         // Filter by floor
+    //         if ($request->filled('floor') && $request->floor !== 'all') {
+    //             $query->where('floor', $request->floor);
+    //         }
+            
+    //         // Filter by status
+    //         if ($request->filled('status') && $request->status !== 'all') {
+    //             $query->where('status', $request->status);
+    //         }
+            
+    //         // Get paginated results (9 per page for 3x3 grid)
+    //         $rooms = $query->latest()->paginate(9)->withQueryString();
+            
+    //         // Get unique floors for filter dropdown
+    //         $floors = Room::select('floor')->distinct()->orderBy('floor')->pluck('floor');
+            
+    //         return view('pages.RoomsPage', compact('rooms', 'floors'));
+    //     } catch (\Throwable $th) {
+    //         return redirect()->route('public.home')->with('error', 'មានបញ្ហា៖ ' . $th->getMessage());
+    //     }
+    // }
+    public function roomsRooms(Request $request)
+{
+    try {
+        $query = Room::query();
+
+        // 🔍 Search (room number + name)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('room_number', 'LIKE', "%{$search}%")
+                  ->orWhere('name', 'LIKE', "%{$search}%");
+            });
         }
+
+        // 🏢 Filter by floor
+        if ($request->filled('floor') && $request->floor !== 'all') {
+            $query->where('floor', $request->floor);
+        }
+
+        // 📌 Filter by status
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        $rooms = $query->latest()
+                       ->paginate(9)
+                       ->withQueryString();
+
+        $floors = Room::select('floor')->distinct()->orderBy('floor')->pluck('floor');
+
+        return view('pages.RoomsPage', compact('rooms', 'floors'));
+    } catch (\Throwable $th) {
+        return redirect()->route('public.home')
+            ->with('error', 'មានបញ្ហា៖ ' . $th->getMessage());
     }
+}
 
     public function homeRooms() {
         try {

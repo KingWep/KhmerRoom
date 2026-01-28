@@ -31,7 +31,7 @@ class RentalController extends Controller
                 function($attribute, $value, $fail) {
                     // ការកែតម្រូវ៖ ពិនិត្យមើលស្ថានភាពបន្ទប់ក្នុង Table RENTALS
                     $roomOccupied = Rental::where('room_id', $value)
-                        ->where('status', 'active')
+                        ->where('status', 'ongoing')
                         ->exists();
                     if ($roomOccupied) {
                         $fail('បច្ចុប្បន្នបន្ទប់នេះមានអ្នកស្នាក់នៅរួចហើយ (Room is already occupied).');
@@ -41,7 +41,7 @@ class RentalController extends Controller
             'rent_amount'  => ['required', 'numeric', 'min:0'],
             'move_in_date' => ['required', 'date'],
             'move_out_date'=> ['nullable', 'date', 'after_or_equal:move_in_date'],
-            'status'       => ['required', 'in:ongoing,completed,cancelled'],
+            // 'status'       => ['required', 'in:ongoing,completed,cancelled'],
 
         ]);
 
@@ -69,7 +69,7 @@ class RentalController extends Controller
             ]); 
         });
 
-        return redirect()->route('admintenants')->with('success', 'ចុះឈ្មោះអ្នកជួលបានជោគជ័យ!');
+        return redirect()->route('admin.tenants')->with('success', 'ចុះឈ្មោះអ្នកជួលបានជោគជ័យ!');
     }
     /**
      * Display the specified resource.
