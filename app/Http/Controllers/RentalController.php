@@ -10,12 +10,21 @@ use Illuminate\Support\Facades\DB;
 
 class RentalController extends Controller
 {
-     public function index()
+    //  public function index()
+    // {
+    //     // សម្រាប់បង្ហាញ available rooms នៅ modal
+    //     $availableRooms = Room::where('status', 'available')->get();
+    //     // ទៅ tenants page
+    //     return view('admin.TenantsPage', compact('availableRooms'));
+    // }
+    public function index()
     {
-        // សម្រាប់បង្ហាញ available rooms នៅ modal
-        $availableRooms = Room::where('status', 'available')->get();
-        // ទៅ tenants page
-        return view('admin.TenantsPage', compact('availableRooms'));
+        // $availableRooms = Room::where('status', 'available')->get();
+        $availableRooms = Room::whereDoesntHave('rental', function($q){
+            $q->where('status', 'ongoing');
+        })->get();
+        $tenants = Rental::with(['tenant','room','tenant.user'])->get();
+        return view('admin.TenantsPage', compact('availableRooms','tenants'));
     }
     public function store(Request $request)
     {

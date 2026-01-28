@@ -64,7 +64,7 @@
                         <span class="text-xs font-bold text-blue-500 bg-blue-500/10 px-2 py-1 rounded-full">សកម្ម</span>
                     </div>
                     <p class="text-[#658683] text-sm mb-1">អ្នកជួលសកម្ម</p>
-                    <p class="text-2xl font-black dark:text-white">{{ $tenants->where('status', 'active')->count() ?? 0 }}</p>
+                    <p class="text-2xl font-black dark:text-white">{{ $tenants->where('status', 'ongoing')->count() ?? 0 }}</p>
                 </div>
 
                 <div
@@ -137,10 +137,14 @@
                                 <tr class="hover:bg-gray-50 dark:hover:bg-[#233d3a]/50 transition-colors">
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-3">
+                                            {{-- <div
+                                                class="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                                                {{ strtoupper(substr($rental->tenant->name ?? 'N', 0, 1,'UTF-8')) }}</div>
+                                            <div> --}}
                                             <div
                                                 class="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                                                {{ strtoupper(substr($rental->tenant->name ?? 'N', 0, 1)) }}</div>
-                                            <div>
+                                                {{ strtoupper(mb_substr($rental->tenant->name ?? 'N', 0, 1, 'UTF-8')) }}
+                                            </div>
                                                 <p class="font-bold text-[#121717] dark:text-white">{{ $rental->tenant->name ?? 'N/A' }}</p>
                                                 <p class="text-xs text-[#658683]">ID: T-{{ str_pad($rental->tenant->id ?? 0, 4, '0', STR_PAD_LEFT) }}</p>
                                             </div>
@@ -153,7 +157,7 @@
                                     <td class="px-6 py-4 font-bold dark:text-white">{{ $rental->room->room_number ?? 'N/A' }}</td>
                                     <td class="px-6 py-4 text-sm dark:text-gray-300">{{ \Carbon\Carbon::parse($rental->move_in_date)->format('d M Y') }}</td>
                                     <td class="px-6 py-4">
-                                        @if($rental->status == 'active')
+                                        @if($rental->status == 'ongoing')
                                             <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-green-500/10 text-green-600 uppercase">សកម្ម</span>
                                         @elseif($rental->status == 'completed')
                                             <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-orange-500/10 text-orange-600 uppercase">បញ្ចប់</span>
