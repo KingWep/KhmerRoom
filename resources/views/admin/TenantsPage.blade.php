@@ -5,7 +5,7 @@
 @section('content')
     <main class="flex-1 overflow-y-auto flex flex-col min-h-screen">
         <div class="p-8 max-w-[1440px] mx-auto w-full">
-            
+
             @if(session('success'))
                 <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-lg">
                     <div class="flex items-center gap-2">
@@ -64,7 +64,8 @@
                         <span class="text-xs font-bold text-blue-500 bg-blue-500/10 px-2 py-1 rounded-full">សកម្ម</span>
                     </div>
                     <p class="text-[#658683] text-sm mb-1">អ្នកជួលសកម្ម</p>
-                    <p class="text-2xl font-black dark:text-white">{{ $tenants->where('status', 'ongoing')->count() ?? 0 }}</p>
+                    <p class="text-2xl font-black dark:text-white">{{ $tenants->where('status', 'ongoing')->count() ?? 0 }}
+                    </p>
                 </div>
 
                 <div
@@ -73,10 +74,13 @@
                         <div class="size-12 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500">
                             <span class="material-symbols-outlined">person_off</span>
                         </div>
-                        <span class="text-xs font-bold text-orange-500 bg-orange-500/10 px-2 py-1 rounded-full">បញ្ចប់</span>
+                        <span
+                            class="text-xs font-bold text-orange-500 bg-orange-500/10 px-2 py-1 rounded-full">បញ្ចប់</span>
                     </div>
                     <p class="text-[#658683] text-sm mb-1">អ្នកជួលចាកចេញ</p>
-                    <p class="text-2xl font-black dark:text-white">{{ $tenants->where('status', 'completed')->count() ?? 0 }}</p>
+                    <p class="text-2xl font-black dark:text-white">
+                        {{ $tenants->where('status', 'completed')->count() ?? 0 }}
+                    </p>
                 </div>
 
                 <div
@@ -88,7 +92,9 @@
                         <span class="text-xs font-bold text-red-500 bg-red-500/10 px-2 py-1 rounded-full">បោះបង់</span>
                     </div>
                     <p class="text-[#658683] text-sm mb-1">កិច្ចសន្យាបោះបង់</p>
-                    <p class="text-2xl font-black dark:text-white">{{ $tenants->where('status', 'cancelled')->count() ?? 0 }}</p>
+                    <p class="text-2xl font-black dark:text-white">
+                        {{ $tenants->where('status', 'cancelled')->count() ?? 0 }}
+                    </p>
                 </div>
             </div>
 
@@ -134,99 +140,135 @@
                         </thead>
                         <tbody class="divide-y divide-[#dce5e4] dark:divide-[#2a4542]">
                             @forelse($tenants ?? [] as $rental)
-                                <tr class="hover:bg-gray-50 dark:hover:bg-[#233d3a]/50 transition-colors">
-                                    <td class="px-6 py-4">
-                                        <div class="flex items-center gap-3">
-                                            <div
-                                                class="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                                                {{ strtoupper(mb_substr($rental->tenant->name ?? 'N', 0, 1, 'UTF-8')) }}
-                                            </div>
-                                                <p class="font-bold text-[#121717] dark:text-white">{{ $rental->tenant->name ?? 'N/A' }}</p>
-                                                <p class="text-xs text-[#658683]">ID: T-{{ str_pad($rental->tenant->id ?? 0, 4, '0', STR_PAD_LEFT) }}</p>
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        <p class="text-sm dark:text-gray-300">{{ $rental->tenant->phone ?? 'N/A' }}</p>
-                                        <p class="text-xs text-[#658683]">{{ $rental->tenant->user->email ?? 'N/A' }}</p>
-                                    </td>
-                                    <td class="px-6 py-4 font-bold dark:text-white">{{ $rental->room->room_number ?? 'N/A' }}</td>
-                                    <td class="px-6 py-4 text-sm dark:text-gray-300">{{ \Carbon\Carbon::parse($rental->move_in_date)->format('d M Y') }}</td>
-                                    <td class="px-6 py-4">
-                                        @if($rental->status == 'ongoing')
-                                            <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-green-500/10 text-green-600 uppercase">សកម្ម</span>
-                                        @elseif($rental->status == 'completed')
-                                            <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-orange-500/10 text-orange-600 uppercase">បញ្ចប់</span>
-                                        @else
-                                            <span class="px-3 py-1 rounded-full text-[10px] font-bold bg-red-500/10 text-red-600 uppercase">បោះបង់</span>
-                                        @endif
-                                    </td>
-                                    <td class="px-6 py-4 text-right">
-                                        <div class="flex items-center justify-end gap-2">
-                                            <button
-                                                class="view-rental-btn p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-[#658683] transition-colors"
-                                                data-rental-id="{{ $rental->id }}"
-                                                title="View Detail">
-                                                <span class="material-symbols-outlined text-[20px]">visibility</span>
-                                            </button>
-                                            <button
-                                                class="edit-rental-btn p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-blue-500 transition-colors"
-                                                data-rental-id="{{ $rental->id }}"
-                                                title="Edit">
-                                                <span class="material-symbols-outlined text-[20px]">edit</span>
-                                            </button>
-                                        </div>
-                                    </td>
+                                            <tr class="hover:bg-gray-50 dark:hover:bg-[#233d3a]/50 transition-colors">
+                                                <td class="px-6 py-4">
+                                                    <div class="flex items-center gap-3">
+                                                        <div
+                                                            class="size-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                                                            {{ strtoupper(mb_substr($rental->tenant->name ?? 'N', 0, 1, 'UTF-8')) }}
+                                                        </div>
+                                                        <p class="font-bold text-[#121717] dark:text-white">
+                                                            {{ $rental->tenant->name ?? 'N/A' }}
+                                                        </p>
+                                                        <p class="text-xs text-[#658683]">ID:
+                                                            T-{{ str_pad($rental->tenant->id ?? 0, 4, '0', STR_PAD_LEFT) }}</p>
+                                                    </div>
+                                </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <p class="text-sm dark:text-gray-300">{{ $rental->tenant->phone ?? 'N/A' }}</p>
+                                    <p class="text-xs text-[#658683]">{{ $rental->tenant->user->email ?? 'N/A' }}</p>
+                                </td>
+                                <td class="px-6 py-4 font-bold dark:text-white">{{ $rental->room->room_number ?? 'N/A' }}</td>
+                                <td class="px-6 py-4 text-sm dark:text-gray-300">
+                                    {{ \Carbon\Carbon::parse($rental->move_in_date)->format('d M Y') }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    @if($rental->status == 'ongoing')
+                                        <span
+                                            class="px-3 py-1 rounded-full text-[10px] font-bold bg-green-500/10 text-green-600 uppercase">សកម្ម</span>
+                                    @elseif($rental->status == 'completed')
+                                        <span
+                                            class="px-3 py-1 rounded-full text-[10px] font-bold bg-orange-500/10 text-orange-600 uppercase">បញ្ចប់</span>
+                                    @else
+                                        <span
+                                            class="px-3 py-1 rounded-full text-[10px] font-bold bg-red-500/10 text-red-600 uppercase">បោះបង់</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end gap-2">
+                                        <button
+                                            class="view-rental-btn p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-[#658683] transition-colors"
+                                            data-rental-id="{{ $rental->id }}" title="View Detail">
+                                            <span class="material-symbols-outlined text-[20px]">visibility</span>
+                                        </button>
+                                        <button
+                                            class="edit-rental-btn p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg text-blue-500 transition-colors"
+                                            data-rental-id="{{ $rental->id }}" title="Edit">
+                                            <span class="material-symbols-outlined text-[20px]">edit</span>
+                                        </button>
+                                    </div>
+                                </td>
                                 </tr>
                             @empty
-                                <tr>
-                                    <td colspan="6" class="px-6 py-8 text-center text-[#658683]">
-                                        <div class="flex flex-col items-center gap-2">
-                                            <span class="material-symbols-outlined text-4xl">person_off</span>
-                                            <p>មិនមានអ្នកជួលនៅឡើយទេ (No tenants found)</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+                    <tr>
+                        <td colspan="6" class="px-6 py-8 text-center text-[#658683]">
+                            <div class="flex flex-col items-center gap-2">
+                                <span class="material-symbols-outlined text-4xl">person_off</span>
+                                <p>មិនមានអ្នកជួលនៅឡើយទេ (No tenants found)</p>
+                            </div>
+                        </td>
+                    </tr>
+                @endforelse
+                </tbody>
+                </table>
+            </div>
 
+            {{-- Pagination --}}
+            @if($tenants->hasPages())
                 <div
-                    class="px-6 py-4 flex items-center justify-between border-t border-[#dce5e4] dark:border-[#2a4542] bg-gray-50/50 dark:bg-[#233d3a]/30">
-                    <p class="text-sm text-[#658683]">បង្ហាញពី ១ ដល់ ៤ នៃ ១,២៨៤ នាក់</p>
+                    class="px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-[#dce5e4] dark:border-[#2a4542] bg-gray-50/50 dark:bg-[#233d3a]/30">
+                    <p class="text-sm text-[#658683]">
+                        បង្ហាញ {{ $tenants->firstItem() }} ដល់ {{ $tenants->lastItem() }} នៃ {{ $tenants->total() }} នាក់
+                    </p>
                     <div class="flex items-center gap-2">
-                        <button
-                            class="size-9 flex items-center justify-center rounded-lg border border-[#dce5e4] dark:border-[#2a4542] hover:bg-white dark:hover:bg-[#233d3a] transition-colors">
-                            <span class="material-symbols-outlined">chevron_left</span>
-                        </button>
-                        <button
-                            class="size-9 flex items-center justify-center rounded-lg bg-primary text-white font-bold text-sm">1</button>
-                        <button
-                            class="size-9 flex items-center justify-center rounded-lg border border-[#dce5e4] dark:border-[#2a4542] hover:bg-white dark:hover:bg-[#233d3a] transition-colors font-medium text-sm dark:text-white">2</button>
-                        <button
-                            class="size-9 flex items-center justify-center rounded-lg border border-[#dce5e4] dark:border-[#2a4542] hover:bg-white dark:hover:bg-[#233d3a] transition-colors font-medium text-sm dark:text-white">3</button>
-                        <span class="px-1 text-[#658683]">...</span>
-                        <button
-                            class="size-9 flex items-center justify-center rounded-lg border border-[#dce5e4] dark:border-[#2a4542] hover:bg-white dark:hover:bg-[#233d3a] transition-colors">
-                            <span class="material-symbols-outlined">chevron_right</span>
-                        </button>
+                        {{-- Previous Page Link --}}
+                        @if ($tenants->onFirstPage())
+                            <span
+                                class="size-9 flex items-center justify-center rounded-lg border border-[#dce5e4] dark:border-[#2a4542] text-gray-400 cursor-not-allowed">
+                                <span class="material-symbols-outlined">chevron_left</span>
+                            </span>
+                        @else
+                            <a href="{{ $tenants->previousPageUrl() }}"
+                                class="size-9 flex items-center justify-center rounded-lg border border-[#dce5e4] dark:border-[#2a4542] hover:bg-white dark:hover:bg-[#233d3a] transition-colors">
+                                <span class="material-symbols-outlined">chevron_left</span>
+                            </a>
+                        @endif
+
+                        {{-- Page Numbers --}}
+                        @foreach ($tenants->getUrlRange(1, $tenants->lastPage()) as $page => $url)
+                            @if ($page == $tenants->currentPage())
+                                <span
+                                    class="size-9 flex items-center justify-center rounded-lg bg-primary text-white font-bold text-sm">{{ $page }}</span>
+                            @else
+                                <a href="{{ $url }}"
+                                    class="size-9 flex items-center justify-center rounded-lg border border-[#dce5e4] dark:border-[#2a4542] hover:bg-white dark:hover:bg-[#233d3a] transition-colors font-medium text-sm dark:text-white">{{ $page }}</a>
+                            @endif
+                        @endforeach
+
+                        {{-- Next Page Link --}}
+                        @if ($tenants->hasMorePages())
+                            <a href="{{ $tenants->nextPageUrl() }}"
+                                class="size-9 flex items-center justify-center rounded-lg border border-[#dce5e4] dark:border-[#2a4542] hover:bg-white dark:hover:bg-[#233d3a] transition-colors">
+                                <span class="material-symbols-outlined">chevron_right</span>
+                            </a>
+                        @else
+                            <span
+                                class="size-9 flex items-center justify-center rounded-lg border border-[#dce5e4] dark:border-[#2a4542] text-gray-400 cursor-not-allowed">
+                                <span class="material-symbols-outlined">chevron_right</span>
+                            </span>
+                        @endif
                     </div>
                 </div>
-            </div>
+            @endif
+        </div>
         </div>
         {{-- Modal for adding/editing/viewing tenant --}}
-        <div id="rentalModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-0 opacity-0 invisible transition-all duration-300 ease-in-out">
-            <div id="rentalModalContent" class="bg-white dark:bg-[#1a2e2c] rounded-lg shadow-xl w-full max-w-4xl overflow-hidden transform scale-95 transition-all duration-300 ease-in-out">
+        <div id="rentalModal"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-0 opacity-0 invisible transition-all duration-300 ease-in-out">
+            <div id="rentalModalContent"
+                class="bg-white dark:bg-[#1a2e2c] rounded-lg shadow-xl w-full max-w-4xl overflow-hidden transform scale-95 transition-all duration-300 ease-in-out">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-[#2a4542] flex justify-between items-center">
-                    <h3 id="modalTitle" class="text-xl font-bold text-gray-800 dark:text-white">ចុះឈ្មោះអ្នកជួលថ្មី (New Rental)</h3>
+                    <h3 id="modalTitle" class="text-xl font-bold text-gray-800 dark:text-white">ចុះឈ្មោះអ្នកជួលថ្មី (New
+                        Rental)</h3>
                     <button id="closeRentalModal" class="text-gray-400 hover:text-gray-600 text-3xl">&times;</button>
                 </div>
                 <form id="rentalForm" action="{{ route('admin.rentals.store') }}" method="POST"
                     class="bg-white dark:bg-[#1a2e2c] rounded-xl shadow-lg overflow-hidden">
-                   @csrf
-                   <input type="hidden" id="formMethod" name="_method" value="">
-                   <input type="hidden" id="rentalId" name="rental_id" value="">
+                    @csrf
+                    <input type="hidden" id="formMethod" name="_method" value="">
+                    <input type="hidden" id="rentalId" name="rental_id" value="">
+
                     <div class="p-6">
                         @if ($errors->any())
                             <div class="mb-4 p-4 bg-red-50 border-l-4 border-red-500 text-red-700">
@@ -298,7 +340,8 @@
 
                             <div class="col-md-6 lg:border-l border-gray-100 lg:pl-10">
                                 <div class="space-y-4">
-                                    <div>
+                                    <!-- Room Selection (for new rentals) -->
+                                    <div id="roomSelectContainer">
                                         <label class="block text-sm font-semibold text-slate-600 mb-1">ជ្រើសរើសបន្ទប់ (Room)
                                             <span class="text-red-500">*</span></label>
                                         <select name="room_id" id="roomSelect" required
@@ -306,7 +349,9 @@
                                             <option value="">-- Select Room --</option>
                                             @if(isset($availableRooms))
                                                 @foreach($availableRooms as $room)
-                                                    <option value="{{ $room->id }}" data-available="true" {{ old('room_id') == $room->id ? 'selected' : '' }}>
+                                                    <option value="{{ $room->id }}" data-available="true"
+                                                        data-room-number="{{ $room->room_number }}" data-floor="{{ $room->floor }}"
+                                                        {{ old('room_id') == $room->id ? 'selected' : '' }}>
                                                         បន្ទប់លេខ {{ $room->room_number }} (ជាន់ទី {{ $room->floor }})
                                                     </option>
                                                 @endforeach
@@ -314,7 +359,9 @@
                                             @if(isset($allRooms))
                                                 @foreach($allRooms as $room)
                                                     @if(!$availableRooms->contains('id', $room->id))
-                                                        <option value="{{ $room->id }}" data-available="false" style="display:none;">
+                                                        <option value="{{ $room->id }}" data-available="false"
+                                                            data-room-number="{{ $room->room_number }}" data-floor="{{ $room->floor }}"
+                                                            style="display:none;">
                                                             បន្ទប់លេខ {{ $room->room_number }} (ជាន់ទី {{ $room->floor }})
                                                         </option>
                                                     @endif
@@ -323,65 +370,88 @@
                                         </select>
                                     </div>
 
-                                    <div class="row g-3">
-                                        <div class="col-6">
-                                            <label class="block text-sm font-semibold text-slate-600 mb-1">ថ្ងៃចូលនៅ
-                                                (Move-in)</label>
-                                            <input type="date" name="move_in_date"
-                                                value="{{ old('move_in_date', date('Y-m-d')) }}" required
-                                                class="form-control h-11 border-gray-200 rounded-lg focus:ring-4 focus:ring-emerald-100">
-                                        </div>
-                                        <div class="col-6">
-                                            <label class="block text-sm font-semibold text-slate-600 mb-1">ថ្ងៃចាកចេញ
-                                                (Move-out)</label>
-                                            <input type="date" name="move_out_date" value="{{ old('move_out_date') }}"
-                                                class="form-control h-11 border-gray-200 rounded-lg focus:ring-4 focus:ring-emerald-100">
-                                        </div>
-                                        <div class="col-12">
-                                            <label class="block text-sm font-semibold text-slate-600 mb-1">ថ្លៃឈ្នួល/ខែ ($)
-                                                <span class="text-red-500">*</span></label>
-                                            <div class="input-group">
-                                                <span
-                                                    class="input-group-text bg-gray-50 border-gray-200 text-slate-500 font-bold">$</span>
-                                                <input type="number" name="rent_amount" value="{{ old('rent_amount') }}"
-                                                    min="0" step="0.01" required
-                                                    class="form-control h-11 border-gray-200 focus:ring-4 focus:ring-emerald-100"
-                                                    placeholder="0.00">
+                                    <!-- Room Display (for editing - read only) -->
+                                    <div id="roomDisplayContainer" style="display: none;">
+                                        <label class="block text-sm font-semibold text-slate-600 mb-1">បន្ទប់បច្ចុប្បន្ន
+                                            (Current Room)</label>
+                                        <div class=" border-blue-200 rounded-lg p-4">
+                                            <div class="flex items-center gap-3">
+                                                <div
+                                                    class="size-12 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-600">
+                                                    <span class="material-symbols-outlined">meeting_room</span>
+                                                </div>
+                                                <div>
+                                                    <p id="roomDisplayText" class="font-bold text-gray-800">បន្ទប់លេខ -
+                                                        (ជាន់ទី -)</p>
+                                                    <p class="text-xs text-gray-500">មិនអាចផ្លាស់ប្តូរបន្ទប់បានទេ</p>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-12" id="statusField" style="display: none;">
-                                            <label class="block text-sm font-semibold text-slate-600 mb-1">ស្ថានភាព (Status)
-                                                <span class="text-red-500">*</span></label>
-                                            <select name="status" id="statusSelect"
-                                                class="form-select h-11 border-gray-200 rounded-lg focus:ring-4 focus:ring-emerald-100">
-                                                <option value="ongoing">សកម្ម (Ongoing)</option>
-                                                <option value="completed">បញ្ចប់ (Completed)</option>
-                                                <option value="cancelled">បោះបង់ (Cancelled)</option>
-                                            </select>
+                                        <input type="hidden" name="room_id" id="roomIdHidden" value="">
+                                    </div>
+                                </div>
+
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <label class="block text-sm font-semibold text-slate-600 mb-1">ថ្ងៃចូលនៅ
+                                            (Move-in)</label>
+                                        <input type="date" name="move_in_date"
+                                            value="{{ old('move_in_date', date('Y-m-d')) }}" required
+                                            class="form-control h-11 border-gray-200 rounded-lg focus:ring-4 focus:ring-emerald-100">
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="block text-sm font-semibold text-slate-600 mb-1">ថ្ងៃចាកចេញ
+                                            (Move-out)</label>
+                                        <input type="date" name="move_out_date" value="{{ old('move_out_date') }}"
+                                            class="form-control h-11 border-gray-200 rounded-lg focus:ring-4 focus:ring-emerald-100">
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="block text-sm font-semibold text-slate-600 mb-1">ថ្លៃឈ្នួល/ខែ ($)
+                                            <span class="text-red-500">*</span></label>
+                                        <div class="input-group">
+                                            <span
+                                                class="input-group-text bg-gray-50 border-gray-200 text-slate-500 font-bold">$</span>
+                                            <input type="number" name="rent_amount" value="{{ old('rent_amount') }}" min="0"
+                                                step="0.01" required
+                                                class="form-control h-11 border-gray-200 focus:ring-4 focus:ring-emerald-100"
+                                                placeholder="0.00">
                                         </div>
+                                    </div>
+                                    <div class="col-12" id="statusField" style="display: none;">
+                                        <label class="block text-sm font-semibold text-slate-600 mb-1">ស្ថានភាព (Status)
+                                            <span class="text-red-500">*</span></label>
+                                        <select name="status" id="statusSelect"
+                                            class="form-select h-11 border-gray-200 rounded-lg focus:ring-4 focus:ring-emerald-100">
+                                            <option value="ongoing">សកម្ម (Ongoing)</option>
+                                            <option value="completed">បញ្ចប់ (Completed)</option>
+                                            <option value="cancelled">បោះបង់ (Cancelled)</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div
+                            class="bg-slate-50 dark:bg-[#233d3a] p-4 border-t border-gray-100 dark:border-[#2a4542] flex justify-end gap-3">
+                            <button id="cancelRentalModal" type="button"
+                                class="px-6 py-2.5 rounded-lg font-semibold text-slate-600 dark:text-gray-300 hover:bg-slate-200 dark:hover:bg-gray-700 transition-colors">
+                                បោះបង់ (Cancel)
+                            </button>
+                            <button id="submitBtn" type="submit"
+                                class="px-8 py-2.5 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-200 transition-all transform hover:-translate-y-0.5 active:scale-95">
+                                រក្សាទុក (Save Rental)
+                            </button>
+                        </div>
                     </div>
-
-                    <div class="bg-slate-50 dark:bg-[#233d3a] p-4 border-t border-gray-100 dark:border-[#2a4542] flex justify-end gap-3">
-                        <button id="cancelRentalModal" type="button"
-                            class="px-6 py-2.5 rounded-lg font-semibold text-slate-600 dark:text-gray-300 hover:bg-slate-200 dark:hover:bg-gray-700 transition-colors">
-                            បោះបង់ (Cancel)
-                        </button>
-                        <button id="submitBtn" type="submit"
-                            class="px-8 py-2.5 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-200 transition-all transform hover:-translate-y-0.5 active:scale-95">
-                            រក្សាទុក (Save Rental)
-                        </button>
-                    </div>
-                </form>
             </div>
+            </form>
+        </div>
         </div>
 
         {{-- View Details Modal --}}
-        <div id="viewModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-0 opacity-0 invisible transition-all duration-300 ease-in-out">
-            <div id="viewModalContent" class="bg-white dark:bg-[#1a2e2c] rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden transform scale-95 transition-all duration-300 ease-in-out max-h-[90vh] overflow-y-auto">
+        <div id="viewModal"
+            class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-0 opacity-0 invisible transition-all duration-300 ease-in-out">
+            <div id="viewModalContent"
+                class="bg-white dark:bg-[#1a2e2c] rounded-2xl shadow-2xl w-full max-w-4xl overflow-hidden transform scale-95 transition-all duration-300 ease-in-out max-h-[90vh] overflow-y-auto">
                 <!-- Modal Header -->
                 <div class="bg-gradient-to-r from-primary to-blue-600 px-8 py-6 flex justify-between items-center">
                     <div class="flex items-center gap-4">
@@ -393,67 +463,86 @@
                             <p class="text-white/80 text-sm">Rental Details Information</p>
                         </div>
                     </div>
-                    <button id="closeViewModal" class="text-white/80 hover:text-white text-4xl transition-colors">&times;</button>
+                    <button id="closeViewModal"
+                        class="text-white/80 hover:text-white text-4xl transition-colors">&times;</button>
                 </div>
 
                 <!-- Modal Body -->
                 <div class="p-8">
                     <!-- Tenant Information Card -->
-                    <div class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-[#233d3a] dark:to-[#1a2e2c] rounded-2xl p-6 mb-6 border border-blue-100 dark:border-[#2a4542]">
+                    <div
+                        class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-[#233d3a] dark:to-[#1a2e2c] rounded-2xl p-6 mb-6 border border-blue-100 dark:border-[#2a4542]">
                         <div class="flex items-center gap-3 mb-6">
                             <div class="bg-blue-500 p-3 rounded-xl shadow-lg">
                                 <span class="material-symbols-outlined text-white text-2xl">badge</span>
                             </div>
-                            <h4 class="text-xl font-black text-gray-800 dark:text-white">ព័ត៌មានអ្នកជួល (Tenant Information)</h4>
+                            <h4 class="text-xl font-black text-gray-800 dark:text-white">ព័ត៌មានអ្នកជួល (Tenant Information)
+                            </h4>
                         </div>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="flex items-start gap-4">
-                                <div class="size-12 rounded-xl bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                                <div
+                                    class="size-12 rounded-xl bg-blue-500/10 flex items-center justify-center flex-shrink-0">
                                     <span class="material-symbols-outlined text-blue-600">person</span>
                                 </div>
                                 <div>
-                                    <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">ឈ្មោះពេញ (Full Name)</p>
+                                    <p
+                                        class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                                        ឈ្មោះពេញ (Full Name)</p>
                                     <p id="viewTenantName" class="text-lg font-bold text-gray-800 dark:text-white">-</p>
                                 </div>
                             </div>
 
                             <div class="flex items-start gap-4">
-                                <div class="size-12 rounded-xl bg-green-500/10 flex items-center justify-center flex-shrink-0">
+                                <div
+                                    class="size-12 rounded-xl bg-green-500/10 flex items-center justify-center flex-shrink-0">
                                     <span class="material-symbols-outlined text-green-600">call</span>
                                 </div>
                                 <div>
-                                    <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">លេខទូរស័ព្ទ (Phone)</p>
+                                    <p
+                                        class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                                        លេខទូរស័ព្ទ (Phone)</p>
                                     <p id="viewTenantPhone" class="text-lg font-bold text-gray-800 dark:text-white">-</p>
                                 </div>
                             </div>
 
                             <div class="flex items-start gap-4">
-                                <div class="size-12 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0">
+                                <div
+                                    class="size-12 rounded-xl bg-purple-500/10 flex items-center justify-center flex-shrink-0">
                                     <span class="material-symbols-outlined text-purple-600">wc</span>
                                 </div>
                                 <div>
-                                    <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">ភេទ (Gender)</p>
+                                    <p
+                                        class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                                        ភេទ (Gender)</p>
                                     <p id="viewTenantGender" class="text-lg font-bold text-gray-800 dark:text-white">-</p>
                                 </div>
                             </div>
 
                             <div class="flex items-start gap-4">
-                                <div class="size-12 rounded-xl bg-orange-500/10 flex items-center justify-center flex-shrink-0">
+                                <div
+                                    class="size-12 rounded-xl bg-orange-500/10 flex items-center justify-center flex-shrink-0">
                                     <span class="material-symbols-outlined text-orange-600">mail</span>
                                 </div>
                                 <div>
-                                    <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">អ៊ីមែល (Email)</p>
-                                    <p id="viewTenantEmail" class="text-lg font-bold text-gray-800 dark:text-white break-all">-</p>
+                                    <p
+                                        class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                                        អ៊ីមែល (Email)</p>
+                                    <p id="viewTenantEmail"
+                                        class="text-lg font-bold text-gray-800 dark:text-white break-all">-</p>
                                 </div>
                             </div>
 
                             <div class="flex items-start gap-4 md:col-span-2">
-                                <div class="size-12 rounded-xl bg-red-500/10 flex items-center justify-center flex-shrink-0">
+                                <div
+                                    class="size-12 rounded-xl bg-red-500/10 flex items-center justify-center flex-shrink-0">
                                     <span class="material-symbols-outlined text-red-600">home</span>
                                 </div>
                                 <div class="flex-1">
-                                    <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">អាសយដ្ឋាន (Address)</p>
+                                    <p
+                                        class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                                        អាសយដ្ឋាន (Address)</p>
                                     <p id="viewTenantAddress" class="text-lg font-bold text-gray-800 dark:text-white">-</p>
                                 </div>
                             </div>
@@ -461,71 +550,91 @@
                     </div>
 
                     <!-- Rental Information Card -->
-                    <div class="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-[#233d3a] dark:to-[#1a2e2c] rounded-2xl p-6 mb-6 border border-emerald-100 dark:border-[#2a4542]">
+                    <div
+                        class="bg-gradient-to-br from-emerald-50 to-teal-50 dark:from-[#233d3a] dark:to-[#1a2e2c] rounded-2xl p-6 mb-6 border border-emerald-100 dark:border-[#2a4542]">
                         <div class="flex items-center gap-3 mb-6">
                             <div class="bg-emerald-500 p-3 rounded-xl shadow-lg">
                                 <span class="material-symbols-outlined text-white text-2xl">apartment</span>
                             </div>
-                            <h4 class="text-xl font-black text-gray-800 dark:text-white">ព័ត៌មានការជួល (Rental Information)</h4>
+                            <h4 class="text-xl font-black text-gray-800 dark:text-white">ព័ត៌មានការជួល (Rental Information)
+                            </h4>
                         </div>
-                        
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <div class="flex items-start gap-4">
-                                <div class="size-12 rounded-xl bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
+                                <div
+                                    class="size-12 rounded-xl bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
                                     <span class="material-symbols-outlined text-emerald-600">meeting_room</span>
                                 </div>
                                 <div>
-                                    <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">លេខបន្ទប់ (Room Number)</p>
+                                    <p
+                                        class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                                        លេខបន្ទប់ (Room Number)</p>
                                     <p id="viewRoomNumber" class="text-lg font-bold text-gray-800 dark:text-white">-</p>
                                 </div>
                             </div>
 
                             <div class="flex items-start gap-4">
-                                <div class="size-12 rounded-xl bg-yellow-500/10 flex items-center justify-center flex-shrink-0">
+                                <div
+                                    class="size-12 rounded-xl bg-yellow-500/10 flex items-center justify-center flex-shrink-0">
                                     <span class="material-symbols-outlined text-yellow-600">payments</span>
                                 </div>
                                 <div>
-                                    <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">ថ្លៃជួល/ខែ (Rent/Month)</p>
+                                    <p
+                                        class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                                        ថ្លៃជួល/ខែ (Rent/Month)</p>
                                     <p id="viewRentAmount" class="text-lg font-bold text-gray-800 dark:text-white">-</p>
                                 </div>
                             </div>
 
                             <div class="flex items-start gap-4">
-                                <div class="size-12 rounded-xl bg-blue-500/10 flex items-center justify-center flex-shrink-0">
+                                <div
+                                    class="size-12 rounded-xl bg-blue-500/10 flex items-center justify-center flex-shrink-0">
                                     <span class="material-symbols-outlined text-blue-600">login</span>
                                 </div>
                                 <div>
-                                    <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">ថ្ងៃចូលស្នាក់នៅ (Move-in Date)</p>
+                                    <p
+                                        class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                                        ថ្ងៃចូលស្នាក់នៅ (Move-in Date)</p>
                                     <p id="viewMoveInDate" class="text-lg font-bold text-gray-800 dark:text-white">-</p>
                                 </div>
                             </div>
 
                             <div class="flex items-start gap-4">
-                                <div class="size-12 rounded-xl bg-red-500/10 flex items-center justify-center flex-shrink-0">
+                                <div
+                                    class="size-12 rounded-xl bg-red-500/10 flex items-center justify-center flex-shrink-0">
                                     <span class="material-symbols-outlined text-red-600">logout</span>
                                 </div>
                                 <div>
-                                    <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">ថ្ងៃចាកចេញ (Move-out Date)</p>
+                                    <p
+                                        class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                                        ថ្ងៃចាកចេញ (Move-out Date)</p>
                                     <p id="viewMoveOutDate" class="text-lg font-bold text-gray-800 dark:text-white">-</p>
                                 </div>
                             </div>
 
                             <div class="flex items-start gap-4">
-                                <div class="size-12 rounded-xl bg-indigo-500/10 flex items-center justify-center flex-shrink-0">
+                                <div
+                                    class="size-12 rounded-xl bg-indigo-500/10 flex items-center justify-center flex-shrink-0">
                                     <span class="material-symbols-outlined text-indigo-600">info</span>
                                 </div>
                                 <div>
-                                    <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">ស្ថានភាព (Status)</p>
+                                    <p
+                                        class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                                        ស្ថានភាព (Status)</p>
                                     <div id="viewStatus"></div>
                                 </div>
                             </div>
 
                             <div class="flex items-start gap-4">
-                                <div class="size-12 rounded-xl bg-pink-500/10 flex items-center justify-center flex-shrink-0">
+                                <div
+                                    class="size-12 rounded-xl bg-pink-500/10 flex items-center justify-center flex-shrink-0">
                                     <span class="material-symbols-outlined text-pink-600">tag</span>
                                 </div>
                                 <div>
-                                    <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">លេខសម្គាល់ (Rental ID)</p>
+                                    <p
+                                        class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1">
+                                        លេខសម្គាល់ (Rental ID)</p>
                                     <p id="viewRentalId" class="text-lg font-bold text-gray-800 dark:text-white">-</p>
                                 </div>
                             </div>
@@ -534,7 +643,8 @@
                 </div>
 
                 <!-- Modal Footer -->
-                <div class="bg-gray-50 dark:bg-[#233d3a] px-8 py-5 border-t border-gray-200 dark:border-[#2a4542] flex justify-end gap-3">
+                <div
+                    class="bg-gray-50 dark:bg-[#233d3a] px-8 py-5 border-t border-gray-200 dark:border-[#2a4542] flex justify-end gap-3">
                     <button id="closeViewModalBtn" type="button"
                         class="px-6 py-2.5 rounded-xl font-semibold text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all">
                         បិទ (Close)
@@ -623,11 +733,11 @@
                 // Function to populate view modal with rental data
                 function populateViewModal(rental) {
                     currentRentalData = rental;
-                    
+
                     // Tenant Information
                     document.getElementById('viewTenantName').textContent = rental.tenant.name || '-';
                     document.getElementById('viewTenantPhone').textContent = rental.tenant.phone || '-';
-                    
+
                     const genderMap = {
                         'male': 'ប្រុស (Male)',
                         'female': 'ស្រី (Female)',
@@ -636,14 +746,14 @@
                     document.getElementById('viewTenantGender').textContent = genderMap[rental.tenant.gender] || '-';
                     document.getElementById('viewTenantEmail').textContent = rental.tenant.user?.email || '-';
                     document.getElementById('viewTenantAddress').textContent = rental.tenant.address || '-';
-                    
+
                     // Rental Information
                     document.getElementById('viewRoomNumber').textContent = `បន្ទប់លេខ ${rental.room.room_number} (ជាន់ទី ${rental.room.floor})`;
                     document.getElementById('viewRentAmount').textContent = `$${parseFloat(rental.rent_amount).toFixed(2)}`;
                     document.getElementById('viewMoveInDate').textContent = new Date(rental.move_in_date).toLocaleDateString('km-KH', { year: 'numeric', month: 'long', day: 'numeric' });
                     document.getElementById('viewMoveOutDate').textContent = rental.move_out_date ? new Date(rental.move_out_date).toLocaleDateString('km-KH', { year: 'numeric', month: 'long', day: 'numeric' }) : 'មិនទាន់កំណត់ (Not set)';
                     document.getElementById('viewRentalId').textContent = `R-${String(rental.id).padStart(4, '0')}`;
-                    
+
                     // Status Badge
                     const statusContainer = document.getElementById('viewStatus');
                     let statusBadge = '';
@@ -667,6 +777,12 @@
                     statusField.style.display = 'none';
                     rentalForm.reset();
                     setFormReadonly(false);
+
+                    // Show room select, hide room display
+                    document.getElementById('roomSelectContainer').style.display = 'block';
+                    document.getElementById('roomDisplayContainer').style.display = 'none';
+                    roomSelect.required = true;
+
                     // Show only available rooms for new rentals
                     Array.from(roomSelect.options).forEach(option => {
                         if (option.value === '') {
@@ -691,7 +807,7 @@
                             input.removeAttribute('disabled');
                         }
                     });
-                    
+
                     if (readonly) {
                         submitBtn.style.display = 'none';
                     } else {
@@ -705,19 +821,20 @@
                     document.querySelector('input[name="phone"]').value = rental.tenant.phone || '';
                     document.querySelector('select[name="gender"]').value = rental.tenant.gender || 'male';
                     document.querySelector('textarea[name="address"]').value = rental.tenant.address || '';
-                    
+
                     // Show and set status field
                     statusField.style.display = 'block';
                     statusSelect.value = rental.status || 'ongoing';
-                    
+
                     if (mode === 'view') {
                         modalTitle.textContent = 'មើលព័ត៌មានអ្នកជួល (View Rental Details)';
                         setFormReadonly(true);
-                        // Show all rooms in view mode
-                        Array.from(roomSelect.options).forEach(option => {
-                            option.style.display = 'block';
-                        });
-                        roomSelect.value = rental.room_id || '';
+                        // Show room display in view mode
+                        document.getElementById('roomSelectContainer').style.display = 'none';
+                        document.getElementById('roomDisplayContainer').style.display = 'block';
+                        document.getElementById('roomDisplayText').textContent = `បន្ទប់លេខ ${rental.room.room_number} (ជាន់ទី ${rental.room.floor})`;
+                        document.getElementById('roomIdHidden').value = rental.room_id || '';
+                        roomSelect.required = false;
                     } else if (mode === 'edit') {
                         modalTitle.textContent = 'កែប្រែព័ត៌មានអ្នកជួល (Edit Rental)';
                         submitBtn.textContent = 'ធ្វើបច្ចុប្បន្នភាព (Update)';
@@ -725,20 +842,15 @@
                         formMethod.value = 'PATCH';
                         rentalId.value = rental.id;
                         setFormReadonly(false);
-                        
-                        // In edit mode, show available rooms + current room
-                        Array.from(roomSelect.options).forEach(option => {
-                            if (option.value === '') {
-                                option.style.display = 'block';
-                            } else if (option.getAttribute('data-available') === 'true' || option.value == rental.room_id) {
-                                option.style.display = 'block';
-                            } else {
-                                option.style.display = 'none';
-                            }
-                        });
-                        roomSelect.value = rental.room_id || '';
+
+                        // In edit mode, show room as display only (not changeable)
+                        document.getElementById('roomSelectContainer').style.display = 'none';
+                        document.getElementById('roomDisplayContainer').style.display = 'block';
+                        document.getElementById('roomDisplayText').textContent = `បន្ទប់លេខ ${rental.room.room_number} (ជាន់ទី ${rental.room.floor})`;
+                        document.getElementById('roomIdHidden').value = rental.room_id || '';
+                        roomSelect.required = false;
                     }
-                    
+
                     document.querySelector('input[name="move_in_date"]').value = rental.move_in_date || '';
                     document.querySelector('input[name="move_out_date"]').value = rental.move_out_date || '';
                     document.querySelector('input[name="rent_amount"]').value = rental.rent_amount || '';

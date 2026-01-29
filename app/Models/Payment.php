@@ -9,7 +9,7 @@ class Payment extends Model
 {
     use HasFactory;
     protected $table = 'payments';
-    protected $fillable = ['rental_id', 'amount_paid', 'paid_date', 'status'];
+    protected $fillable = ['rental_id', 'pay_month', 'amount_paid', 'paid_date', 'status'];
     public function rental(){
         return $this->belongsTo(Rental::class);
     }

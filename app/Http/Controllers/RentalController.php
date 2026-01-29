@@ -10,19 +10,19 @@ use Illuminate\Support\Facades\DB;
 
 class RentalController extends Controller
 {
-    public function index()
-    {
-        // Get available rooms for new rentals
-        $availableRooms = Room::whereDoesntHave('rentals', function ($q) {
-            $q->where('status', 'ongoing');
-        })->get();
+    // public function index()
+    // {
+    //     // Get available rooms for new rentals
+    //     $availableRooms = Room::whereDoesntHave('rentals', function ($q) {
+    //         $q->where('status', 'ongoing');
+    //     })->get();
 
-        // Get all rooms for editing (needed when editing existing rentals)
-        $allRooms = Room::all();
+    //     // Get all rooms for editing (needed when editing existing rentals)
+    //     $allRooms = Room::all();
 
-        $tenants = Rental::with(['tenant','room','tenant.user'])->get();
-        return view('admin.TenantsPage', compact('availableRooms', 'allRooms', 'tenants'));
-    }
+    //     $tenants = Rental::with(['tenant','room','tenant.user'])->get();
+    //     return view('admin.TenantsPage', compact('availableRooms', 'allRooms', 'tenants'));
+    // }
     public function store(Request $request)
     {
         $request->validate([

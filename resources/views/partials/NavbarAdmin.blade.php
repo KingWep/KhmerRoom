@@ -10,10 +10,5 @@
         <div class="relative">
             <h3>សួស្តី, អ្នកគ្រប់គ្រង់</h3>
         </div>
-        <button
-            class="relative size-11 flex items-center justify-center bg-background-light dark:bg-[#233d3a] rounded-xl text-[#121717] dark:text-white">
-            <span class="material-symbols-outlined">notifications</span>
-            <span class="absolute top-3 right-3 size-2 bg-red-500 rounded-full border-2 border-white dark:border-[#233d3a]"></span>
-        </button>
     </div>
 </header>

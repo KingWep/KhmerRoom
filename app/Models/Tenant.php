@@ -18,6 +18,6 @@ class Tenant extends Model
     }
     public function activeRental()
     {
-        return $this->hasOne(Rental::class)->where('status', 'active');
+        return $this->hasOne(Rental::class)->where('status', 'ongoing');
     }
 }

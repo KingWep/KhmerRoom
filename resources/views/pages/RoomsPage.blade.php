@@ -1,8 +1,9 @@
 @extends('layouts.LayoutsUser')
 @section('title', 'ផ្ទះជួលខ្មែរ - ទំនាក់ទំនង')
 @section('content')
+
     <!-- Main Content -->
-    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <main class="flex-grow w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8 mt-14">
         <!-- Page Heading & Intro -->
         <div class="mb-8">
             <h2 class="text-3xl font-bold text-slate-900 mb-2">បញ្ជីបន្ទប់ជួល</h2>
@@ -225,3 +226,4 @@
         </div>
         @endif
     </main>
+@endsection

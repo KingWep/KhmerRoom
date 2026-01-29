@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\RentalController;
 use App\Http\Controllers\RoomController;
@@ -73,8 +74,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // --------------------------------------------------------------------
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
     Route::get('/tenants', [AdminController::class, 'tenants'])->name('tenants');
-    Route::get('/rooms', [AdminController::class, 'rooms'])->name('rooms');
-    Route::get('/payments', [AdminController::class, 'payments'])->name('payments');
+    Route::get('/payments', [PaymentController::class, 'index'])->name('payments');
     Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
     
     // --------------------------------------------------------------------
@@ -96,4 +96,12 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::get('/{rental}', [RentalController::class, 'show'])->name('show');
         Route::patch('/{rental}', [RentalController::class, 'update'])->name('update');
     });
+    
+    // --------------------------------------------------------------------
+    // Payment Management (CRUD Operations)
+    // --------------------------------------------------------------------
+    Route::post('/payments', [PaymentController::class, 'store'])->name('payments.store');
+    Route::get('/payments/{payment}', [PaymentController::class, 'show'])->name('payments.show');
+    Route::patch('/payments/{payment}', [PaymentController::class, 'update'])->name('payments.update');
+    Route::delete('/payments/{payment}', [PaymentController::class, 'destroy'])->name('payments.destroy');
 });

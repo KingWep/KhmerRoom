@@ -12,37 +12,32 @@ class RoomController extends Controller
         */
     public function roomsRooms(Request $request)
     {
-        try {
-            $query = Room::query();
-            // 🔍 Search (room number + name)
-            if ($request->filled('search')) {
-                $search = $request->search;
-                $query->where(function ($q) use ($search) {
-                    $q->where('room_number', 'LIKE', "%{$search}%")
-                    ->orWhere('name', 'LIKE', "%{$search}%");
-                });
-            }
-            // 🏢 Filter by floor
-            if ($request->filled('floor') && $request->floor !== 'all') {
-                $query->where('floor', $request->floor);
-            }
-
-            // 📌 Filter by status
-            if ($request->filled('status') && $request->status !== 'all') {
-                $query->where('status', $request->status);
-            }
-
-            $rooms = $query->latest()
-                            ->withQueryString()
-                            ->paginate(9);
-
-            $floors = Room::select('floor')->distinct()->orderBy('floor')->pluck('floor');
-
-            return view('pages.RoomsPage', compact('rooms', 'floors'));
-        } catch (\Throwable $th) {
-            return redirect()->route('public.home')
-                ->with('error', 'មានបញ្ហា៖ ' . $th->getMessage());
+        $query = Room::query();
+        
+        // Search (room number + description)
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('room_number', 'LIKE', "%{$search}%")
+                ->orWhere('description', 'LIKE', "%{$search}%");
+            });
         }
+        
+        // Filter by floor
+        if ($request->filled('floor') && $request->floor !== 'all') {
+            $query->where('floor', $request->floor);
+        }
+
+        // Filter by status
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        $rooms = $query->latest()->paginate(9)->appends($request->query());
+
+        $floors = Room::select('floor')->distinct()->orderBy('floor')->pluck('floor');
+
+        return view('pages.RoomsPage', compact('rooms', 'floors'));
     }
 
     public function homeRooms() {

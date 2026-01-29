@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 use App\Http\Controllers\Admin\RoomController;
+use App\Models\Payment;
 use App\Models\Rental;
 use App\Models\Room;
+use App\Models\Tenant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
@@ -26,15 +30,46 @@ class AdminController extends Controller
                 ];
             });
 
+            // Get current month payments
+            $currentMonth = Carbon::now()->month;
+            $currentYear = Carbon::now()->year;
+            
+            // Monthly income (paid this month)
+            $monthlyIncome = Payment::whereMonth('paid_date', $currentMonth)
+                ->whereYear('paid_date', $currentYear)
+                ->where('status', 'paid')
+                ->sum('amount_paid');
+            
+            // Unpaid/Pending payments
+            $pendingPayments = Payment::where('status', 'pending')->get();
+            $unpaidAmount = $pendingPayments->sum('amount_paid');
+            $pendingCount = $pendingPayments->count();
+            
+            // Recent payments (last 5)
+            $recentPayments = Payment::with(['rental.tenant', 'rental.room'])
+                ->orderBy('paid_date', 'desc')
+                ->limit(5)
+                ->get();
+
+            // Total tenants and active rentals
+            $totalTenants = Tenant::count();
+            $activeRentals = Rental::where('status', 'ongoing')->count();
+
             return view('admin.Dashboard', compact(
                 'totalRooms',
                 'availableRooms',
                 'occupiedRooms',
                 'maintenanceRooms',
-                'rooms'
+                'rooms',
+                'monthlyIncome',
+                'unpaidAmount',
+                'pendingCount',
+                'recentPayments',
+                'totalTenants',
+                'activeRentals'
             ));
         } catch (\Throwable $th) {
-            return redirect()->route('public.home')->with('error', 'មិនអាចចូលទៅកាន់ Dashboard បានឡើយ!');
+            return redirect()->route('public.home')->with('error', 'មិនអាចចូលទៅកាន់ Dashboard បានឡើយ! ' . $th->getMessage());
         }
     }
     // public function tenants()
@@ -46,18 +81,23 @@ class AdminController extends Controller
     //     }
     // }
     public function tenants()
-{
-    // ទាញយកបន្ទប់ដែលទំនេរ (មិនមានការជួលសកម្ម)
-    $availableRooms = Room::whereDoesntHave('rentals', function($q){
-        $q->where('status', 'ongoing');
-    })->get();
+    {
+        // ទាញយកបន្ទប់ដែលទំនេរ (មិនមានការជួលសកម្ម)
+        $availableRooms = Room::whereDoesntHave('rentals', function($q){
+            $q->where('status', 'ongoing');
+        })->get();
 
-    // ទាញយកបញ្ជីការជួលទាំងអស់មកបង្ហាញក្នុង Table
-    $tenants = Rental::with(['room', 'tenant', 'tenant.user'])->get();
+        // ទាញយកបន្ទប់ទាំងអស់សម្រាប់ edit mode
+        $allRooms = Room::all();
 
-    // បញ្ជូនទៅកាន់ View admin/TenantsPage.blade.php
-    return view('admin.TenantsPage', compact('availableRooms', 'tenants'));
-}
+        // ទាញយកបញ្ជីការជួលទាំងអស់មកបង្ហាញក្នុង Table with pagination
+        $tenants = Rental::with(['room', 'tenant', 'tenant.user'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        // បញ្ជូនទៅកាន់ View admin/TenantsPage.blade.php
+        return view('admin.TenantsPage', compact('availableRooms', 'allRooms', 'tenants'));
+    }
     public function rooms()
     {
         try {
@@ -77,9 +117,76 @@ class AdminController extends Controller
     public function reports()
     {
         try {
-            return view('admin.ReportsPage');
+            $currentYear = Carbon::now()->year;
+            
+            // Khmer month names
+            $khmerMonths = ['មករា', 'កុម្ភៈ', 'មីនា', 'មេសា', 'ឧសភា', 'មិថុនា', 'កក្កដា', 'សីហា', 'កញ្ញា', 'តុលា', 'វិច្ឆិកា', 'ធ្នូ'];
+            
+            // Initialize arrays for monthly data
+            $monthlyIncome = [];
+            $monthlyPending = [];
+            $monthlyTotal = [];
+            
+            // Get all payments for current year
+            $allPayments = Payment::whereYear('paid_date', $currentYear)->get();
+            
+            // Calculate monthly data
+            for ($i = 1; $i <= 12; $i++) {
+                $monthPayments = $allPayments->filter(function($payment) use ($i) {
+                    return Carbon::parse($payment->paid_date)->month == $i;
+                });
+                
+                $paidAmount = $monthPayments->where('status', 'paid')->sum('amount_paid');
+                $pendingAmount = $monthPayments->where('status', 'pending')->sum('amount_paid');
+                
+                $monthlyIncome[] = (float)$paidAmount;
+                $monthlyPending[] = (float)$pendingAmount;
+                $monthlyTotal[] = (float)($paidAmount + $pendingAmount);
+            }
+
+            // Room status statistics
+            $roomStatus = [
+                ['name' => 'ទំនេរ', 'value' => Room::where('status', 'available')->count(), 'color' => '#22c55e'],
+                ['name' => 'មានអ្នកជួល', 'value' => Room::where('status', 'occupied')->count(), 'color' => '#3b82f6'],
+                ['name' => 'កំពុងជួសជុល', 'value' => Room::where('status', 'maintenance')->count(), 'color' => '#f59e0b'],
+            ];
+
+            // Calculate totals
+            $totalIncome = array_sum($monthlyIncome);
+            $totalPending = array_sum($monthlyPending);
+            $monthsWithData = count(array_filter($monthlyIncome));
+            $avgIncome = $monthsWithData > 0 ? $totalIncome / $monthsWithData : 0;
+
+            // Get recent payments for the table with pagination
+            $recentPayments = Payment::with(['rental.tenant', 'rental.room'])
+                ->whereYear('paid_date', $currentYear)
+                ->orderBy('paid_date', 'desc')
+                ->paginate(10);
+
+            // Summary statistics
+            $totalRooms = Room::count();
+            $totalTenants = Tenant::count();
+            $activeRentals = Rental::where('status', 'ongoing')->count();
+            $totalPayments = $allPayments->count();
+
+            return view('admin.ReportsPage', compact(
+                'khmerMonths',
+                'monthlyIncome',
+                'monthlyPending',
+                'monthlyTotal',
+                'roomStatus',
+                'totalIncome',
+                'totalPending',
+                'avgIncome',
+                'recentPayments',
+                'totalRooms',
+                'totalTenants',
+                'activeRentals',
+                'totalPayments',
+                'currentYear'
+            ));
         } catch (\Throwable $th) {
-            return redirect()->route('public.home')->with('error', 'មិនអាចចូលទៅកាន់ Dashboard បានឡើយ!');
+            return redirect()->route('public.home')->with('error', 'មិនអាចចូលទៅកាន់ របាយការណ៍ បានឡើយ! ' . $th->getMessage());
         }
     }
 }

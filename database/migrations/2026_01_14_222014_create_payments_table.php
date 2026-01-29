@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
             $table->foreignId('rental_id')->constrained()->cascadeOnDelete();
+            $table->date('pay_month');
             $table->decimal('amount_paid', 10, 2);
             $table->date('paid_date');
             $table->enum('status', ['paid', 'pending', 'overdue'])->default('pending');
