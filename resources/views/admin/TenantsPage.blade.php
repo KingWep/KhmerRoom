@@ -387,7 +387,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <input type="hidden" name="room_id" id="roomIdHidden" value="">
+                                        <input type="hidden" id="roomIdHidden" value="">
+                                        <input type="hidden" id="roomIdHidden" value="">
                                     </div>
                                 </div>
 
@@ -778,6 +779,12 @@
                     rentalForm.reset();
                     setFormReadonly(false);
 
+                    // Remove any hidden room_id input created during edit mode
+                    let hiddenRoomId = document.querySelector('input[name="room_id"][type="hidden"]:not(#roomIdHidden)');
+                    if (hiddenRoomId) {
+                        hiddenRoomId.remove();
+                    }
+
                     // Show room select, hide room display
                     document.getElementById('roomSelectContainer').style.display = 'block';
                     document.getElementById('roomDisplayContainer').style.display = 'none';
@@ -847,7 +854,16 @@
                         document.getElementById('roomSelectContainer').style.display = 'none';
                         document.getElementById('roomDisplayContainer').style.display = 'block';
                         document.getElementById('roomDisplayText').textContent = `បន្ទប់លេខ ${rental.room.room_number} (ជាន់ទី ${rental.room.floor})`;
-                        document.getElementById('roomIdHidden').value = rental.room_id || '';
+                        
+                        // Create a hidden input for room_id when editing
+                        let roomIdInput = document.querySelector('input[name="room_id"][type="hidden"]');
+                        if (!roomIdInput) {
+                            roomIdInput = document.createElement('input');
+                            roomIdInput.type = 'hidden';
+                            roomIdInput.name = 'room_id';
+                            rentalForm.appendChild(roomIdInput);
+                        }
+                        roomIdInput.value = rental.room_id || '';
                         roomSelect.required = false;
                     }
 

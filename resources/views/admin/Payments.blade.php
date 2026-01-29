@@ -194,7 +194,7 @@
                                                         <div>
                                                             <label class="block text-sm font-bold text-gray-700 mb-1">ចំនួនទឹកប្រាក់ ($)</label>
                                                             <div class="relative">
-                                                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">$</span>
+                                                                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500">$</span> 
                                                                 <input type="number" step="0.01" name="amount_paid" value="{{ $payment->amount_paid }}"
                                                                     class="w-full pl-8 border-gray-300 rounded-xl focus:ring-blue-500 shadow-sm px-3 py-2"
                                                                     placeholder="0.00" required>
