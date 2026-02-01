@@ -116,111 +116,112 @@ class AdminController extends Controller
     }
     public function reports()
     {
-        try {
-            $currentYear = Carbon::now()->year;
+        $currentYear = Carbon::now()->year;
+        
+        // Khmer month names
+        $khmerMonths = ['មករា', 'កុម្ភៈ', 'មីនា', 'មេសា', 'ឧសភា', 'មិថុនា', 'កក្កដា', 'សីហា', 'កញ្ញា', 'តុលា', 'វិច្ឆិកា', 'ធ្នូ'];
+        
+        // Initialize arrays for monthly data
+        $monthlyIncome = [];
+        $monthlyPending = [];
+        $monthlyTotal = [];
+        $monthlyDataByIndex = [];
+        
+        // Get all payments for current year
+        $allPayments = Payment::whereYear('paid_date', $currentYear)->get();
+        
+        // Calculate monthly data
+        for ($i = 1; $i <= 12; $i++) {
+            $monthPayments = $allPayments->filter(function($payment) use ($i) {
+                return Carbon::parse($payment->paid_date)->month == $i;
+            });
             
-            // Khmer month names
-            $khmerMonths = ['មករា', 'កុម្ភៈ', 'មីនា', 'មេសា', 'ឧសភា', 'មិថុនា', 'កក្កដា', 'សីហា', 'កញ្ញា', 'តុលា', 'វិច្ឆិកា', 'ធ្នូ'];
+            $paidAmount = $monthPayments->where('status', 'paid')->sum('amount_paid');
+            $pendingAmount = $monthPayments->where('status', 'pending')->sum('amount_paid');
             
-            // Initialize arrays for monthly data
-            $monthlyIncome = [];
-            $monthlyPending = [];
-            $monthlyTotal = [];
-            $monthlyDataByIndex = [];
+            $monthlyIncome[] = (float)$paidAmount;
+            $monthlyPending[] = (float)$pendingAmount;
+            $monthlyTotal[] = (float)($paidAmount + $pendingAmount);
             
-            // Get all payments for current year
-            $allPayments = Payment::whereYear('paid_date', $currentYear)->get();
-            
-            // Calculate monthly data
-            for ($i = 1; $i <= 12; $i++) {
-                $monthPayments = $allPayments->filter(function($payment) use ($i) {
-                    return Carbon::parse($payment->paid_date)->month == $i;
-                });
-                
-                $paidAmount = $monthPayments->where('status', 'paid')->sum('amount_paid');
-                $pendingAmount = $monthPayments->where('status', 'pending')->sum('amount_paid');
-                
-                $monthlyIncome[] = (float)$paidAmount;
-                $monthlyPending[] = (float)$pendingAmount;
-                $monthlyTotal[] = (float)($paidAmount + $pendingAmount);
-                
-                // Store indexed data for pagination
-                $monthlyDataByIndex[$i - 1] = [
-                    'index' => $i,
-                    'income' => (float)$paidAmount,
-                    'pending' => (float)$pendingAmount,
-                    'total' => (float)($paidAmount + $pendingAmount)
-                ];
-            }
-            
-            // Paginate monthly data (12 per page to show all months)
+            // Store indexed data for pagination
+            $monthlyDataByIndex[$i - 1] = [
+                'index' => $i,
+                'income' => (float)$paidAmount,
+                'pending' => (float)$pendingAmount,
+                'total' => (float)($paidAmount + $pendingAmount)
+            ];
+        }
+        
+            // Paginate monthly data (use custom page name `page_monthly` to avoid conflict
+            // with the other paginator on the same page)
             $perPage = request('per_page_monthly', 12);
-            $currentPage = request('page_monthly', 1);
+            $currentPage = (int) request('page_monthly', 1);
             $monthlyDataCollection = collect($monthlyDataByIndex);
-            $monthlyData = new \Illuminate\Pagination\Paginator(
-                $monthlyDataCollection->forPage($currentPage, $perPage)->values(),
+
+            $monthlyData = new \Illuminate\Pagination\LengthAwarePaginator(
+                $monthlyDataCollection->forPage($currentPage, $perPage)->values()->values(),
+                $monthlyDataCollection->count(),
                 $perPage,
                 $currentPage,
                 [
                     'path' => route('admin.reports'),
-                    'query' => ['per_page_monthly' => $perPage, 'page_monthly' => $currentPage],
+                    'pageName' => 'page_monthly',
                     'fragment' => 'monthly-table'
                 ]
             );
-            $monthlyData->setTotal($monthlyDataCollection->count());
 
-            // Room status statistics
-            $roomStatus = [
-                ['name' => 'ទំនេរ', 'value' => Room::where('status', 'available')->count(), 'color' => '#22c55e'],
-                ['name' => 'មានអ្នកជួល', 'value' => Room::where('status', 'occupied')->count(), 'color' => '#3b82f6'],
-                ['name' => 'កំពុងជួសជុល', 'value' => Room::where('status', 'maintenance')->count(), 'color' => '#f59e0b'],
-            ];
+            // Preserve per_page_monthly in pagination URLs
+            $monthlyData->appends(['per_page_monthly' => $perPage]);
 
-            // Calculate totals
-            $totalIncome = array_sum($monthlyIncome);
-            $totalPending = array_sum($monthlyPending);
-            $monthsWithData = count(array_filter($monthlyIncome));
-            $avgIncome = $monthsWithData > 0 ? $totalIncome / $monthsWithData : 0;
+        // Room status statistics
+        $roomStatus = [
+            ['name' => 'ទំនេរ', 'value' => Room::where('status', 'available')->count(), 'color' => '#22c55e'],
+            ['name' => 'មានអ្នកជួល', 'value' => Room::where('status', 'occupied')->count(), 'color' => '#3b82f6'],
+            ['name' => 'កំពុងជួសជុល', 'value' => Room::where('status', 'maintenance')->count(), 'color' => '#f59e0b'],
+        ];
 
-            // Get recent payments for the table with pagination
-            $perPagePayments = request('per_page', 10);
-            $allowedPerPage = [10, 15, 25];
-            if (!in_array($perPagePayments, $allowedPerPage)) {
-                $perPagePayments = 10;
-            }
-            
-            $recentPayments = Payment::with(['rental.tenant', 'rental.room'])
-                ->whereYear('paid_date', $currentYear)
-                ->orderBy('paid_date', 'desc')
-                ->paginate($perPagePayments);
-            // Preserve per_page in pagination links
-            $recentPayments->appends(request()->query());
+        // Calculate totals
+        $totalIncome = array_sum($monthlyIncome);
+        $totalPending = array_sum($monthlyPending);
+        $monthsWithData = count(array_filter($monthlyIncome));
+        $avgIncome = $monthsWithData > 0 ? $totalIncome / $monthsWithData : 0;
 
-            // Summary statistics
-            $totalRooms = Room::count();
-            $totalTenants = Tenant::count();
-            $activeRentals = Rental::where('status', 'ongoing')->count();
-            $totalPayments = $allPayments->count();
-
-            return view('admin.ReportsPage', compact(
-                'khmerMonths',
-                'monthlyIncome',
-                'monthlyPending',
-                'monthlyTotal',
-                'monthlyData',
-                'roomStatus',
-                'totalIncome',
-                'totalPending',
-                'avgIncome',
-                'recentPayments',
-                'totalRooms',
-                'totalTenants',
-                'activeRentals',
-                'totalPayments',
-                'currentYear'
-            ));
-        } catch (\Throwable $th) {
-            return redirect()->route('public.home')->with('error', 'មិនអាចចូលទៅកាន់ របាយការណ៍ បានឡើយ! ' . $th->getMessage());
+        // Get recent payments for the table with pagination
+        $perPagePayments = request('per_page', 10);
+        $allowedPerPage = [10, 15, 25];
+        if (!in_array($perPagePayments, $allowedPerPage)) {
+            $perPagePayments = 10;
         }
+        
+        $recentPayments = Payment::with(['rental.tenant', 'rental.room'])
+            ->whereYear('paid_date', $currentYear)
+            ->orderBy('paid_date', 'desc')
+            ->paginate($perPagePayments);
+        // Preserve per_page in pagination links
+        $recentPayments->appends(request()->query());
+
+        // Summary statistics
+        $totalRooms = Room::count();
+        $totalTenants = Tenant::count();
+        $activeRentals = Rental::where('status', 'ongoing')->count();
+        $totalPayments = $allPayments->count();
+
+        return view('admin.ReportsPage', compact(
+            'khmerMonths',
+            'monthlyIncome',
+            'monthlyPending',
+            'monthlyTotal',
+            'monthlyData',
+            'roomStatus',
+            'totalIncome',
+            'totalPending',
+            'avgIncome',
+            'recentPayments',
+            'totalRooms',
+            'totalTenants',
+            'activeRentals',
+            'totalPayments',
+            'currentYear'
+        ));
     }
 }
