@@ -151,12 +151,16 @@
     </div>
 
     {{-- Monthly Summary Table --}}
-    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden" id="monthly-table">
         <div class="p-5 border-b border-gray-100 flex items-center justify-between">
             <h3 class="font-bold text-gray-700 flex items-center gap-2">
                 <i class="fas fa-table text-green-500"></i>
                 សង្ខេបប្រចាំខែ ({{ $currentYear }})
             </h3>
+            <select name="per_page_monthly" onchange="window.location.href='{{ route('admin.reports') }}?per_page_monthly=' + this.value + '&page_monthly=1#monthly-table'" class="bg-gray-50 text-sm text-gray-700 rounded-lg px-2 py-1 outline-none font-medium cursor-pointer border border-slate-200">
+                <option value="6" {{ request('per_page_monthly') == '6' ? 'selected' : '' }}>6 / ទំព័ក</option>
+                <option value="12" {{ request('per_page_monthly', 12) == '12' ? 'selected' : '' }}>12 / ទំព័ក</option>
+            </select>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left">
@@ -169,22 +173,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($khmerMonths as $index => $month)
+                    @foreach($monthlyData as $item)
                     <tr class="border-b border-gray-50 hover:bg-blue-50/30 transition-colors">
                         <td class="px-6 py-4 font-medium text-gray-800">
                             <span class="inline-flex items-center gap-2">
-                                <span class="h-8 w-8 bg-gray-100 rounded-lg flex items-center justify-center text-xs font-bold text-gray-500">{{ $index + 1 }}</span>
-                                {{ $month }} {{ $currentYear }}
+                                <span class="h-8 w-8 bg-gray-100 rounded-lg flex items-center justify-center text-xs font-bold text-gray-500">{{ $item['index'] }}</span>
+                                {{ $khmerMonths[$item['index'] - 1] ?? 'N/A' }} {{ $currentYear }}
                             </span>
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <span class="text-green-600 font-bold">${{ number_format($monthlyIncome[$index], 2) }}</span>
+                            <span class="text-green-600 font-bold">${{ number_format($item['income'], 2) }}</span>
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <span class="text-yellow-600 font-bold">${{ number_format($monthlyPending[$index], 2) }}</span>
+                            <span class="text-yellow-600 font-bold">${{ number_format($item['pending'], 2) }}</span>
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <span class="font-bold text-gray-800">${{ number_format($monthlyTotal[$index], 2) }}</span>
+                            <span class="font-bold text-gray-800">${{ number_format($item['total'], 2) }}</span>
                         </td>
                     </tr>
                     @endforeach
@@ -199,19 +203,66 @@
                 </tfoot>
             </table>
         </div>
+        {{-- Pagination --}}
+        @if($monthlyData->hasPages())
+        <div class="px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-gray-100 bg-gray-50/50">
+            <p class="text-sm text-gray-500">
+                បង្ហាញ {{ $monthlyData->firstItem() }} ដល់ {{ $monthlyData->lastItem() }} នៃ {{ $monthlyData->total() }} ខែ
+            </p>
+            <div class="flex items-center gap-2">
+                {{-- Previous Page Link --}}
+                @if ($monthlyData->onFirstPage())
+                    <span class="size-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 cursor-not-allowed">
+                        <i class="fas fa-chevron-left text-xs"></i>
+                    </span>
+                @else
+                    <a href="{{ $monthlyData->previousPageUrl() }}&per_page_monthly={{ request('per_page_monthly', 12) }}#monthly-table" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors">
+                        <i class="fas fa-chevron-left text-xs"></i>
+                    </a>
+                @endif
+
+                {{-- Page Numbers --}}
+                @foreach ($monthlyData->getUrlRange(1, $monthlyData->lastPage()) as $page => $url)
+                    @if ($page == $monthlyData->currentPage())
+                        <span class="size-9 flex items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-sm">{{ $page }}</span>
+                    @else
+                        <a href="{{ $url }}&per_page_monthly={{ request('per_page_monthly', 12) }}#monthly-table" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors font-medium text-sm text-gray-700">{{ $page }}</a>
+                    @endif
+                @endforeach
+
+                {{-- Next Page Link --}}
+                @if ($monthlyData->hasMorePages())
+                    <a href="{{ $monthlyData->nextPageUrl() }}&per_page_monthly={{ request('per_page_monthly', 12) }}#monthly-table" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors">
+                        <i class="fas fa-chevron-right text-xs"></i>
+                    </a>
+                @else
+                    <span class="size-9 flex items-center justify-center rounded-lg border border-gray-200 text-gray-400 cursor-not-allowed">
+                        <i class="fas fa-chevron-right text-xs"></i>
+                    </span>
+                @endif
+            </div>
+        </div>
+        @endif
     </div>
 
     {{-- Recent Payments Table --}}
-    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden">
+    <div class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden" id="payments-table">
         <div class="p-5 border-b border-gray-100 flex items-center justify-between">
             <h3 class="font-bold text-gray-700 flex items-center gap-2">
                 <i class="fas fa-history text-blue-500"></i>
                 ការបង់ប្រាក់ថ្មីៗ
             </h3>
-            <a href="{{ route('admin.payments') }}" class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1">
-                មើលទាំងអស់
-                <i class="fas fa-arrow-right text-xs"></i>
-            </a>
+            <div class="flex items-center gap-2">
+                <select name="per_page" onchange="window.location.href='{{ route('admin.reports') }}?per_page=' + this.value + '&page=1#payments-table'" class="bg-gray-50 text-sm text-gray-700 rounded-lg px-2 py-1 outline-none font-medium cursor-pointer border border-slate-200">
+                    <option value="10" {{ request('per_page') == '10' ? 'selected' : '' }}>10 / ទំព័ក</option>
+                    <option value="15" {{ request('per_page') == '15' ? 'selected' : '' }}>15 / ទំព័ក</option>
+                    <option value="25" {{ request('per_page') == '25' ? 'selected' : '' }}>25 / ទំព័ក</option>
+                </select>
+                <a href="{{ route('admin.payments') }}" class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1">
+                    មើលទាំងអស់
+                    <i class="fas fa-arrow-right text-xs"></i>
+                </a>
+            </div>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left">
@@ -276,7 +327,7 @@
                         <i class="fas fa-chevron-left text-xs"></i>
                     </span>
                 @else
-                    <a href="{{ $recentPayments->previousPageUrl() }}" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors">
+                    <a href="{{ $recentPayments->previousPageUrl() }}&per_page={{ request('per_page', 10) }}#payments-table" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors">
                         <i class="fas fa-chevron-left text-xs"></i>
                     </a>
                 @endif
@@ -286,13 +337,13 @@
                     @if ($page == $recentPayments->currentPage())
                         <span class="size-9 flex items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-sm">{{ $page }}</span>
                     @else
-                        <a href="{{ $url }}" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors font-medium text-sm text-gray-700">{{ $page }}</a>
+                        <a href="{{ $url }}&per_page={{ request('per_page', 10) }}#payments-table" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors font-medium text-sm text-gray-700">{{ $page }}</a>
                     @endif
                 @endforeach
 
                 {{-- Next Page Link --}}
                 @if ($recentPayments->hasMorePages())
-                    <a href="{{ $recentPayments->nextPageUrl() }}" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors">
+                    <a href="{{ $recentPayments->nextPageUrl() }}&per_page={{ request('per_page', 10) }}#payments-table" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors">
                         <i class="fas fa-chevron-right text-xs"></i>
                     </a>
                 @else

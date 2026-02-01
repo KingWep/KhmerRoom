@@ -24,7 +24,7 @@
                             ផ្តល់ជូននូវទឹក ភ្លើងរដ្ឋ និងអ៊ីនធឺណិតល្បឿនលឿន។
                         </h2>
                         <div class="mt-4 flex flex-col gap-3 sm:flex-row">
-                            <a href="#rooms" class="flex h-12 min-w-[160px] items-center justify-center gap-2 rounded-lg bg-primary hover:bg-blue-600 transition-all px-6 text-white text-base font-bold font-khmer-title shadow-lg shadow-blue-500/30">
+                            <a href="{{ route('public.rooms') }}" class="flex h-12 min-w-[160px] items-center justify-center gap-2 rounded-lg bg-primary hover:bg-blue-600 transition-all px-6 text-white text-base font-bold font-khmer-title shadow-lg shadow-blue-500/30">
                                 <span class="material-symbols-outlined">search</span>
                                 <span>មើលបន្ទប់ជួល</span>
                             </a>
@@ -96,7 +96,7 @@
                     <span class="h-8 w-1.5 rounded-full bg-primary block"></span>
                     បន្ទប់ពេញនិយម
                 </h2>
-                <a class="text-primary text-sm font-bold hover:underline flex items-center gap-1 font-khmer-title" href="#">
+                <a class="text-primary text-sm font-bold hover:underline flex items-center gap-1 font-khmer-title" href="{{ route('public.rooms') }}">
                     មើលទាំងអស់ <span class="material-symbols-outlined text-sm">arrow_forward</span>
                 </a>
             </div>
@@ -107,8 +107,7 @@
                 @forelse($rooms as $room)
                     <div class="group relative overflow-hidden rounded-2xl bg-white shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-1.5 transition-all duration-500">
                         <div class="relative aspect-[4/3] w-full overflow-hidden">
-                            <img src="{{ $room->image_url ?? 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&q=80&w=800' }}"
-                                alt="{{ $room->name }}"
+                            <img src="{{ $room->images }}" alt="Room {{ $room->room_number }}" 
                                 class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
                             <div class="absolute top-4 right-4 z-10">
                                 <span class="flex items-center gap-1.5 rounded-full bg-white/95 backdrop-blur-sm px-3 py-1 text-xs font-bold text-emerald-600 shadow-sm border border-emerald-100">

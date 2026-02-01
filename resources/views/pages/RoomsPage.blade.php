@@ -58,17 +58,13 @@
                         បង្ហាញ <span class="text-slate-900 font-bold">{{ $rooms->total() }}</span> បន្ទប់
                     </div>
                     <div class="relative w-full md:w-64">
-                        <input name="search" value="{{ request('search') }}"
-                            class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary text-slate-700 placeholder:text-slate-400"
-                            placeholder="ស្វែងរកលេខបន្ទប់..." type="text" />
-                        <span
-                            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">search</span>
-                        @if(request('search'))
-                            <button type="button" onclick="document.querySelector('input[name=search]').value=''; this.form.submit();"
-                                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
-                                <span class="material-symbols-outlined text-[20px]">close</span>
-                            </button>
-                        @endif
+                        <input id="roomSearch" name="search" value="{{ request('search') }}"
+                            class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm"
+                            placeholder="ស្វែងរកលេខបន្ទប់..." type="text" autocomplete="off" />
+                        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-[20px]">search</span>
+
+                        <!-- Suggestion box -->
+                        <ul id="suggestBox" class="absolute z-50 mt-1 w-full bg-white border border-slate-200 rounded-lg shadow hidden max-h-60 overflow-y-auto"></ul>
                     </div>
                 </div>
             </div>
@@ -226,4 +222,66 @@
         </div>
         @endif
     </main>
+    <!-- Autocomplete Script -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const input = document.getElementById('roomSearch');
+    const box = document.getElementById('suggestBox');
+    let searchTimeout;
+
+    if (!input || !box) return;
+
+    input.addEventListener('keyup', function () {
+        const q = this.value.trim();
+        
+        // Clear previous timeout
+        clearTimeout(searchTimeout);
+        
+        if (q.length < 1) {
+            box.classList.add('hidden');
+            box.innerHTML = '';
+            // Clear search if empty
+            searchTimeout = setTimeout(() => {
+                input.form.submit();
+            }, 800);
+            return;
+        }
+
+        // Show autocomplete suggestions
+        fetch(`/suggest?q=${encodeURIComponent(q)}`)
+            .then(res => res.json())
+            .then(data => {
+                box.innerHTML = '';
+                if (data.length === 0) {
+                    box.classList.add('hidden');
+                } else {
+                    data.forEach(room => {
+                        const li = document.createElement('li');
+                        li.className = "px-4 py-2 hover:bg-slate-100 cursor-pointer text-sm";
+                        li.innerHTML = `<strong>${room.room_number}</strong>
+                                        <div class="text-xs text-slate-500">${room.description ?? ''}</div>`;
+                        li.onclick = () => {
+                            input.value = room.room_number;
+                            box.classList.add('hidden');
+                            input.form.submit();
+                        };
+                        box.appendChild(li);
+                    });
+                    box.classList.remove('hidden');
+                }
+            });
+
+        // Auto-submit form after user stops typing (800ms debounce)
+        searchTimeout = setTimeout(() => {
+            input.form.submit();
+        }, 800);
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!e.target.closest('.relative')) {
+            box.classList.add('hidden');
+        }
+    });
+});
+</script>
 @endsection

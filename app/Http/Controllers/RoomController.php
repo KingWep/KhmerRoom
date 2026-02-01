@@ -10,6 +10,18 @@ class RoomController extends Controller
     /**
      * Display a listing of the resource.
         */
+    public function search(Request $request)
+    {
+        $q = $request->query('q');
+
+        $rooms = Room::query()
+            ->when($q, fn($query) => $query->where('room_number', 'like', "%{$q}%")
+                ->orWhere('name', 'like', "%{$q}%"))
+            ->select('id', 'room_number', 'name', 'floor', 'size', 'price', 'images', 'accessories')
+            ->get();
+
+        return response()->json($rooms);
+    }
     public function roomsRooms(Request $request)
     {
         $query = Room::query();
@@ -104,8 +116,15 @@ class RoomController extends Controller
             if ($request->filled('floor')) {
                 $query->where('floor', $request->floor);
             }
-            // Use paginate instead of get() for better performance
-            $rooms = $query->latest()->paginate(15); 
+            // Determine per-page value (allow client to control page size)
+            $perPage = (int) $request->get('per_page', 15);
+            $allowed = [10,15,25,50,100];
+            if (!in_array($perPage, $allowed)) {
+                $perPage = 15;
+            }
+
+            // Use paginate with provided per-page and preserve query params
+            $rooms = $query->latest()->paginate($perPage)->appends($request->query()); 
             return view('admin.RoomsControl', compact('rooms'));
         } catch (\Exception $e) {    
             // Provide a fallback so the view doesn't crash if you redirect back to it

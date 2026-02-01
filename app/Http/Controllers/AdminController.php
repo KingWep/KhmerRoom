@@ -126,6 +126,7 @@ class AdminController extends Controller
             $monthlyIncome = [];
             $monthlyPending = [];
             $monthlyTotal = [];
+            $monthlyDataByIndex = [];
             
             // Get all payments for current year
             $allPayments = Payment::whereYear('paid_date', $currentYear)->get();
@@ -142,7 +143,31 @@ class AdminController extends Controller
                 $monthlyIncome[] = (float)$paidAmount;
                 $monthlyPending[] = (float)$pendingAmount;
                 $monthlyTotal[] = (float)($paidAmount + $pendingAmount);
+                
+                // Store indexed data for pagination
+                $monthlyDataByIndex[$i - 1] = [
+                    'index' => $i,
+                    'income' => (float)$paidAmount,
+                    'pending' => (float)$pendingAmount,
+                    'total' => (float)($paidAmount + $pendingAmount)
+                ];
             }
+            
+            // Paginate monthly data (12 per page to show all months)
+            $perPage = request('per_page_monthly', 12);
+            $currentPage = request('page_monthly', 1);
+            $monthlyDataCollection = collect($monthlyDataByIndex);
+            $monthlyData = new \Illuminate\Pagination\Paginator(
+                $monthlyDataCollection->forPage($currentPage, $perPage)->values(),
+                $perPage,
+                $currentPage,
+                [
+                    'path' => route('admin.reports'),
+                    'query' => ['per_page_monthly' => $perPage, 'page_monthly' => $currentPage],
+                    'fragment' => 'monthly-table'
+                ]
+            );
+            $monthlyData->setTotal($monthlyDataCollection->count());
 
             // Room status statistics
             $roomStatus = [
@@ -158,10 +183,18 @@ class AdminController extends Controller
             $avgIncome = $monthsWithData > 0 ? $totalIncome / $monthsWithData : 0;
 
             // Get recent payments for the table with pagination
+            $perPagePayments = request('per_page', 10);
+            $allowedPerPage = [10, 15, 25];
+            if (!in_array($perPagePayments, $allowedPerPage)) {
+                $perPagePayments = 10;
+            }
+            
             $recentPayments = Payment::with(['rental.tenant', 'rental.room'])
                 ->whereYear('paid_date', $currentYear)
                 ->orderBy('paid_date', 'desc')
-                ->paginate(10);
+                ->paginate($perPagePayments);
+            // Preserve per_page in pagination links
+            $recentPayments->appends(request()->query());
 
             // Summary statistics
             $totalRooms = Room::count();
@@ -174,6 +207,7 @@ class AdminController extends Controller
                 'monthlyIncome',
                 'monthlyPending',
                 'monthlyTotal',
+                'monthlyData',
                 'roomStatus',
                 'totalIncome',
                 'totalPending',

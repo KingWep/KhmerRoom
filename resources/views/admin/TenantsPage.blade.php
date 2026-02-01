@@ -387,7 +387,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <input type="hidden" id="roomIdHidden" value="">
+                                        {{-- <input type="hidden" id="roomIdHidden" value=""> --}}
                                         <input type="hidden" id="roomIdHidden" value="">
                                     </div>
                                 </div>
@@ -430,19 +430,20 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div
-                            class="bg-slate-50 dark:bg-[#233d3a] p-4 border-t border-gray-100 dark:border-[#2a4542] flex justify-end gap-3">
-                            <button id="cancelRentalModal" type="button"
-                                class="px-6 py-2.5 rounded-lg font-semibold text-slate-600 dark:text-gray-300 hover:bg-slate-200 dark:hover:bg-gray-700 transition-colors">
-                                បោះបង់ (Cancel)
-                            </button>
-                            <button id="submitBtn" type="submit"
-                                class="px-8 py-2.5 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-200 transition-all transform hover:-translate-y-0.5 active:scale-95">
-                                រក្សាទុក (Save Rental)
-                            </button>
-                        </div>
+                        </div>      
                     </div>
+                    <div
+                        class="bg-slate-50 dark:bg-[#233d3a] p-3 border-t border-gray-100 dark:border-[#2a4542] flex justify-end gap-3">
+                        <button id="cancelRentalModal" type="button"
+                            class="px-6 py-2.5 rounded-lg font-semibold text-slate-600 dark:text-gray-300 hover:bg-slate-200 dark:hover:bg-gray-700 transition-colors">
+                            បោះបង់ (Cancel)
+                        </button>
+                        <button id="submitBtn" type="submit"
+                            class="px-6 py-2.5 rounded-lg font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-200 transition-all transform hover:-translate-y-0.5 active:scale-95">
+                            រក្សាទុក (Save Rental)
+                        </button>
+                    </div>
+                </div>
             </div>
             </form>
         </div>

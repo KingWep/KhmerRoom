@@ -14,12 +14,12 @@ class AdminMiddleware
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
-{
-    // ១. ឆែកថាមាន Login ឬអត់ និងឆែកថាជា Admin ឬអត់
-    if (auth()->check() && auth()->user()->role == 'admin') {
-        return $next($request);
+    {
+        // ១. ឆែកថាមាន Login ឬអត់ និងឆែកថាជា Admin ឬអត់
+        if (auth()->check() && auth()->user()->role == 'admin') {
+            return $next($request);
+        }
+        // ២. បើមិនមែនជា Admin ទេ ឱ្យរុញទៅកាន់ទំព័រដើម ជាមួយសារ Error
+        return redirect()->route('public.home')->with('error', 'អ្នកមិនមានសិទ្ធិចូលទៅកាន់ទំព័រនេះទេ!');
     }
-    // ២. បើមិនមែនជា Admin ទេ ឱ្យរុញទៅកាន់ទំព័រដើម ជាមួយសារ Error
-    return redirect()->route('public.home')->with('error', 'អ្នកមិនមានសិទ្ធិចូលទៅកាន់ទំព័រនេះទេ!');
-}
 }

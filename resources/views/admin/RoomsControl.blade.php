@@ -9,50 +9,18 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Khmer:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', 'Noto Sans Khmer', sans-serif;
-        }
-
-        .premium-card {
-            background: #ffffff;
-            border: 1px solid #f0f2f5;
-            box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.05);
-        }
-
-        table {
-            font-size: 15px;
-        }
-
-        .row-fade-in {
-            animation: fadeIn 0.5s ease forwards;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
-
     <main class="flex-1 overflow-y-auto flex flex-col min-h-screen bg-[#F8F9FB]">
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
-                <div class="modal-content border-0 shadow-2xl rounded-3xl overflow-hidden">
-                    <div class="bg-gradient-to-r from-cyan-600 to-blue-700 px-5 py-3 flex justify-between items-center">
+                <div class="modal-content border-0 shadow-2xl rounded-xl overflow-hidden">
+                    <div class=" bg-blue-500 px-5 py-3 flex justify-between items-center">
                         <h5 id="modalTitle" class="text-white font-bold text-xl mb-0 flex items-center gap-2">
                             បន្ថែមបន្ទប់ថ្មី
                         </h5>
 
                         <button  data-bs-dismiss="modal" type="button" class="text-white/80 hover:text-white transition-colors"
                             onclick="closeModal()">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 font-bold" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M6 18L18 6M6 6l12 12" />
@@ -300,7 +268,7 @@
                                 class="px-5 py-2.5 text-slate-500 font-medium hover:text-slate-800 transition-colors"
                                 data-bs-dismiss="modal">បោះបង់</button>
                             <button id="submitBtn" type="submit"
-                                class="px-8 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-blue-200 transition-all transform active:scale-95">
+                                class="px-8 py-2.5 bg-blue-500 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-lg shadow-blue-200 transition-all transform active:scale-95">
                                 រក្សាទុកទិន្នន័យ
                             </button>
                         </div>
@@ -309,46 +277,52 @@
             </div>
         </div>
 
-        <div class="p-8 max-w-[1600px] mx-auto w-full">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-12">
+        <div class="w-full">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-8 mb-3">
                 <div class="space-y-2">
                     <div class="flex items-center gap-3 text-primary/60 mb-1">
                         <span class="text-xs uppercase tracking-[0.3em] font-bold text-blue-600">Workspace</span>
                         <span class="size-1.5 rounded-full bg-blue-200"></span>
                         <span class="text-xs uppercase tracking-[0.3em] font-bold">Property Units</span>
                     </div>
-                    <h2 class="text-4xl font-semibold text-[#121826] tracking-tight">គ្រប់គ្រងបន្ទប់</h2>
+                    <h2 class="text-2xl font-semibold text-[#121826] tracking-tight">គ្រប់គ្រងបន្ទប់</h2>
                     <p class="text-lg text-gray-500 font-light">ទិន្នន័យសាកល្បង (Local Mock Data)</p>
                 </div>
-
                 <button data-bs-toggle="modal" data-bs-target="#exampleModal"
-                    class="inline-flex items-center gap-3 bg-[#121826] text-white px-3 py-3 rounded-2xl text-base font-medium hover:bg-black hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
-                    <span class="material-symbols-outlined text-[24px]">add_circle</span>
+                    class="inline-flex items-center gap-3 bg-[#121826] text-white px-3 py-2 rounded-xl text-base font-medium hover:bg-black hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+                    <span class="material-symbols-outlined text-[18px]">add_circle</span>
                     បន្ថែមបន្ទប់ថ្មី
                 </button>
             </div>
 
             {{-- <div class="premium-card rounded-3xl mb-10 flex flex-col md:flex-row gap-4 items-center bg-white"> --}}
                 <form action="{{ request()->url() }}" method="GET"
-                    class="premium-card rounded-3xl mb-10 flex flex-col md:flex-row gap-4 items-center bg-white shadow-sm border border-gray-100 p-2">
+                    class="premium-card rounded-3xl mb-10 flex flex-col md:flex-row gap-4 items-center bg-white shadow-sm border border-gray-100">
                     <div class="relative flex-1 w-full">
-                        <span
-                            class="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-[24px]">search</span>
+                        <span class="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-[18px]">search</span>
                         <input type="text" name="search" value="{{ request('search') }}"
                             placeholder="ស្វែងរកលេខបន្ទប់ ឬការបរិយាយ..." oninput="debounceSearch(this)"
                             class="w-full pl-14 pr-6 py-3 bg-transparent border-none text-lg focus:ring-0 outline-none font-light">
-
                     </div>
-                    <div class="flex items-center gap-3 pr-3">
+
+                    <div class="flex items-center gap-2 pr-3">
                         <select name="floor" onchange="this.form.submit()"
-                            class="bg-gray-50 border-none text-base text-gray-700 rounded-2xl px-8 py-2 outline-none font-medium cursor-pointer focus:ring-2 focus:ring-blue-500">
+                            class="bg-gray-50 text-base text-gray-700 rounded-2xl px-4 py-2 outline-none font-medium cursor-pointer border border-slate-100">
                             <option value="">គ្រប់ជាន់ (All)</option>
                             <option value="1" {{ request('floor') == '1' ? 'selected' : '' }}>ជាន់ទី ១</option>
                             <option value="2" {{ request('floor') == '2' ? 'selected' : '' }}>ជាន់ទី ២</option>
                             <option value="3" {{ request('floor') == '3' ? 'selected' : '' }}>ជាន់ទី ៣</option>
                             <option value="4" {{ request('floor') == '4' ? 'selected' : '' }}>ជាន់ទី 4</option>
                         </select>
-                        <button type="submit" class="px-6 py-2 bg-blue-500 text-white rounded-2xl font-medium">
+{{-- 
+                        <select name="per_page" onchange="this.form.submit()" class="bg-gray-50 text-base text-gray-700 rounded-2xl px-3 py-2 outline-none font-medium cursor-pointer border border-slate-100">
+                            <option value="10" {{ request('per_page') == '10' ? 'selected' : '' }}>10/ទំព័រ</option>
+                            <option value="15" {{ request('per_page') == '15' ? 'selected' : '' }}>15/ទំព័រ</option>
+                            <option value="25" {{ request('per_page') == '25' ? 'selected' : '' }}>25/ទំព័រ</option>
+                            <option value="50" {{ request('per_page') == '50' ? 'selected' : '' }}>50/ទំព័រ</option>
+                        </select> --}}
+
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-2xl font-medium shadow-sm hover:bg-blue-700">
                             Search
                         </button>
                     </div>
@@ -369,20 +343,22 @@
                     {{ session('message') }}
                 </div>
             @endif
-            <div class="overflow-hidden bg-white border border-gray-100 shadow-sm rounded-3xl">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
+            <div class="overflow-hidden bg-white border border-gray-100 shadow-sm rounded-xl relative">
+                <div class="relative">
+
+                    <div id="roomsTableWrapper" class="overflow-x-auto">
+                        <table class="min-w-[900px] w-full text-left border-collapse">
                         <thead>
-                            <tr class=" bg-blue-500 ">
+                            <tr class="bg-blue-500 ">
                                 <th class="px-4 py-3 text-md font-bold tracking-wider text-white uppercase">ព័ត៌មានបន្ទប់
                                 </th>
                                 <th class="px-4 py-3 text-md font-bold tracking-wider text-white uppercase">តម្លៃប្រចាំខែ
                                 </th>
                                 <th class="px-4 py-3 text-md font-bold tracking-wider text-white uppercase">
-                                    ស្ថានភាពបច្ចុប្បន្ន</th>
+                                    ស្ថានភាព</th>
                                 <th class="px-4 py-3 text-md font-bold tracking-wider text-white uppercase">បរិយាយ
                                 </th>
-                                <th class="px-4 py-3 text-xs font-bolmdtracking-wider text-right text-white uppercase">
+                                <th class="px-4 py-3 text-ms font-bold tracking-wider text-right text-white uppercase">
                                     សកម្មភាព</th>
                             </tr>
                         </thead>
@@ -391,13 +367,22 @@
                                 <tr class="transition-colors hover:bg-gray-50/50">
                                     <td class="px-4 py-3">
                                         <div class="flex items-center gap-4">
-                                            <div
-                                                class="flex items-center justify-center w-12 h-12 text-blue-700 bg-blue-100 rounded-2xl">
-                                                <span class="font-bold">#</span>
+                                            <div class="w-14 h-14 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                                                @if($room->images)
+                                                    <img src="{{ $room->images }}" alt="Room {{ $room->room_number }}" class="w-full h-full object-cover">
+                                                @else
+                                                    <div class="w-full h-full flex items-center justify-center text-gray-400">No Image</div>
+                                                @endif
                                             </div>
-                                            <div>
-                                                <p class="text-base font-bold text-gray-900">Room {{ $room->room_number }}</p>
-                                                <p class="text-sm text-gray-500">Floor {{ $room->floor }}</p>
+                                            <div class="min-w-0">
+                                                <p class="text-base font-bold text-gray-900 truncate">Room {{ $room->room_number }} <span class="text-sm text-gray-500">· Floor {{ $room->floor }}</span></p>
+                                                <div class="mt-2 flex flex-wrap gap-1">
+                                                    @if($room->accessories)
+                                                        @foreach($room->accessories as $acc)
+                                                            <span class="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded-full border border-slate-200">{{ $acc }}</span>
+                                                        @endforeach
+                                                    @endif
+                                                </div>
                                             </div>
                                         </div>
                                     </td>
@@ -417,13 +402,13 @@
                                             ];
                                             $statusLabels = [
                                                 'available' => 'ទំនេរ',
-                                                'occupied' => 'មានអ្នកជួល',
+                                                'occupied' => 'មិនទំនេរ',
                                                 'maintenance' => 'ជួសជុល'
                                             ];
                                             $currentClass = $statusClasses[$room->status] ?? 'bg-gray-50 text-gray-600';
                                         @endphp
                                         <span
-                                            class="inline-flex items-center px-3 py-1 text-sm font-semibold border rounded-lg {{ $currentClass }}">
+                                            class="inline-flex items-center px-4 text-center py-1 text-sm font-semibold border rounded-lg {{ $currentClass }}">
                                             {{ $statusLabels[$room->status] ?? $room->status }}
                                         </span>
                                     </td>
@@ -436,20 +421,20 @@
 
                                     <td class="px-4 py-3">
                                         <div class="flex justify-end gap-2">
-                                            <button type="button" class="btn btn-warning btn-edit-room"
+                                            <button type="button" class="inline-flex items-center gap-2 px-3 py-2 bg-yellow-50 text-yellow-700 rounded-lg font-semibold btn-edit-room"
                                                 data-id="{{ $room->id }}" data-room_number="{{ $room->room_number }}"
                                                 data-floor="{{ $room->floor }}" data-price="{{ $room->price }}"
                                                 data-size="{{ $room->size }}" data-status="{{ $room->status }}"
                                                 data-description="{{ $room->description }}"
                                                 data-accessories='@json($room->accessories)'>
-                                                កែប្រែ
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                             </button>
                                             <form action="{{ route('admin.rooms.delete', $room->id) }}" method="POST"
                                                 class="delete-form inline-block">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="btn btn-danger delete-btn">
-                                                    <span class="material-symbols-outlined text-[20px]">delete</span>
+                                                <button type="button" class="inline-flex items-center gap-2 px-3 py-2 bg-red-50 text-red-600 rounded-lg font-semibold delete-btn">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                                                 </button>
                                             </form>
                                         </div>
@@ -464,7 +449,50 @@
                             @endforelse
                         </tbody>
                     </table>
+                    </div>
+
                 </div>
+
+                {{-- Pagination --}}
+                @if($rooms->hasPages())
+                <div class="px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-gray-100 bg-white">
+                    <div class="text-sm text-slate-600">
+                        បង្ហាញ <span class="font-bold text-slate-900">{{ $rooms->firstItem() ?? 0 }}</span>
+                        - <span class="font-bold text-slate-900">{{ $rooms->lastItem() ?? 0 }}</span>
+                        នៃ <span class="font-bold text-slate-900">{{ $rooms->total() }}</span> បន្ទប់
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        @if ($rooms->onFirstPage())
+                            <button disabled class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white text-slate-300 cursor-not-allowed">
+                                <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                            </button>
+                        @else
+                            <a href="{{ $rooms->previousPageUrl() }}" class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white text-slate-500 hover:border-primary hover:text-primary transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">chevron_left</span>
+                            </a>
+                        @endif
+
+                        @foreach ($rooms->getUrlRange(1, $rooms->lastPage()) as $page => $url)
+                            @if ($page == $rooms->currentPage())
+                                <button class="flex items-center justify-center size-9 rounded-lg border border-primary bg-primary text-white font-bold text-sm">{{ $page }}</button>
+                            @else
+                                <a href="{{ $url }}" class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white text-slate-700 hover:border-primary hover:text-primary transition-colors text-sm">{{ $page }}</a>
+                            @endif
+                        @endforeach
+
+                        @if ($rooms->hasMorePages())
+                            <a href="{{ $rooms->nextPageUrl() }}" class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white text-slate-500 hover:border-primary hover:text-primary transition-colors">
+                                <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                            </a>
+                        @else
+                            <button disabled class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white text-slate-300 cursor-not-allowed">
+                                <span class="material-symbols-outlined text-[18px]">chevron_right</span>
+                            </button>
+                        @endif
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
     </main>

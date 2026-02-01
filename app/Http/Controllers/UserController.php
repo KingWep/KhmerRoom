@@ -47,7 +47,7 @@ class UserController extends Controller
         return back()->with('error', 'កំហុសបច្ចេកទេស៖ ' . $th->getMessage());
     }
 }
-    public function destroy($id){
+    public function deleteAccount($id){
         try {
              $user = User::findOrFail($id);
              if(auth()->id() !== $user->id && auth()->user()->role !== 'admin'){
@@ -58,7 +58,7 @@ class UserController extends Controller
                 request()->session()->invalidate();
                 request()->session()->regenerateToken();
                 $user->delete();
-                return redirect()->route('public.home')->with('message','User deleted successfully');
+                return redirect()->route('public.home')->with('message','គណនីត្រូវបានលុបដោយជោគជ័យ។');
             }
         } catch (\Throwable $th) {
             return back()->with('error', 'មានបញ្ហាបច្ចេកទេស៖ ' . $th->getMessage());

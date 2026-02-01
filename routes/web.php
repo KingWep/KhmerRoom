@@ -51,7 +51,7 @@ Route::middleware(['auth', 'role:user'])->prefix('user')->group(function () {
     // Profile Management
     Route::get('/profile', [AuthController::class, 'showProfile'])->name('user.profile');
     Route::patch('/profile/{id}', [UserController::class, 'update'])->name('user.update.profile');
-    
+    Route::delete('/account/{id}', [UserController::class, 'deleteAccount'])->name('user.delete.account');
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('user.logout');
 });
@@ -67,6 +67,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     // --------------------------------------------------------------------
     Route::get('/profile', [AuthController::class, 'showProfile'])->name('profile');
     Route::patch('/profile/{id}', [UserController::class, 'update'])->name('update.profile');
+    Route::delete('/account/{id}', [UserController::class, 'deleteAccount'])->name('delete.account');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
     // --------------------------------------------------------------------
@@ -85,6 +86,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
         Route::post('/', [RoomController::class, 'create'])->name('create');
         Route::patch('/{id}', [RoomController::class, 'update'])->name('update');
         Route::delete('/{id}', [RoomController::class, 'destroy'])->name('delete');
+        // autocomplete (NO submit)
+        Route::get('/search-rooms', [RoomController::class, 'search']);
+
     });
     
     // --------------------------------------------------------------------

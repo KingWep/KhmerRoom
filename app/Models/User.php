@@ -24,6 +24,8 @@ class User extends Authenticatable
         'phone',
         'password',
         'profile',
+        'role',
+        'status',
     ];
     public function tenant(){
         return $this->hasOne(Tenant::class);
