@@ -4,7 +4,7 @@
 
 @section('content')
     <main class="flex-1 overflow-y-auto flex flex-col min-h-screen">
-        <div class="p-8 max-w-[1440px] mx-auto w-full">
+        <div class="p-0 max-w-[1440px] mx-auto w-full">
 
             @if(session('success'))
                 <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 text-green-700 rounded-lg">

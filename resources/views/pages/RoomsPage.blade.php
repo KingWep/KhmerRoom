@@ -3,7 +3,7 @@
 @section('content')
 
     <!-- Main Content -->
-    <main class="flex-grow w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8 mt-14">
+    <main class="flex-grow w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8 mt-8">
         <!-- Page Heading & Intro -->
         <div class="mb-8">
             <h2 class="text-3xl font-bold text-slate-900 mb-2">បញ្ជីបន្ទប់ជួល</h2>
@@ -31,8 +31,6 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <span
-                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-[20px]">expand_more</span>
                         </div>
                     </div>
                     <!-- Status Filter -->
@@ -47,8 +45,6 @@
                                 <option value="occupied" {{ request('status') == 'occupied' ? 'selected' : '' }}>មានអ្នកស្នាក់នៅ (Occupied)</option>
                                 <option value="maintenance" {{ request('status') == 'maintenance' ? 'selected' : '' }}>កំពុងជួសជុល (Maintenance)</option>
                             </select>
-                            <span
-                                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-[20px]">expand_more</span>
                         </div>
                     </div>
                 </div>

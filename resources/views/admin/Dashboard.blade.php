@@ -4,7 +4,7 @@
 
 @section('content')
 <main class="flex-1 overflow-y-auto flex flex-col min-h-screen bg-gray-50">
-    <div class="p-8 max-w-[1440px] mx-auto w-full">
+    <div class="p-0 max-w-[1440px] mx-auto w-full">
         
         {{-- Header --}}
         <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">

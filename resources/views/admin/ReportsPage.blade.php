@@ -2,7 +2,7 @@
 @section('title', 'ផ្ទះជួលខ្មែរ - របាយការណ៍')
 
 @section('content')
-<div class="space-y-6 animate-slide-up p-6">
+<div class="space-y-6 animate-slide-up p-0">
     {{-- Header --}}
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -158,8 +158,8 @@
                 សង្ខេបប្រចាំខែ ({{ $currentYear }})
             </h3>
             <select name="per_page_monthly" onchange="window.location.href='{{ route('admin.reports') }}?per_page_monthly=' + this.value + '&page_monthly=1#monthly-table'" class="bg-gray-50 text-sm text-gray-700 rounded-lg px-2 py-1 outline-none font-medium cursor-pointer border border-slate-200">
-                <option value="6" {{ request('per_page_monthly') == '6' ? 'selected' : '' }}>6 / ទំព័ក</option>
-                <option value="12" {{ request('per_page_monthly', 12) == '12' ? 'selected' : '' }}>12 / ទំព័ក</option>
+                <option value="6" {{ request('per_page_monthly') == '6' ? 'selected' : '' }}>6/ទំព័រ</option>
+                <option value="12" {{ request('per_page_monthly', 12) == '12' ? 'selected' : '' }}>12/ទំព័រ</option>
             </select>
         </div>
         <div class="overflow-x-auto">
@@ -254,9 +254,9 @@
             </h3>
             <div class="flex items-center gap-2">
                 <select name="per_page" onchange="window.location.href='{{ route('admin.reports') }}?per_page=' + this.value + '&page=1#payments-table'" class="bg-gray-50 text-sm text-gray-700 rounded-lg px-2 py-1 outline-none font-medium cursor-pointer border border-slate-200">
-                    <option value="10" {{ request('per_page') == '10' ? 'selected' : '' }}>10 / ទំព័ក</option>
-                    <option value="15" {{ request('per_page') == '15' ? 'selected' : '' }}>15 / ទំព័ក</option>
-                    <option value="25" {{ request('per_page') == '25' ? 'selected' : '' }}>25 / ទំព័ក</option>
+                    <option value="10" {{ request('per_page') == '10' ? 'selected' : '' }}>10/ទំព័រ</option>
+                    <option value="15" {{ request('per_page') == '15' ? 'selected' : '' }}>15/ទំព័រ</option>
+                    <option value="25" {{ request('per_page') == '25' ? 'selected' : '' }}>25/ទំព័រ</option>
                 </select>
                 <a href="{{ route('admin.payments') }}" class="text-blue-600 hover:text-blue-700 text-sm font-medium flex items-center gap-1">
                     មើលទាំងអស់

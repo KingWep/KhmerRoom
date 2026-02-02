@@ -3,7 +3,7 @@
 @section('content')
     <main class="flex items-center justify-center min-h-screen px-4">
         <div
-            class="w-full max-w-4xl bg-surface-light dark:bg-surface-dark rounded-2xl shadow-xl grid grid-cols-1 lg:grid-cols-2 overflow-hidden">
+            class="w-full max-w-4xl bg-surface-light dark:bg-surface-dark rounded-2xl shadow-xl shadow-gray-600/40 grid grid-cols-1 lg:grid-cols-2 overflow-hidden">
             @if (session('message'))
                 <div id="alert-message" class="inline-flex items-center gap-2 px-3 py-2 mb-4 rounded-lg
                    bg-emerald-50 border border-emerald-200

@@ -110,13 +110,10 @@
                             <img src="{{ $room->images }}" alt="Room {{ $room->room_number }}" 
                                 class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
                             <div class="absolute top-4 right-4 z-10">
-                                <span class="flex items-center gap-1.5 rounded-full bg-white/95 backdrop-blur-sm px-3 py-1 text-xs font-bold text-emerald-600 shadow-sm border border-emerald-100">
-                                    <span class="relative flex h-2 w-2">
-                                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                                    </span>
-                                    {{ $room->status == 'available' ? 'ទំនេរ' : ($room->status =='occupied' ? 'មានអ្នកស្នាក់នៅ' : 'កំពុងជួសជុល' )}}
-                                </span>    
+                                <span class="inline-flex items-center px-3 py-1 rounded-xl text-[10px] font-bold uppercase tracking-widest backdrop-blur-md {{ $room->status == 'available' ? 'bg-emerald-500/90 text-white' : 'bg-rose-500/90 text-white' }}">
+                            <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse me-2"></span>
+                            {{ $room->status == 'available' ? 'ទំនេរ' : ($room->status =='occupied' ? 'មានអ្នកស្នាក់នៅ' : 'កំពុងជួសជុល' )}}
+                        </span>
                             </div>
                         </div>
 
