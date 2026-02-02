@@ -26,7 +26,7 @@
 
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                 <div>
-                    <h2 class="text-3xl font-black text-[#121717] dark:text-white tracking-tight mb-2">
+                    <h2 class="text-2xl font-black text-[#121717] dark:text-white tracking-tight mb-2">
                         បញ្ជីអ្នកជួល (Tenant List)
                     </h2>
                     <p class="text-[#658683] dark:text-gray-400">គ្រប់គ្រង និងតាមដានព័ត៌មានរបស់អ្នកជួលទាំងអស់ក្នុងប្រព័ន្ធ
@@ -105,7 +105,7 @@
                     <div class="relative w-full md:w-96">
                         <span
                             class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#658683]">search</span>
-                        <input type="text" placeholder="ស្វែងរកឈ្មោះ ឬលេខបន្ទប់..."
+                        <input type="text" id="tenantSearch" placeholder="ស្វែងរកឈ្មោះ ឬលេខបន្ទប់..."
                             class="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#1a2e2c] border border-[#dce5e4] dark:border-[#2a4542] rounded-xl focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all text-sm dark:text-white">
                     </div>
 
@@ -138,7 +138,7 @@
                                     សកម្មភាព (Actions)</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-[#dce5e4] dark:divide-[#2a4542]">
+                        <tbody id="tenantTableBody" class="divide-y divide-[#dce5e4] dark:divide-[#2a4542]">
                             @forelse($tenants ?? [] as $rental)
                                             <tr class="hover:bg-gray-50 dark:hover:bg-[#233d3a]/50 transition-colors">
                                                 <td class="px-6 py-4">
@@ -679,7 +679,53 @@
                 const closeViewModalBtn = document.getElementById('closeViewModalBtn');
                 const editFromViewBtn = document.getElementById('editFromViewBtn');
 
+                // Search Elements
+                const tenantSearch = document.getElementById('tenantSearch');
+                const tenantTableBody = document.getElementById('tenantTableBody');
+
                 if (!openBtn || !closeBtn || !cancelBtn || !rentalModal || !rentalForm) return;
+
+                // Search functionality for Tenants and Rooms
+                if (tenantSearch && tenantTableBody) {
+                    tenantSearch.addEventListener('input', function () {
+                        const searchTerm = this.value.toLowerCase().trim();
+                        const rows = tenantTableBody.querySelectorAll('tr');
+
+                        rows.forEach(row => {
+                            // Get tenant name and room number
+                            const tenantNameEl = row.querySelector('p.font-bold.text-\\[\\#121717\\]');
+                            const roomNumberEl = row.querySelector('td:nth-child(3)');
+                            
+                            const tenantName = tenantNameEl ? tenantNameEl.textContent.toLowerCase() : '';
+                            const roomNumber = roomNumberEl ? roomNumberEl.textContent.toLowerCase() : '';
+
+                            // Check if search term matches either tenant name or room number
+                            const matches = tenantName.includes(searchTerm) || roomNumber.includes(searchTerm);
+
+                            // Show or hide the row
+                            row.style.display = matches ? '' : 'none';
+                        });
+
+                        // Show "no results" message if all rows are hidden
+                        const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
+                        if (searchTerm && visibleRows.length === 0) {
+                            // Check if no results message already exists
+                            let noResultsRow = tenantTableBody.querySelector('.no-results-row');
+                            if (!noResultsRow) {
+                                noResultsRow = document.createElement('tr');
+                                noResultsRow.className = 'no-results-row';
+                                noResultsRow.innerHTML = '<td colspan="6" class="px-6 py-8 text-center text-[#658683]"><div class="flex flex-col items-center gap-2"><span class="material-symbols-outlined text-4xl">search_off</span><p>មិនមានលទ្ធផលស្វែងរក (No results found)</p></div></td>';
+                                tenantTableBody.appendChild(noResultsRow);
+                            }
+                        } else {
+                            // Remove no results message if it exists
+                            let noResultsRow = tenantTableBody.querySelector('.no-results-row');
+                            if (noResultsRow) {
+                                noResultsRow.remove();
+                            }
+                        }
+                    });
+                }
 
                 let currentRentalData = null;
 

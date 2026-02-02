@@ -425,6 +425,38 @@
             const rentalSelect = document.getElementById('rentalFilter');
             const rentalInfo = document.getElementById('rentalInfo');
             const amountInput = document.getElementById('amount_paid');
+            const paymentSearch = document.getElementById('paymentSearch');
+            const paymentTableBody = document.getElementById('paymentTableBody');
+
+            // Search functionality for Tenants and Rooms
+            paymentSearch.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase().trim();
+                const rows = paymentTableBody.querySelectorAll('tr');
+
+                rows.forEach(row => {
+                    // Get tenant name and room number from the first cell
+                    const tenantNameEl = row.querySelector('div.font-bold.text-gray-800');
+                    const roomNumberEl = row.querySelector('div.text-xs.text-gray-500');
+                    
+                    const tenantName = tenantNameEl ? tenantNameEl.textContent.toLowerCase() : '';
+                    const roomNumber = roomNumberEl ? roomNumberEl.textContent.toLowerCase() : '';
+
+                    // Check if search term matches either tenant name or room number
+                    const matches = tenantName.includes(searchTerm) || roomNumber.includes(searchTerm);
+
+                    // Show or hide the row
+                    row.style.display = matches ? '' : 'none';
+                });
+
+                // Show "no results" message if all rows are hidden
+                const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
+                if (searchTerm && visibleRows.length === 0) {
+                    paymentTableBody.innerHTML = '<tr><td colspan="6" class="px-6 py-8 text-center text-gray-500"><i class="fas fa-search mr-2"></i>គ្មានលទ្ធផលស្វែងរក</td></tr>';
+                } else if (!searchTerm && visibleRows.length === 0) {
+                    // Restore original table if search is cleared but no payments exist
+                    location.reload();
+                }
+            });
 
             // 1. Month selection: hide rentals already paid for selected month
             payMonthInput.addEventListener('change', function () {
