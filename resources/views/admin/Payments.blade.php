@@ -297,7 +297,7 @@
                             <i class="fas fa-chevron-left"></i>
                         </span>
                     @else
-                        <a href="{{ $payments->previousPageUrl() }}" class="px-3 py-2 text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <a href="{{ $payments->appends(['search' => request('search')])->previousPageUrl() }}" class="px-3 py-2 text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                             <i class="fas fa-chevron-left"></i>
                         </a>
                     @endif
@@ -313,7 +313,7 @@
 
                     {{-- Next Page Link --}}
                     @if ($payments->hasMorePages())
-                        <a href="{{ $payments->nextPageUrl() }}" class="px-3 py-2 text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                        <a href="{{ $payments->appends(['search' => request('search')])->nextPageUrl() }}" class="px-3 py-2 text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
                             <i class="fas fa-chevron-right"></i>
                         </a>
                     @else

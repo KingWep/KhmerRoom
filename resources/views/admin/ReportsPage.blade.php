@@ -216,7 +216,7 @@
                         <i class="fas fa-chevron-left text-xs"></i>
                     </span>
                 @else
-                    <a href="{{ $monthlyData->previousPageUrl() }}&per_page_monthly={{ request('per_page_monthly', 12) }}#monthly-table" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors">
+                    <a href="{{ $monthlyData->previousPageUrl() }}#monthly-table" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors">
                         <i class="fas fa-chevron-left text-xs"></i>
                     </a>
                 @endif
@@ -226,13 +226,13 @@
                     @if ($page == $monthlyData->currentPage())
                         <span class="size-9 flex items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-sm">{{ $page }}</span>
                     @else
-                        <a href="{{ $url }}&per_page_monthly={{ request('per_page_monthly', 12) }}#monthly-table" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors font-medium text-sm text-gray-700">{{ $page }}</a>
+                        <a href="{{ $url }}#monthly-table" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors font-medium text-sm text-gray-700">{{ $page }}</a>
                     @endif
                 @endforeach
 
                 {{-- Next Page Link --}}
                 @if ($monthlyData->hasMorePages())
-                    <a href="{{ $monthlyData->nextPageUrl() }}&per_page_monthly={{ request('per_page_monthly', 12) }}#monthly-table" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors">
+                    <a href="{{ $monthlyData->nextPageUrl() }}#monthly-table" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors">
                         <i class="fas fa-chevron-right text-xs"></i>
                     </a>
                 @else
@@ -327,7 +327,7 @@
                         <i class="fas fa-chevron-left text-xs"></i>
                     </span>
                 @else
-                    <a href="{{ $recentPayments->previousPageUrl() }}&per_page={{ request('per_page', 10) }}#payments-table" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors">
+                    <a href="{{ $recentPayments->previousPageUrl() }}#payments-table" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors">
                         <i class="fas fa-chevron-left text-xs"></i>
                     </a>
                 @endif
@@ -337,13 +337,13 @@
                     @if ($page == $recentPayments->currentPage())
                         <span class="size-9 flex items-center justify-center rounded-lg bg-blue-600 text-white font-bold text-sm">{{ $page }}</span>
                     @else
-                        <a href="{{ $url }}&per_page={{ request('per_page', 10) }}#payments-table" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors font-medium text-sm text-gray-700">{{ $page }}</a>
+                        <a href="{{ $url }}#payments-table" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors font-medium text-sm text-gray-700">{{ $page }}</a>
                     @endif
                 @endforeach
 
                 {{-- Next Page Link --}}
                 @if ($recentPayments->hasMorePages())
-                    <a href="{{ $recentPayments->nextPageUrl() }}&per_page={{ request('per_page', 10) }}#payments-table" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors">
+                    <a href="{{ $recentPayments->nextPageUrl() }}#payments-table" class="size-9 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-white transition-colors">
                         <i class="fas fa-chevron-right text-xs"></i>
                     </a>
                 @else

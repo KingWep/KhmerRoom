@@ -24,5 +24,8 @@ class AppServiceProvider extends ServiceProvider
         if (request()->is('home')) {
             Route::redirect('/home', '/');
         }
+        if (config('app.env') === 'production') {
+        \URL::forceScheme('https');
+        }
     }
 }

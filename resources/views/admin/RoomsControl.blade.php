@@ -314,13 +314,6 @@
                             <option value="3" {{ request('floor') == '3' ? 'selected' : '' }}>ជាន់ទី ៣</option>
                             <option value="4" {{ request('floor') == '4' ? 'selected' : '' }}>ជាន់ទី 4</option>
                         </select>
-{{-- 
-                        <select name="per_page" onchange="this.form.submit()" class="bg-gray-50 text-base text-gray-700 rounded-2xl px-3 py-2 outline-none font-medium cursor-pointer border border-slate-100">
-                            <option value="10" {{ request('per_page') == '10' ? 'selected' : '' }}>10/ទំព័រ</option>
-                            <option value="15" {{ request('per_page') == '15' ? 'selected' : '' }}>15/ទំព័រ</option>
-                            <option value="25" {{ request('per_page') == '25' ? 'selected' : '' }}>25/ទំព័រ</option>
-                            <option value="50" {{ request('per_page') == '50' ? 'selected' : '' }}>50/ទំព័រ</option>
-                        </select> --}}
 
                         <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-2xl font-medium shadow-sm hover:bg-blue-700">
                             Search
@@ -468,7 +461,7 @@
                                 <span class="material-symbols-outlined text-[18px]">chevron_left</span>
                             </button>
                         @else
-                            <a href="{{ $rooms->previousPageUrl() }}" class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white text-slate-500 hover:border-primary hover:text-primary transition-colors">
+                            <a href="{{ $rooms->appends(['search' => request('search'), 'floor' => request('floor')])->previousPageUrl() }}" class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white text-slate-500 hover:border-primary hover:text-primary transition-colors">
                                 <span class="material-symbols-outlined text-[18px]">chevron_left</span>
                             </a>
                         @endif
@@ -482,7 +475,7 @@
                         @endforeach
 
                         @if ($rooms->hasMorePages())
-                            <a href="{{ $rooms->nextPageUrl() }}" class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white text-slate-500 hover:border-primary hover:text-primary transition-colors">
+                            <a href="{{ $rooms->appends(['search' => request('search'), 'floor' => request('floor')])->nextPageUrl() }}" class="flex items-center justify-center size-9 rounded-lg border border-slate-200 bg-white text-slate-500 hover:border-primary hover:text-primary transition-colors">
                                 <span class="material-symbols-outlined text-[18px]">chevron_right</span>
                             </a>
                         @else

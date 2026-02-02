@@ -101,17 +101,64 @@ class AdminController extends Controller
     public function rooms()
     {
         try {
-            return view('admin.RoomsControl');
+            // Get rooms with pagination
+            $search = request('search');
+            $floor = request('floor');
+            
+            $rooms = Room::query();
+            
+            if ($search) {
+                $rooms->where('room_number', 'like', "%$search%")
+                      ->orWhere('description', 'like', "%$search%");
+            }
+            
+            if ($floor) {
+                $rooms->where('floor', $floor);
+            }
+            
+            $rooms = $rooms->orderBy('created_at', 'desc')
+                          ->paginate(10)
+                          ->appends(['search' => $search, 'floor' => $floor]);
+            
+            return view('admin.RoomsControl', compact('rooms'));
         } catch (\Throwable $th) {
-            return redirect()->route('public.home')->with('error', 'មិនអាចចូលទៅកាន់ Dashboard បានឡើយ!');
+            return redirect()->route('public.home')->with('error', 'មិនអាចចូលទៅកាន់ Rooms បានឡើយ! ' . $th->getMessage());
         }
     }
     public function payments()
     {
         try {
-            return view('admin.Payments');
+            // Get payments with pagination
+            $perPage = request('per_page', 10);
+            $allowedPerPage = [10, 15, 25, 50];
+            if (!in_array($perPage, $allowedPerPage)) {
+                $perPage = 10;
+            }
+            
+            $search = request('search');
+            
+            $payments = Payment::with(['rental.tenant', 'rental.room']);
+            
+            if ($search) {
+                $payments->whereHas('rental.tenant', function($q) use ($search) {
+                    $q->where('name', 'like', "%$search%");
+                })->orWhereHas('rental.room', function($q) use ($search) {
+                    $q->where('room_number', 'like', "%$search%");
+                });
+            }
+            
+            $payments = $payments->orderBy('paid_date', 'desc')
+                                ->paginate($perPage)
+                                ->appends(['per_page' => $perPage, 'search' => $search]);
+            
+            // Calculate summary statistics
+            $totalPaid = Payment::where('status', 'paid')->sum('amount_paid');
+            $totalUnpaid = Payment::where('status', 'pending')->sum('amount_paid');
+            $activeRentals = Rental::where('status', 'ongoing')->get();
+            
+            return view('admin.Payments', compact('payments', 'totalPaid', 'totalUnpaid', 'activeRentals'));
         } catch (\Throwable $th) {
-            return redirect()->route('public.home')->with('error', 'មិនអាចចូលទៅកាន់ Dashboard បានឡើយ!');
+            return redirect()->route('public.home')->with('error', 'មិនអាចច�លទៅកាន់ Payments បានឡើយ! ' . $th->getMessage());
         }
     }
     public function reports()
