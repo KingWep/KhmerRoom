@@ -2,11 +2,11 @@
 @section('title','ផ្ទះជួលខ្មែរ - ទំនាក់ទំនង')
 @section('content')
     <main class="flex-1 flex flex-col items-center">
-            <div class="w-full max-w-[1200px] px-4 md:px-10 py-8 flex flex-col gap-12">
+            <div class="w-full max-w-[1200px] px-4 md:px-10 py-8 flex flex-col gap-10">
                 <!-- Page Heading -->
                 <div class="flex flex-col gap-4 text-center md:text-left py-4">
                     <h1
-                        class="text-[#0d141b]  text-3xl md:text-5xl font-bold leading-tight tracking-[-0.033em] font-khmer">
+                        class="text-[#0d141b]  text-3xl md:text-3xl font-bold leading-tight tracking-[-0.033em] font-khmer">
                         អំពីយើងខ្ញុំ <span class="text-primary">&amp;</span> ទំនាក់ទំនង
                     </h1>
                     <p
@@ -149,9 +149,7 @@
                     <div class="absolute inset-0 bg-cover bg-center" data-alt="Map view showing location in Phnom Penh"
                         data-location="Phnom Penh"
                        >
-                       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31276.296050626042!2d104.9287462234497!3d11.513284346941399!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3109574f479edc5b%3A0xfa311d32a186f747!2sPassport%20Department!5e0!3m2!1sen!2skh!4v1768202402975!5m2!1sen!2skh" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-         {{-- style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuB3SC4e3P4TdkaUhdYCRyYPetyQuaBW-8sVAMZRrgd4drbJxVq5HAqUQBK6sd3lvfOsdBbci8x3kU6ZrOpcExeIDSB6YHMo1ay9SZDL_T7dCsr6uyobjjIm2wHYuJSsfC5IfLv8N26BntYn045ndnTM2l4gBW8Qt0YDNttm0x5beBGzrgHWBVABevdb_O3umBepdKvMSlA0CSGCbmCElYrMldnfVWYsMxoOim_4mka7CZG15I_YkpymtBm_PmiG3xQ9u8h-UV7d3hA"); filter: grayscale(20%);'> --}}
-                    </div>
+                       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3909.0594363490127!2d104.87935397481696!3d11.547594188651965!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31095100352ef23d%3A0xaa1287fb3f8c87e4!2z4Z6U4Z6T4Z-S4Z6R4Z6U4Z-LIOGeh-GeveGem-GeouGevOGemuGelOGfguGegOGegOGfkuGeouGemA!5e0!3m2!1sen!2skh!4v1770056242273!5m2!1sen!2skh" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>                    </div>
                     <div class="absolute inset-0 flex items-center justify-center bg-black/10">
                         <div
                             class="bg-white/90/90 backdrop-blur p-6 rounded-xl shadow-lg flex flex-col items-center gap-3 max-w-sm text-center m-4">
@@ -165,6 +163,7 @@
                                 class="w-full mt-2 bg-primary hover:bg-primary/90 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center gap-2 transition-colors">
                                 <span>
                                     <a href="https://maps.app.goo.gl/RjiEJnVL4Fz8259v8">មើលផែនទី</a></span>
+                                    
                                 <span class="material-symbols-outlined text-sm">open_in_new</span>
                             </button>
                         </div>

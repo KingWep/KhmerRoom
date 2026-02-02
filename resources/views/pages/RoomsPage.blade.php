@@ -3,7 +3,7 @@
 @section('content')
 
     <!-- Main Content -->
-    <main class="flex-grow w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8 mt-8">
+    <main class="flex-grow w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         <!-- Page Heading & Intro -->
         <div class="mb-8">
             <h2 class="text-3xl font-bold text-slate-900 mb-2">បញ្ជីបន្ទប់ជួល</h2>
@@ -144,7 +144,7 @@
                             </div>
                         </div>
 
-                        <a href="#" class="h-12 w-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-blue-300 transition-all duration-300 group-hover:rotate-12">
+                        <a href="{{ route('public.rooms.show', $room->id) }}" class="h-12 w-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-200 hover:bg-blue-700 hover:shadow-blue-300 transition-all duration-300 group-hover:rotate-12">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                             </svg>

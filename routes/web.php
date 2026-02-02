@@ -26,6 +26,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [RoomController::class, 'homeRooms'])->name('public.home');
 Route::get('/rooms', [RoomController::class, 'roomsRooms'])->name('public.rooms');
+Route::get('/rooms/{id}', [RoomController::class, 'show'])->name('public.rooms.show');
 Route::get('/about', [PublicController::class, 'about'])->name('public.about');
 Route::get('/contact', [PublicController::class, 'contact'])->name('public.contact');
 

@@ -21,7 +21,10 @@ class PublicController extends Controller
         // return view('pages.RoomsPage', compact('rooms'));
         return view('pages.RoomsPage');
     }
-
+    // public function detailsRooms()
+    // {
+    //     return view('pages.DetailRooms');
+    // }
     // Contact page
     public function contact()
     {

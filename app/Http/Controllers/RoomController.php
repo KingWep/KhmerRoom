@@ -173,9 +173,10 @@ class RoomController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Room $room)
+    public function show($id)
     {
-        //
+        $room = Room::findOrFail($id);
+        return view('pages.DetailRooms', compact('room'));
     }
     /**
      * Show the form for editing the specified resource.
