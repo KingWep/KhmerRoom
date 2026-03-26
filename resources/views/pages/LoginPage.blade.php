@@ -2,32 +2,49 @@
 @section('title', 'ចូលគណនី - ផ្ទះជួលខ្មែរ')
 @section('content')
     <main class="flex items-center justify-center min-h-screen px-4">
+        @if (session('message'))
+    <div id="toast-container" class="fixed top-5 right-5 z-50 pointer-events-none">
+        <div id="toast-message" 
+             class="flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border border-emerald-100 bg-white/90 backdrop-blur-sm
+                    text-emerald-800 text-sm pointer-events-auto
+                    transform transition-all duration-500 translate-x-full opacity-0">
+            
+            <span class="material-symbols-outlined text-emerald-500">check_circle</span>
+            
+            <span class="font-khmer font-medium">
+                {{ session('message') }}
+            </span>
+
+            <button onclick="dismissToast()" class="ml-2 text-slate-400 hover:text-slate-600 transition">
+                <span class="material-symbols-outlined text-sm">close</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const toast = document.getElementById('toast-message');
+
+        // 1. Slide In
+        setTimeout(() => {
+            toast.classList.remove('translate-x-full', 'opacity-0');
+            toast.classList.add('translate-x-0', 'opacity-100');
+        }, 100);
+
+        // 2. Function to Hide
+        function dismissToast() {
+            toast.classList.add('translate-x-full', 'opacity-0');
+            toast.classList.remove('translate-x-0', 'opacity-100');
+            setTimeout(() => {
+                document.getElementById('toast-container')?.remove();
+            }, 500); // Wait for animation to finish
+        }
+
+        // 3. Auto Close after 3 seconds
+        setTimeout(dismissToast, 3000);
+    </script>
+@endif
         <div
             class="w-full max-w-4xl bg-surface-light dark:bg-surface-dark rounded-2xl shadow-xl shadow-gray-600/40 grid grid-cols-1 lg:grid-cols-2 overflow-hidden">
-            @if (session('message'))
-                <div id="alert-message" class="inline-flex items-center gap-2 px-3 py-2 mb-4 rounded-lg
-                   bg-emerald-50 border border-emerald-200
-                   text-emerald-700 text-xs shadow
-                   animate-in fade-in slide-in-from-top-2 duration-200">
-                    <span class="material-symbols-outlined text-sm">
-                        check_circle
-                    </span>
-                    <span class="font-khmer">
-                        {{ session('message') }}
-                    </span>
-                    <button onclick="closeAlert()" class="ml-1 text-emerald-500 hover:text-emerald-700 transition">
-                        <span class="material-symbols-outlined text-xs">close</span>
-                    </button>
-                </div>
-                <script>
-                    function closeAlert() {
-                        document.getElementById('alert-message')?.remove();
-                    }
-                    // auto close after 2 seconds
-                    setTimeout(closeAlert, 2000);
-                </script>
-            @endif
-
             <!-- LOGIN FORM -->
             <div class="p-8 md:p-12 flex flex-col justify-center">
 

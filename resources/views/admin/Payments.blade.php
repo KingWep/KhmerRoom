@@ -3,6 +3,46 @@
 
 @section('content')
     <div class="p-6 space-y-6 animate-fade-in">
+        
+        {{-- Success Message --}}
+        @if(session('success'))
+            <div class="relative bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-4 shadow-sm animate-slide-in" role="alert">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center h-10 w-10 rounded-full bg-green-100">
+                            <i class="fas fa-check-circle text-green-600 text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow">
+                        <h3 class="text-sm font-bold text-green-800">ជោគជ័យ!</h3>
+                        <p class="text-sm text-green-700 mt-1">{{ session('success') }}</p>
+                    </div>
+                    <button type="button" onclick="this.parentElement.parentElement.remove()" class="flex-shrink-0 text-green-400 hover:text-green-600 transition-colors">
+                        <i class="fas fa-times fa-lg"></i>
+                    </button>
+                </div>
+            </div>
+        @endif
+
+        {{-- Error Message --}}
+        @if(session('error'))
+            <div class="relative bg-gradient-to-r from-red-50 to-rose-50 border border-red-200 rounded-2xl p-4 shadow-sm animate-slide-in" role="alert">
+                <div class="flex items-start gap-4">
+                    <div class="flex-shrink-0">
+                        <div class="flex items-center justify-center h-10 w-10 rounded-full bg-red-100">
+                            <i class="fas fa-exclamation-circle text-red-600 text-lg"></i>
+                        </div>
+                    </div>
+                    <div class="flex-grow">
+                        <h3 class="text-sm font-bold text-red-800">មានបញ្ហា!</h3>
+                        <p class="text-sm text-red-700 mt-1">{{ session('error') }}</p>
+                    </div>
+                    <button type="button" onclick="this.parentElement.parentElement.remove()" class="flex-shrink-0 text-red-400 hover:text-red-600 transition-colors">
+                        <i class="fas fa-times fa-lg"></i>
+                    </button>
+                </div>
+            </div>
+        @endif
 
         {{-- Header Section --}}
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -517,6 +557,10 @@
             animation: fadeIn 0.5s ease-in-out;
         }
 
+        .animate-slide-in {
+            animation: slideIn 0.4s ease-out;
+        }
+
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -526,6 +570,18 @@
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
             }
         }
     </style>
