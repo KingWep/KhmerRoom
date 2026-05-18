@@ -1,8 +1,8 @@
 <?php
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -10,7 +10,7 @@ class UserController extends Controller
     {
         try {
            $user = User::all();
-           if(!$user){
+           if($user->isEmpty()){
                 throw new \Exception("រកមិនឃើញព័ត៌មានអ្នកប្រើប្រាស់ឡើយ។");
            }
             return view('pages.ProfilePage', compact('user'));
@@ -22,11 +22,16 @@ class UserController extends Controller
     {
         try {
             $user = User::findOrFail($id);
+
+            if (Auth::id() !== $user->id && Auth::user()?->role !== 'admin') {
+                return back()->with('error', 'អ្នកគ្មានសិទ្ធិកែប្រែគណនីនេះទេ! (Unauthorized Access)');
+            }
+
             $validatedData = $request->validate([
                 'name'     => ['sometimes', 'string', 'min:3', 'max:255'],
                 'email'    => ['sometimes', 'email', 'unique:users,email,' . $id],
                 'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-                'profile'  => ['nullable', 'image', 'mimes:png,jpg,jpeg', 'max:2048'],
+                'profile'  => ['nullable', 'file', 'mimes:png,jpg,jpeg', 'max:2048'],
             ]);
             // គ្រប់គ្រងការប្តូរ Password
             if (!empty($request->password)) {
@@ -36,30 +41,41 @@ class UserController extends Controller
             }
             
         // គ្រប់គ្រងការ Upload រូបភាពទៅ Cloudinary
-        if ($request->hasFile('profile')) {
-            $uploadedFile = $request->file('profile')->storeOnCloudinary('profile_images');   
-            $validatedData['profile'] = $uploadedFile->getSecurePath(); 
-        }
-        $user->update($validatedData);
-        return redirect()->back()->with('message', 'ព័ត៌មានត្រូវបានផ្លាស់ប្តូរដោយជោគជ័យ!');
+            if ($request->hasFile('profile')) {
+                $uploadedFile = $request->file('profile')->storeOnCloudinary('profile_images');
+                $validatedData['profile'] = $uploadedFile->getSecurePath();
+            }
 
-    } catch (\Throwable $th) {
-        return back()->with('error', 'កំហុសបច្ចេកទេស៖ ' . $th->getMessage());
+            $user->update($validatedData);
+            return redirect()->back()->with('message', 'ព័ត៌មានត្រូវបានផ្លាស់ប្តូរដោយជោគជ័យ!');
+
+        } catch (\Throwable $th) {
+            return back()->with('error', 'កំហុសបច្ចេកទេស៖ ' . $th->getMessage());
+        }
     }
-}
+
     public function deleteAccount($id){
         try {
              $user = User::findOrFail($id);
-             if(auth()->id() !== $user->id && auth()->user()->role !== 'admin'){
+
+             if (!Auth::check()) {
+                return redirect()->route('login');
+             }
+
+             if(Auth::id() !== $user->id && Auth::user()?->role !== 'admin'){
                 return back()->with('error', 'អ្នកគ្មានសិទ្ធិលុបគណនីនេះទេ! (Unauthorized Access)');
              }
-            if (auth()->id() === $user->id) {
-                auth()->logout();
+
+            if (Auth::id() === $user->id) {
+                Auth::logout();
                 request()->session()->invalidate();
                 request()->session()->regenerateToken();
                 $user->delete();
                 return redirect()->route('public.home')->with('message','គណនីត្រូវបានលុបដោយជោគជ័យ។');
             }
+
+            $user->delete();
+            return back()->with('message', 'គណនីត្រូវបានលុបដោយជោគជ័យ។');
         } catch (\Throwable $th) {
             return back()->with('error', 'មានបញ្ហាបច្ចេកទេស៖ ' . $th->getMessage());
         }
