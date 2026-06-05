@@ -295,7 +295,7 @@
                 </button>
             </div>
             {{-- <div class="premium-card rounded-3xl mb-10 flex flex-col md:flex-row gap-4 items-center bg-white"> --}}
-                <form action="{{ request()->url() }}" method="GET"
+                <form action="{{ route('admin.rooms.index') }}" method="GET"
                     class="premium-card rounded-3xl mb-10 flex flex-col md:flex-row gap-4 items-center bg-white shadow-sm border border-gray-100">
                     <div class="relative flex-1 w-full">
                         <span class="material-symbols-outlined absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 text-[18px]">search</span>

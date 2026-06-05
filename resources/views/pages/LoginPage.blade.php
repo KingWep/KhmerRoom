@@ -53,7 +53,7 @@
                     សូមបញ្ចូលព័ត៌មាន ដើម្បីចូលគណនី
                 </p>
 
-                <form class="space-y-5" method="POST" action="">
+                <form class="space-y-5" method="POST" action="{{ route('login.store') }}">
                     @csrf
 
                     <!-- Email -->

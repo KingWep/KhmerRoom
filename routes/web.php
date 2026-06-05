@@ -24,6 +24,8 @@ use Illuminate\Support\Facades\Route;
 // PUBLIC ROUTES (Accessible to everyone)
 // ============================================================================
 
+Route::redirect('/home', '/');
+
 Route::get('/', [RoomController::class, 'homeRooms'])->name('public.home');
 Route::get('/rooms', [RoomController::class, 'roomsRooms'])->name('public.rooms');
 Route::get('/rooms/{id}', [RoomController::class, 'show'])->name('public.rooms.show');
