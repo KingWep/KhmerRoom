@@ -63,4 +63,20 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 
 ## License
 
+## Optimize / Deploy
+
+Use the helper scripts in [scripts](scripts) to refresh the app after pulling updates and to rebuild Laravel caches.
+
+On Linux or WSL:
+
+```bash
+bash scripts/optimize.sh
+```
+
+On Windows PowerShell:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/optimize.ps1
+```
+
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
