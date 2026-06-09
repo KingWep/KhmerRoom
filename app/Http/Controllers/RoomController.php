@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+use Illuminate\Support\Facades\Log;
+
 class RoomController extends Controller
 {
     /**
@@ -136,38 +139,52 @@ class RoomController extends Controller
      * Show the form for creating a new resource.
      */
     public function create(Request $request)
-    {       
+    {
         $request->validate([
-            'room_number'=>['required','integer','unique:rooms,room_number'],
-            'floor'=>['required','integer'],
-            'price'=>['required','numeric'],
-            'status'=>['required','in:available,occupied,maintenance'],
-            'images'=>['nullable','file','mimes:png,jpg,jpeg','max:2048'],
-            'description'=>['nullable','string'],
-            'size'=>['required','numeric'],
-            'accessories'=>['nullable','array'],
+            'room_number' => ['required','integer','unique:rooms,room_number'],
+            'floor' => ['required','integer'],
+            'price' => ['required','numeric'],
+            'status' => ['required','in:available,occupied,maintenance'],
+            'images' => ['nullable','file','mimes:png,jpg,jpeg','max:2048'],
+            'description' => ['nullable','string'],
+            'size' => ['required','numeric'],
+            'accessories' => ['nullable','array'],
         ]);
-        try {
-            $image_url = null;
-            if($request->hasFile('images')){
-                $file = $request->file('images');
-                $uploadedFile = $file->storeOnCloudinary('room_images');
-                $image_url = $uploadedFile->getSecurePath();
+
+        $image_url = null;
+
+        if ($request->hasFile('images')) {
+            try {
+                $uploaded = Cloudinary::upload(
+                    $request->file('images')->getRealPath(),
+                    [
+                        'folder' => 'room_images'
+                    ]
+                );
+
+                $image_url = $uploaded->getSecurePath();
+
+            } catch (\Throwable $e) {
+                Log::error('Cloudinary Upload Error: ' . $e->getMessage());
+                $image_url = null;
             }
-            $room = new Room;
-            $room->room_number = $request->room_number;
-            $room->floor = $request->floor;
-            $room->price = $request->price;
-            $room->status = $request->status;
-            $room->images = $image_url;
-            $room->description = $request->description;
-            $room->size = $request->size;
-            $room->accessories = $request->accessories;
-            $room->save();
-            return redirect()->route('admin.rooms.index')->with('message', 'បន្ទប់ត្រូវបានបង្កើតដោយជោគជ័យ ');
-        } catch (\Exception $e) {
-            return redirect()->back()->withInput()->with('error', 'មានកំហុសក្នុងការបង្កើតបន្ទប់​​ ' . $e->getMessage());
         }
+
+        // ✅ SAVE ROOM
+        $room = new Room();
+        $room->room_number = $request->room_number;
+        $room->floor = $request->floor;
+        $room->price = $request->price;
+        $room->status = $request->status;
+        $room->images = $image_url;
+        $room->description = $request->description;
+        $room->size = $request->size;
+        $room->accessories = $request->accessories;
+        $room->save();
+
+        return redirect()
+            ->route('admin.rooms.index')
+            ->with('message', 'បន្ទប់ត្រូវបានបង្កើតដោយជោគជ័យ');
     }
 
     /**
