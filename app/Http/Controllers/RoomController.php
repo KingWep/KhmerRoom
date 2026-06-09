@@ -138,15 +138,14 @@ class RoomController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-
-    public function create(Request $request)
+        public function create(Request $request)
     {
         $request->validate([
             'room_number' => ['required','integer','unique:rooms,room_number'],
             'floor' => ['required','integer'],
             'price' => ['required','numeric'],
             'status' => ['required','in:available,occupied,maintenance'],
-            'images' => ['nullable','image','mimes:png,jpg,jpeg','max:2048'],
+            'images' => ['nullable','file','mimes:png,jpg,jpeg','max:2048'],
             'description' => ['nullable','string'],
             'size' => ['required','numeric'],
             'accessories' => ['nullable','array'],
@@ -156,23 +155,22 @@ class RoomController extends Controller
 
         if ($request->hasFile('images')) {
 
-            $file = $request->file('images');
-
             try {
-                $uploadedFileUrl = Cloudinary::upload($file->getRealPath(), [
-                    'folder' => 'room_images',
-                    'resource_type' => 'image'
-                ])->getSecurePath();
+                $file = $request->file('images');
 
-                $image_url = $uploadedFileUrl;
+                $uploaded = cloudinary()->upload(
+                    $file->getRealPath(),
+                    ['folder' => 'room_images']
+                );
 
-            } catch (\Exception $e) {
-                Log::error('Cloudinary Upload Error: ' . $e->getMessage());
-                return back()->with('error', 'Upload failed');
+                $image_url = $uploaded->getSecurePath();
+
+            } catch (\Throwable $e) {
+                \Log::error($e->getMessage());
+                $image_url = null;
             }
         }
-
-        Room::create([
+        $room = Room::create([
             'room_number' => $request->room_number,
             'floor' => $request->floor,
             'price' => $request->price,
