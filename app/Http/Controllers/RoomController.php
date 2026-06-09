@@ -155,6 +155,10 @@ class RoomController extends Controller
 
         if ($request->hasFile('images')) {
             try {
+                dd(
+                    $request->hasFile('images'),
+                    $request->file('images')
+                );
                 $uploaded = Cloudinary::upload(
                     $request->file('images')->getRealPath(),
                     [
@@ -169,8 +173,6 @@ class RoomController extends Controller
                 $image_url = null;
             }
         }
-
-        // ✅ SAVE ROOM
         $room = new Room();
         $room->room_number = $request->room_number;
         $room->floor = $request->floor;
