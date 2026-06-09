@@ -154,25 +154,24 @@ class RoomController extends Controller
         $image_url = null;
 
         if ($request->hasFile('images')) {
-            try {
-                dd(
-                    $request->hasFile('images'),
-                    $request->file('images')
-                );
-                $uploaded = Cloudinary::upload(
-                    $request->file('images')->getRealPath(),
-                    [
-                        'folder' => 'room_images'
-                    ]
-                );
+        try {
 
-                $image_url = $uploaded->getSecurePath();
+            $file = $request->file('images');
 
-            } catch (\Throwable $e) {
-                Log::error('Cloudinary Upload Error: ' . $e->getMessage());
-                $image_url = null;
-            }
+            $uploaded = cloudinary()->upload(
+                $file->getRealPath(),
+                [
+                    'folder' => 'room_images'
+                ]
+            );
+
+            $image_url = $uploaded->getSecurePath();
+
+        } catch (\Throwable $e) {
+            \Log::error('Cloudinary Upload Error: ' . $e->getMessage());
+            $image_url = null;
         }
+    }
         $room = new Room();
         $room->room_number = $request->room_number;
         $room->floor = $request->floor;
