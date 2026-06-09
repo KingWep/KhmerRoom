@@ -138,7 +138,7 @@ class RoomController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Request $request)
+        public function create(Request $request)
     {
         $request->validate([
             'room_number' => ['required','integer','unique:rooms,room_number'],
@@ -154,37 +154,35 @@ class RoomController extends Controller
         $image_url = null;
 
         if ($request->hasFile('images')) {
-        try {
 
-            $file = $request->file('images');
+            try {
+                $file = $request->file('images');
 
-            $uploaded = cloudinary()->upload(
-                $file->getRealPath(),
-                [
-                    'folder' => 'room_images'
-                ]
-            );
+                $uploaded = cloudinary()->upload(
+                    $file->getRealPath(),
+                    ['folder' => 'room_images']
+                );
 
-            $image_url = $uploaded->getSecurePath();
+                $image_url = $uploaded->getSecurePath();
 
-        } catch (\Throwable $e) {
-            \Log::error('Cloudinary Upload Error: ' . $e->getMessage());
-            $image_url = null;
+            } catch (\Throwable $e) {
+                \Log::error($e->getMessage());
+                $image_url = null;
+            }
         }
-    }
-        $room = new Room();
-        $room->room_number = $request->room_number;
-        $room->floor = $request->floor;
-        $room->price = $request->price;
-        $room->status = $request->status;
-        $room->images = $image_url;
-        $room->description = $request->description;
-        $room->size = $request->size;
-        $room->accessories = $request->accessories;
-        $room->save();
 
-        return redirect()
-            ->route('admin.rooms.index')
+        $room = Room::create([
+            'room_number' => $request->room_number,
+            'floor' => $request->floor,
+            'price' => $request->price,
+            'status' => $request->status,
+            'images' => $image_url,
+            'description' => $request->description,
+            'size' => $request->size,
+            'accessories' => $request->accessories,
+        ]);
+
+        return redirect()->route('admin.rooms.index')
             ->with('message', 'បន្ទប់ត្រូវបានបង្កើតដោយជោគជ័យ');
     }
 
