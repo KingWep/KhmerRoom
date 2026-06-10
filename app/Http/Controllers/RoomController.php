@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Room;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\Log;
 
 class RoomController extends Controller
@@ -138,7 +137,7 @@ class RoomController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-        public function create(Request $request)
+    public function create(Request $request)
     {
         $request->validate([
             'room_number' => ['required','integer','unique:rooms,room_number'],
@@ -151,38 +150,41 @@ class RoomController extends Controller
             'accessories' => ['nullable','array'],
         ]);
 
-        $image_url = null;
+        try {
 
-        if ($request->hasFile('images')) {
+            $image_url = null;
 
-            try {
-                $file = $request->file('images');
+            if ($request->hasFile('images')) {
 
-                $uploaded = cloudinary()->upload(
-                    $file->getRealPath(),
-                    ['folder' => 'room_images']
-                );
+                $image = $request->file('images')
+                                ->storeOnCloudinary('room_images');
 
-                $image_url = $uploaded->getSecurePath();
-
-            } catch (\Throwable $e) {
-                \Log::error($e->getMessage());
-                $image_url = null;
+                $image_url = $image->getSecurePath();
             }
-        }
-        $room = Room::create([
-            'room_number' => $request->room_number,
-            'floor' => $request->floor,
-            'price' => $request->price,
-            'status' => $request->status,
-            'images' => $image_url,
-            'description' => $request->description,
-            'size' => $request->size,
-            'accessories' => $request->accessories,
-        ]);
 
-        return redirect()->route('admin.rooms.index')
-            ->with('message', 'បន្ទប់ត្រូវបានបង្កើតដោយជោគជ័យ');
+            Room::create([
+                'room_number' => $request->room_number,
+                'floor' => $request->floor,
+                'price' => $request->price,
+                'status' => $request->status,
+                'images' => $image_url,
+                'description' => $request->description,
+                'size' => $request->size,
+                'accessories' => $request->accessories,
+            ]);
+
+            return redirect()
+                ->route('admin.rooms.index')
+                ->with('message', 'បន្ទប់ត្រូវបានបង្កើតដោយជោគជ័យ');
+
+        } catch (\Throwable $e) {
+
+            Log::error('Create Room Error: '.$e->getMessage());
+
+            return back()
+                ->withInput()
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**
