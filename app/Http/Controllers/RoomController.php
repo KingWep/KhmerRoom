@@ -156,9 +156,14 @@ class RoomController extends Controller
 
             if ($request->hasFile('images')) {
 
-                $image = $request->file('images')
-                                ->storeOnCloudinary('room_images');
-
+                $image = cloudinary()->upload($request->file('images')->getRealPath(),[
+                    'folder' => 'room_images',
+                    // 'transformation' => [
+                    //     'width' => 800,
+                    //     'height' => 600,
+                    //     'crop' => 'fill'
+                    // ]
+                ]);
                 $image_url = $image->getSecurePath();
             }
 
