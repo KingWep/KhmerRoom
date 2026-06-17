@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Testing\Fluent\Concerns\Has;
 
 class AuthController extends Controller
 {
@@ -21,11 +20,15 @@ class AuthController extends Controller
             'password'=>['required','string','min:8','confirmed'],
             'profile'=>['nullable','file','mimes:png,jpg,jpeg','max:2048'],
         ]);
-        $image_url = null;
-        if($request->hasFile('profile')){
-            $file = $request->file('profile');
-            $uploadedFile = $file->storeOnCloudinary('profile_images');
-            $image_url = $uploadedFile->getSecurePath();
+       $image_url = null;
+        if ($request->hasFile('profile') && $request->file('profile')->isValid()) {
+            $uploaded = cloudinary()->upload(
+                $request->file('profile')->getRealPath(),
+                [
+                    'folder' => 'profile_images'
+                ]
+            );
+            $image_url = $uploaded->getSecurePath();
         }
         $user = new User;
         $user->name = $request->name;
