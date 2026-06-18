@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="{{ asset('/images/logowebsite.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('images/logowebsite.png') }}?v={{ time() }}">
     <title>@yield('title', 'ផ្ទះជួលខ្មែរ - Khmer Rental Rooms')</title>
 
     {{-- icon --}}
