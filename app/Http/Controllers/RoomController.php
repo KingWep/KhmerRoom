@@ -140,7 +140,7 @@ class RoomController extends Controller
     public function create(Request $request)
     {
         $request->validate([
-            'room_number' => ['required','integer','unique:rooms,room_number'],
+            'room_number' => ['required','string','max:50','unique:rooms,room_number'],
             'floor' => ['required','integer'],
             'price' => ['required','numeric'],
             'width' => ['nullable','numeric','min:0','max:99.99'],
@@ -212,7 +212,7 @@ class RoomController extends Controller
         try {
             $room = Room::findOrFail($id);
             $ValidateData = $request->validate([
-                'room_number' => ['sometimes','integer', Rule::unique('rooms','room_number')->ignore($id)],
+                'room_number' => ['sometimes','string','max:50', Rule::unique('rooms','room_number')->ignore($id)],
                 'floor' => ['sometimes','integer'],
                 'price' => ['sometimes','numeric'],
                 'width' => ['sometimes','nullable','numeric','min:0','max:99.99'],

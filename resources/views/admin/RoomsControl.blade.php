@@ -61,7 +61,7 @@
                                                 <label class="form-label font-medium text-slate-700">លេខបន្ទប់</label>
                                                 <input type="text" name="room_number"
                                                     class="form-control border-slate-300 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all"
-                                                    placeholder="ឧទាហរណ៍: A-101" required>
+                                                    placeholder="ឧទាហរណ៍: A-101" maxlength="50" required>
                                             </div>
                                             <div class="col-md-6">
                                                 <label class="form-label font-medium text-slate-700">ជាន់</label>
