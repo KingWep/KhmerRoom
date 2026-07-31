@@ -79,12 +79,32 @@
                                                         class="form-control border-slate-300 rounded-r-xl" required>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label font-medium text-slate-700">ទំហំបន្ទប់</label>
+                                            <div class="col-md-4">
+                                                <label class="form-label font-medium text-slate-700">ទទឹង (Width)</label>
                                                 <div class="input-group">
-                                                    <input type="text" name="size"
+                                                    <input type="number" min="0" step="0.01" name="width" id="inputWidth"
                                                         class="form-control border-slate-300 rounded-l-xl"
-                                                        placeholder="ឧទាហរណ៍: 25">
+                                                        placeholder="ឧទាហរណ៍: 4" oninput="calcSize()">
+                                                    <span
+                                                        class="input-group-text bg-slate-100 border-slate-300 text-slate-500 rounded-r-xl">m</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label font-medium text-slate-700">បណ្ដោយ (Length)</label>
+                                                <div class="input-group">
+                                                    <input type="number" min="0" step="0.01" name="length" id="inputLength"
+                                                        class="form-control border-slate-300 rounded-l-xl"
+                                                        placeholder="ឧទាហរណ៍: 5" oninput="calcSize()">
+                                                    <span
+                                                        class="input-group-text bg-slate-100 border-slate-300 text-slate-500 rounded-r-xl">m</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label font-medium text-slate-700">ទំហំបន្ទប់ (Size)</label>
+                                                <div class="input-group">
+                                                    <input type="text" name="size" id="inputSize"
+                                                        class="form-control border-slate-300 rounded-l-xl bg-slate-50"
+                                                        placeholder="គណនាស្វ័យប្រវត្តិ" readonly>
                                                     <span
                                                         class="input-group-text bg-slate-100 border-slate-300 text-slate-500 rounded-r-xl">m²</span>
                                                 </div>
@@ -346,6 +366,8 @@
                                 </th>
                                 <th class="px-4 py-3 text-md font-bold tracking-wider text-white uppercase">តម្លៃប្រចាំខែ
                                 </th>
+                                <th class="px-4 py-3 text-md font-bold tracking-wider text-white uppercase">ទំហំ / វិមាត្រ
+                                </th>
                                 <th class="px-4 py-3 text-md font-bold tracking-wider text-white uppercase">
                                     ស្ថានភាព</th>
                                 <th class="px-4 py-3 text-md font-bold tracking-wider text-white uppercase">បរិយាយ
@@ -386,6 +408,21 @@
                                     </td>
 
                                     <td class="px-4 py-3">
+                                        @if($room->width && $room->length)
+                                            <div class="text-sm font-semibold text-gray-800">
+                                                {{ number_format($room->size, 2) }} m²
+                                            </div>
+                                            <div class="text-xs text-gray-500 mt-0.5">
+                                                {{ number_format($room->width, 2) }}m × {{ number_format($room->length, 2) }}m
+                                            </div>
+                                        @elseif($room->size)
+                                            <span class="text-sm font-semibold text-gray-800">{{ number_format($room->size, 2) }} m²</span>
+                                        @else
+                                            <span class="text-sm text-gray-400">—</span>
+                                        @endif
+                                    </td>
+
+                                    <td class="px-4 py-3">
                                         @php
                                             $statusClasses = [
                                                 'available' => 'bg-emerald-50 text-emerald-700 border-emerald-100',
@@ -416,6 +453,7 @@
                                             <button type="button" class="inline-flex items-center gap-2 px-3 py-2 bg-yellow-50 text-yellow-700 rounded-lg font-semibold btn-edit-room"
                                                 data-id="{{ $room->id }}" data-room_number="{{ $room->room_number }}"
                                                 data-floor="{{ $room->floor }}" data-price="{{ $room->price }}"
+                                                data-width="{{ $room->width }}" data-length="{{ $room->length }}"
                                                 data-size="{{ $room->size }}" data-status="{{ $room->status }}"
                                                 data-description="{{ $room->description }}"
                                                 data-accessories='@json($room->accessories)'>
@@ -434,7 +472,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="py-12 text-center text-gray-400">
+                                    <td colspan="6" class="py-12 text-center text-gray-400">
                                         រកមិនឃើញទិន្នន័យ...
                                     </td>
                                 </tr>
@@ -545,6 +583,17 @@
                 if (input.form) input.form.submit();
             }, 500);
         }
+        // Auto-calculate size from width × length
+        function calcSize() {
+            const w = parseFloat(document.getElementById('inputWidth').value) || 0;
+            const l = parseFloat(document.getElementById('inputLength').value) || 0;
+            const sizeInput = document.getElementById('inputSize');
+            if (w > 0 && l > 0) {
+                sizeInput.value = (w * l).toFixed(2);
+            } else {
+                sizeInput.value = '';
+            }
+        }
         // Open edit modal
         $(document).on('click', '.btn-edit-room', function (e) {
             e.preventDefault();
@@ -559,7 +608,10 @@
             $('input[name="room_number"]').val($(this).data('room_number'));
             $('input[name="floor"]').val($(this).data('floor'));
             $('input[name="price"]').val($(this).data('price'));
+            $('input[name="width"]').val($(this).data('width'));
+            $('input[name="length"]').val($(this).data('length'));
             $('input[name="size"]').val($(this).data('size'));
+            calcSize(); // Recalculate size display
             $('select[name="status"]').val($(this).data('status'));
             $('textarea[name="description"]').val($(this).data('description'));
             // Fill checkboxes

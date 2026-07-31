@@ -143,10 +143,12 @@ class RoomController extends Controller
             'room_number' => ['required','integer','unique:rooms,room_number'],
             'floor' => ['required','integer'],
             'price' => ['required','numeric'],
+            'width' => ['nullable','numeric','min:0','max:99.99'],
+            'length' => ['nullable','numeric','min:0','max:99.99'],
             'status' => ['required','in:available,occupied,maintenance'],
             'images' => ['nullable','file','mimes:png,jpg,jpeg','max:2048'],
             'description' => ['nullable','string'],
-            'size' => ['required','numeric'],
+            'size' => ['nullable','numeric'],
             'accessories' => ['nullable','array'],
         ]);
 
@@ -171,6 +173,8 @@ class RoomController extends Controller
                 'room_number' => $request->room_number,
                 'floor' => $request->floor,
                 'price' => $request->price,
+                'width' => $request->width,
+                'length' => $request->length,
                 'status' => $request->status,
                 'images' => $image_url,
                 'description' => $request->description,
@@ -211,10 +215,12 @@ class RoomController extends Controller
                 'room_number' => ['sometimes','integer', Rule::unique('rooms','room_number')->ignore($id)],
                 'floor' => ['sometimes','integer'],
                 'price' => ['sometimes','numeric'],
+                'width' => ['sometimes','nullable','numeric','min:0','max:99.99'],
+                'length' => ['sometimes','nullable','numeric','min:0','max:99.99'],
                 'status' => ['sometimes','in:available,occupied,maintenance'],
                 'images' => ['sometimes','nullable','file','mimes:png,jpg,jpeg','max:2048'],
                 'description' => ['sometimes','nullable','string'],
-                'size' => ['sometimes','numeric'],
+                'size' => ['sometimes','nullable','numeric'],
                 'accessories' => ['sometimes','nullable','array'], 
             ]);
 
