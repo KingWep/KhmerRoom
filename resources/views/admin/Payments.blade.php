@@ -526,15 +526,15 @@
 
             Swal.fire({
                 title: 'តើអ្នកប្រាកដទេ?',
-                html: `
-                    <div style="text-align:left; font-size:14px; color:#475569; line-height:1.8;">
-                        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>អ្នកជួល:</span> <strong>${tenant}</strong></div>
-                        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>បន្ទប់:</span> <strong>${room}</strong></div>
-                        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>ខែ:</span> <strong>${month}</strong></div>
-                        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>ទឹកប្រាក់:</span> <strong style="color:#2563eb;">${amount}</strong></div>
-                    </div>
-                    <p style="color:#ef4444; font-size:12px; margin-top:12px;">⚠️ សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ!</p>
-                `,
+                // html: `
+                //     <div style="text-align:left; font-size:14px; color:#475569; line-height:1.8;">
+                //         <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>អ្នកជួល:</span> <strong>${tenant}</strong></div>
+                //         <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>បន្ទប់:</span> <strong>${room}</strong></div>
+                //         <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>ខែ:</span> <strong>${month}</strong></div>
+                //         <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>ទឹកប្រាក់:</span> <strong style="color:#2563eb;">${amount}</strong></div>
+                //     </div>
+                //     <p style="color:#ef4444; font-size:12px; margin-top:12px;">⚠️ សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ!</p>
+                // `,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#dc2626',
