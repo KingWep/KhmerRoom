@@ -353,6 +353,9 @@
                                             <label
                                                 class="form-label font-medium text-slate-700 text-sm">រូបភាពបន្ទប់</label>
                                             
+                                            <!-- Hidden input to preserve old image URL -->
+                                            <input type="hidden" id="oldImageInput" name="old_images" value="">
+                                            
                                             <!-- Image Preview Container -->
                                             <div id="imagePreviewContainer" class="hidden mb-3">
                                                 <div class="relative rounded-xl overflow-hidden border-2 border-blue-400 shadow-md">
@@ -566,6 +569,7 @@
                                                 data-width="{{ $room->width }}" data-length="{{ $room->length }}"
                                                 data-size="{{ $room->size }}" data-status="{{ $room->status }}"
                                                 data-description="{{ $room->description }}"
+                                                data-images="{{ $room->images }}"
                                                 data-accessories='@json($room->accessories)'>
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                                             </button>
@@ -682,6 +686,7 @@
             document.getElementById('imagePreview').src = '';
             document.getElementById('imagePreviewContainer').classList.add('hidden');
             document.getElementById('uploadArea').classList.remove('hidden');
+            document.getElementById('oldImageInput').value = '';
         }
         
         // Debounce search input
@@ -729,6 +734,16 @@
             accessories.forEach(item => {
                 $(`input[name="accessories[]"][value="${item}"]`).prop('checked', true);
             });
+            // Show old image if exists
+            let oldImage = $(this).data('images') || '';
+            if (oldImage) {
+                $('#imagePreview').attr('src', oldImage);
+                $('#imagePreviewContainer').removeClass('hidden');
+                $('#uploadArea').addClass('hidden');
+                $('#oldImageInput').val(oldImage);
+            } else {
+                clearImagePreview();
+            }
             // Show modal
             const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
             modal.show();

@@ -227,6 +227,8 @@ class RoomController extends Controller
             if ($request->hasFile('images')) {
                 $image = $request->file('images')->storeOnCloudinary('room_images');
                 $ValidateData['images'] = $image->getSecurePath();
+            } elseif ($request->filled('old_images')) {
+                $ValidateData['images'] = $request->input('old_images');
             }
 
             $room->update($ValidateData);
