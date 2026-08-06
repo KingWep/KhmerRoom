@@ -166,11 +166,15 @@
                                             <span>កែប្រែ</span>
                                         </button>
 
-                                        <!-- Delete Button - Opens Modal -->
+                                        <!-- Delete Button - SweetAlert2 -->
                                         <button type="button" 
-                                            class="inline-flex items-center gap-1.5 px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all duration-200 font-medium text-sm border border-red-200 hover:border-red-300 hover:shadow-sm"
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#deletePaymentModal{{ $payment->id }}"
+                                            class="inline-flex items-center gap-1.5 px-3 py-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-all duration-200 font-medium text-sm border border-red-200 hover:border-red-300 hover:shadow-sm btn-delete-payment"
+                                            data-id="{{ $payment->id }}"
+                                            data-tenant="{{ $payment->rental->tenant->name ?? 'N/A' }}"
+                                            data-room="{{ $payment->rental->room->room_number ?? 'N/A' }}"
+                                            data-month="{{ \Carbon\Carbon::parse($payment->pay_month)->format('M Y') }}"
+                                            data-amount="${{ number_format($payment->amount_paid, 2) }}"
+                                            data-url="{{ route('admin.payments.destroy', $payment->id) }}"
                                             title="លុប">
                                             <i class="fas fa-trash-alt text-sm"></i>
                                             <span>លុប</span>
@@ -269,51 +273,6 @@
                                 </div>
                             </div>
 
-                            {{-- Delete Payment Confirmation Modal --}}
-                            <div class="modal fade" id="deletePaymentModal{{ $payment->id }}" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content border-none rounded-2xl shadow-2xl">
-                                        <div class="modal-header bg-red-600 text-white rounded-t-2xl p-4">
-                                            <h5 class="modal-title font-bold flex items-center gap-2">
-                                                <i class="fas fa-trash-alt"></i> បញ្ជាក់ការលុប
-                                            </h5>
-                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <div class="modal-body p-6 bg-gray-50 text-center">
-                                            <div class="mb-4">
-                                                {{-- <div class="h-16 w-16 bg-red-100 rounded-full flex items-center justify-center text-red-600 mx-auto mb-4">
-                                                    <i class="fas fa-exclamation-triangle fa-2x"></i>
-                                                </div> --}}
-                                                <h4 class="text-lg font-bold text-gray-800 mb-2">តើអ្នកប្រាកដថាចង់លុបការបង់ប្រាក់នេះមែនទេ?</h4>
-                                                <p class="text-gray-600 text-sm">
-                                                    អ្នកជួល: <strong>{{ $payment->rental->tenant->name ?? 'N/A' }}</strong><br>
-                                                    បន្ទប់: <strong>{{ $payment->rental->room->room_number ?? 'N/A' }}</strong><br>
-                                                    ខែ: <strong>{{ \Carbon\Carbon::parse($payment->pay_month)->format('M Y') }}</strong><br>
-                                                    ទឹកប្រាក់: <strong class="text-blue-600">${{ number_format($payment->amount_paid, 2) }}</strong>
-                                                </p>
-                                                <p class="text-red-500 text-xs mt-3">⚠️ សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ!</p>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer bg-white rounded-b-2xl px-6 py-4 flex justify-end gap-3 border-t border-gray-100">
-                                            <button type="button"
-                                                class="inline-flex items-center gap-2 px-5 py-2.5 text-gray-600 font-semibold bg-gray-100 hover:bg-gray-200 rounded-xl transition-all duration-200"
-                                                data-bs-dismiss="modal">
-                                                <i class="fas fa-times"></i>
-                                                បោះបង់
-                                            </button>
-                                            <form action="{{ route('admin.payments.destroy', $payment->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit"
-                                                    class="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-red-600 to-red-700 text-white font-bold rounded-xl hover:from-red-700 hover:to-red-800 shadow-lg shadow-red-500/30 transition-all duration-200 hover:shadow-xl hover:shadow-red-500/40 hover:-translate-y-0.5">
-                                                    <i class="fas fa-trash-alt"></i>
-                                                    បញ្ជាក់ការលុប
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         @empty
                             <tr>
                                 <td colspan="6" class="px-6 py-10 text-center text-gray-400 italic">មិនទាន់មានទិន្នន័យនៅឡើយ...
@@ -547,6 +506,59 @@
                     amountInput.value = selectedOption.dataset.price;
                 } else {
                     amountInput.value = '';
+                }
+            });
+        });
+    </script>
+
+    {{-- SweetAlert2 Delete Payment Handler --}}
+    <script>
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('.btn-delete-payment');
+            if (!btn) return;
+            e.preventDefault();
+
+            const tenant = btn.dataset.tenant;
+            const room = btn.dataset.room;
+            const month = btn.dataset.month;
+            const amount = btn.dataset.amount;
+            const url = btn.dataset.url;
+
+            Swal.fire({
+                title: 'តើអ្នកប្រាកដទេ?',
+                html: `
+                    <div style="text-align:left; font-size:14px; color:#475569; line-height:1.8;">
+                        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>អ្នកជួល:</span> <strong>${tenant}</strong></div>
+                        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>បន្ទប់:</span> <strong>${room}</strong></div>
+                        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>ខែ:</span> <strong>${month}</strong></div>
+                        <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>ទឹកប្រាក់:</span> <strong style="color:#2563eb;">${amount}</strong></div>
+                    </div>
+                    <p style="color:#ef4444; font-size:12px; margin-top:12px;">⚠️ សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ!</p>
+                `,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'បាទ/ចាស លុបវា!',
+                cancelButtonText: 'បោះបង់',
+                reverseButtons: true,
+                customClass: {
+                    popup: 'rounded-2xl',
+                    confirmButton: 'rounded-xl px-6 py-2.5 font-bold',
+                    cancelButton: 'rounded-xl px-6 py-2.5 font-bold',
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Create and submit a hidden form
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = url;
+                    form.innerHTML = `
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="_method" value="DELETE">
+                    `;
+                    document.body.appendChild(form);
+                    form.submit();
                 }
             });
         });

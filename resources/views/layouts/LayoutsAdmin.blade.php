@@ -48,6 +48,8 @@
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #dce5e4; border-radius: 10px; }
     </style>
+    {{-- SweetAlert2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 @stack('scripts')
 <body class="bg-background-light dark:bg-background-dark text-[#121717] dark:text-white antialiased">

@@ -9,6 +9,115 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Khmer:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
+
+    {{-- Modern SaaS input styling --}}
+    <style>
+        /* Hide default number input spinners */
+        input[type="number"].unit-input::-webkit-outer-spin-button,
+        input[type="number"].unit-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"].unit-input {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        /* Reusable unit input wrapper */
+        .unit-input-wrapper {
+            display: flex;
+            align-items: center;
+            height: 46px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            background: #fff;
+            overflow: hidden;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .unit-input-wrapper:focus-within {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+        }
+
+        /* Unit badge (prefix or suffix) */
+        .unit-input-wrapper .unit-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 0 14px;
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            user-select: none;
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+        .unit-input-wrapper .unit-badge-left {
+            border-right: 1.5px solid #e2e8f0;
+        }
+        .unit-input-wrapper .unit-badge-right {
+            border-left: 1.5px solid #e2e8f0;
+        }
+
+        /* The actual input inside the wrapper */
+        .unit-input-wrapper .unit-input {
+            flex: 1;
+            height: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            padding: 0 14px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1e293b;
+            min-width: 0;
+        }
+        .unit-input-wrapper .unit-input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+        .unit-input-wrapper .unit-input:read-only {
+            background: #f8fafc;
+            color: #64748b;
+        }
+
+        /* Plain text inputs matching the same height system */
+        .plain-input {
+            height: 46px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 0 14px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #1e293b;
+            background: #fff;
+            width: 100%;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .plain-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+        }
+        .plain-input::placeholder {
+            color: #94a3b8;
+            font-weight: 400;
+        }
+
+        /* Field label */
+        .field-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 6px;
+            letter-spacing: 0.01em;
+        }
+    </style>
+
     <main class="flex-1 overflow-y-auto flex flex-col min-h-screen bg-[#F8F9FB]">
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered">
@@ -56,57 +165,58 @@
                                         <h6 class="text-blue-600 uppercase text-xs font-bold mb-4 tracking-widest">
                                             ព័ត៌មានទូទៅ</h6>
 
-                                        <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <label class="form-label font-medium text-slate-700">លេខបន្ទប់</label>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4">
+                                            {{-- Row 1: Room Number | Floor --}}
+                                            <div>
+                                                <label class="field-label">លេខបន្ទប់</label>
                                                 <input type="text" name="room_number"
-                                                    class="form-control border-slate-300 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 transition-all"
+                                                    class="plain-input"
                                                     placeholder="ឧទាហរណ៍: A-101" maxlength="50" required>
                                             </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label font-medium text-slate-700">ជាន់</label>
+                                            <div>
+                                                <label class="field-label">ជាន់</label>
                                                 <input type="number" min="0" max="4" name="floor"
-                                                    class="form-control border-slate-300 rounded-xl" placeholder="0"
-                                                    required>
+                                                    class="plain-input unit-input"
+                                                    placeholder="0" required>
                                             </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label font-medium text-slate-700">តម្លៃ
-                                                    (ក្នុងមួយខែ)</label>
-                                                <div class="input-group">
-                                                    <span
-                                                        class="input-group-text bg-slate-100 border-slate-300 text-slate-500 rounded-l-xl">$</span>
+
+                                            {{-- Row 2: Price | Width --}}
+                                            <div>
+                                                <label class="field-label">តម្លៃ (ក្នុងមួយខែ)</label>
+                                                <div class="unit-input-wrapper">
+                                                    <span class="unit-badge unit-badge-left">$</span>
                                                     <input type="number" min="0" step="0.01" name="price"
-                                                        class="form-control border-slate-300 rounded-r-xl" required>
+                                                        class="unit-input"
+                                                        placeholder="0.00" required>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label font-medium text-slate-700">ទទឹង (Width)</label>
-                                                <div class="input-group">
+                                            <div>
+                                                <label class="field-label">ទទឹង (Width)</label>
+                                                <div class="unit-input-wrapper">
                                                     <input type="number" min="0" step="0.01" name="width" id="inputWidth"
-                                                        class="form-control border-slate-300 rounded-l-xl"
+                                                        class="unit-input"
                                                         placeholder="ឧទាហរណ៍: 4" oninput="calcSize()">
-                                                    <span
-                                                        class="input-group-text bg-slate-100 border-slate-300 text-slate-500 rounded-r-xl">m</span>
+                                                    <span class="unit-badge unit-badge-right">m</span>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label font-medium text-slate-700">បណ្ដោយ (Length)</label>
-                                                <div class="input-group">
+
+                                            {{-- Row 3: Length | Size --}}
+                                            <div>
+                                                <label class="field-label">បណ្ដោយ (Length)</label>
+                                                <div class="unit-input-wrapper">
                                                     <input type="number" min="0" step="0.01" name="length" id="inputLength"
-                                                        class="form-control border-slate-300 rounded-l-xl"
+                                                        class="unit-input"
                                                         placeholder="ឧទាហរណ៍: 5" oninput="calcSize()">
-                                                    <span
-                                                        class="input-group-text bg-slate-100 border-slate-300 text-slate-500 rounded-r-xl">m</span>
+                                                    <span class="unit-badge unit-badge-right">m</span>
                                                 </div>
                                             </div>
-                                            <div class="col-md-4">
-                                                <label class="form-label font-medium text-slate-700">ទំហំបន្ទប់ (Size)</label>
-                                                <div class="input-group">
+                                            <div>
+                                                <label class="field-label">ទំហំបន្ទប់ (Size)</label>
+                                                <div class="unit-input-wrapper">
                                                     <input type="text" name="size" id="inputSize"
-                                                        class="form-control border-slate-300 rounded-l-xl bg-slate-50"
+                                                        class="unit-input"
                                                         placeholder="គណនាស្វ័យប្រវត្តិ" readonly>
-                                                    <span
-                                                        class="input-group-text bg-slate-100 border-slate-300 text-slate-500 rounded-r-xl">m²</span>
+                                                    <span class="unit-badge unit-badge-right">m²</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -528,7 +638,6 @@
     </main>
 @endsection
 @push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         // Image Preview Functions
         function previewImage(event) {

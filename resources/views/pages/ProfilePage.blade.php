@@ -4,7 +4,6 @@
     {{-- Wrap everything in one x-data to manage Modal and Image Preview together --}}
     <div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-12" x-data="{ 
                             openEditModal: false, 
-                            openDeleteModal: false,
                             imagePreview: '{{ Auth::user()->profile ? Auth::user()->profile : asset('images/default.png') }}',
                             previewImage(event) {
                                 const file = event.target.files[0];
@@ -95,8 +94,9 @@
                                         </button>
                                     </form>
 
-                                    {{-- Delete Account Button --}}
-                                    <button @click="openDeleteModal = true"
+                                    {{-- Delete Account Button - SweetAlert2 --}}
+                                    <button type="button" id="btn-delete-account"
+                                        data-url="{{ auth()->user()->role == 'admin' ? route('admin.delete.account', Auth::user()->id) : route('user.delete.account', Auth::user()->id) }}"
                                         class="group w-full flex items-center justify-center px-4 py-3 bg-red-50 text-red-600 font-bold rounded-2xl border-2 border-red-100 hover:border-red-200 hover:bg-red-100/50 active:scale-95 transition-all duration-300">
                                         <svg class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -330,60 +330,52 @@
     </div>
 </div>
 
-        {{-- DELETE ACCOUNT MODAL --}}
-        <div x-show="openDeleteModal" x-cloak class="fixed inset-0 z-[100] flex items-center justify-center p-4"
-            style="display: none;">
-
-            {{-- Backdrop --}}
-            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" x-show="openDeleteModal" x-transition:opacity
-                @click="openDeleteModal = false"></div>
-
-            {{-- Modal Content --}}
-            <div class="relative bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden z-10 border border-red-100"
-                x-show="openDeleteModal" x-transition:enter="ease-out duration-300"
-                x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-                x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 scale-100"
-                x-transition:leave-end="opacity-0 scale-95">
-
-                <div class="bg-gradient-to-r from-red-600 to-rose-600 px-8 py-8 flex flex-col items-center text-center">
-                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-                        <svg class="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                        </svg>
-                    </div>
-                    <h3 class="text-2xl font-black text-white">លុបគណនី?</h3>
-                    <p class="text-red-100 text-sm font-medium mt-2">សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ</p>
-                </div>
-
-                <div class="px-8 py-6">
-                    <div class="bg-red-50 border border-red-100 rounded-2xl p-4 mb-6">
-                        <p class="text-red-800 text-sm font-medium">
-                            ⚠️ ប្រសិនបើលុបគណនីនេះ ទិន្នន័យ និងព័ត៌មានទាំងអស់របស់អ្នកនឹងត្រូវលុប ដោយគ្មានលទ្ធភាពដាក់វិញ។
-                        </p>
-                    </div>
-
-                    <form
-                        action="{{ auth()->user()->role == 'admin' ? route('admin.delete.account', Auth::user()->id) : route('user.delete.account', Auth::user()->id) }}"
-                        method="POST" class="space-y-4">
-                        @csrf
-                        @method('DELETE')
-
-                        <div class="grid grid-cols-2 gap-3">
-                            <button type="button" @click="openDeleteModal = false"
-                                class="px-6 py-4 bg-slate-100 text-slate-700 rounded-2xl font-bold hover:bg-slate-200 transition-all duration-300 active:scale-95">
-                                ដកថយ
-                            </button>
-                            <button type="submit"
-                                class="px-6 py-4 bg-gradient-to-r from-red-600 to-rose-600 text-white rounded-2xl font-bold shadow-lg shadow-red-200 hover:shadow-xl hover:shadow-red-300 hover:from-red-700 hover:to-rose-700 active:scale-95 transition-all duration-300">
-                                ដាក់លុប
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                {{-- Bottom Accent Line --}}
-                <div class="h-1 bg-gradient-to-r from-red-500 via-rose-500 to-red-500"></div>
-            </div>
-        </div>
     </div>
+
+    {{-- SweetAlert2 Delete Account Handler --}}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const deleteBtn = document.getElementById('btn-delete-account');
+            if (!deleteBtn) return;
+
+            deleteBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const url = this.dataset.url;
+
+                Swal.fire({
+                    title: 'លុបគណនី?',
+                    html: `
+                        <p style="color:#475569; font-size:14px; margin-bottom:12px;">សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ</p>
+                        <div style="background:#fef2f2; border:1px solid #fecaca; border-radius:12px; padding:12px 16px; text-align:left;">
+                            <p style="color:#991b1b; font-size:13px; font-weight:500;">⚠️ ប្រសិនបើលុបគណនីនេះ ទិន្នន័យ និងព័ត៌មានទាំងអស់របស់អ្នកនឹងត្រូវលុប ដោយគ្មានលទ្ធភាពដាក់វិញ។</p>
+                        </div>
+                    `,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc2626',
+                    cancelButtonColor: '#64748b',
+                    confirmButtonText: 'បាទ/ចាស លុបគណនី!',
+                    cancelButtonText: 'បោះបង់',
+                    reverseButtons: true,
+                    customClass: {
+                        popup: 'rounded-2xl',
+                        confirmButton: 'rounded-xl px-6 py-2.5 font-bold',
+                        cancelButton: 'rounded-xl px-6 py-2.5 font-bold',
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const form = document.createElement('form');
+                        form.method = 'POST';
+                        form.action = url;
+                        form.innerHTML = `
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <input type="hidden" name="_method" value="DELETE">
+                        `;
+                        document.body.appendChild(form);
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
 @endsection
-<script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
