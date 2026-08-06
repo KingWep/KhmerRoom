@@ -114,7 +114,7 @@
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
                     <thead>
-                        <tr class="bg-blue-500 text-gray-600 text-sm uppercase tracking-wider">
+                        <tr class="bg-blue-500 text-white text-sm uppercase tracking-wider">
                             <th class="px-6 py-4 font-semibold">អ្នកជួល & បន្ទប់</th>
                             <th class="px-6 py-4 font-semibold">សម្រាប់ខែ</th>
                             <th class="px-6 py-4 font-semibold">ទឹកប្រាក់</th>
