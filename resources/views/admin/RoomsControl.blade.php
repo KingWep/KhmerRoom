@@ -465,11 +465,11 @@
                     {{ session('message') }}
                 </div>
             @endif
-            <div class="overflow-hiiden bg-white border border-gray-100 shadow-sm rounded-xl relative">
+            <div class="overflow-hidden bg-white border border-gray-100 shadow-sm rounded-xl relative">
                 <div class="relative">
 
                     <div id="roomsTableWrapper" class="overflow-x-auto">
-                        <table class="min-w-[1200px] w-full text-left border-collapse">
+                        <table class="min-w-[900px] w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-blue-500 ">
                                 <th class="px-4 py-3 text-md font-bold tracking-wider text-white uppercase">ព័ត៌មានបន្ទប់
