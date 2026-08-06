@@ -379,7 +379,7 @@
 
                             <!-- Amount and Status -->
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div>
+                                <!-- <div>
                                     <label class="block text-sm font-bold text-gray-700 mb-1">ចំនួនទឹកប្រាក់ ($)</label>
                                     <div class="relative">
                                         <span
@@ -387,6 +387,27 @@
                                         <input type="number" step="0.01" name="amount_paid" id="amount_paid"
                                             class="w-full pl-8 border-gray-300 rounded-xl focus:ring-blue-500 shadow-sm px-3 py-2"
                                             placeholder="0.00" required>
+                                    </div>
+                                </div> -->
+                                <div>
+                                    <label class="block mb-2 text-sm font-semibold text-gray-700">
+                                        ចំនួនទឹកប្រាក់ ($)
+                                    </label>
+
+                                    <div class="flex overflow-hidden border border-gray-300 rounded-xl focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500">
+                                        <div class="flex items-center px-4 bg-gray-50 border-r border-gray-300 text-gray-600 font-medium">
+                                            $
+                                        </div>
+
+                                        <input
+                                            type="number"
+                                            step="0.01"
+                                            name="amount_paid"
+                                            id="amount_paid"
+                                            placeholder="0.00"
+                                            class="flex-1 px-4 py-2.5 border-0 focus:ring-0 outline-none"
+                                            required
+                                        >
                                     </div>
                                 </div>
                                 <div>
@@ -526,15 +547,6 @@
 
             Swal.fire({
                 title: 'តើអ្នកប្រាកដទេ?',
-                // html: `
-                //     <div style="text-align:left; font-size:14px; color:#475569; line-height:1.8;">
-                //         <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>អ្នកជួល:</span> <strong>${tenant}</strong></div>
-                //         <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>បន្ទប់:</span> <strong>${room}</strong></div>
-                //         <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>ខែ:</span> <strong>${month}</strong></div>
-                //         <div style="display:flex; justify-content:space-between; padding:4px 0;"><span>ទឹកប្រាក់:</span> <strong style="color:#2563eb;">${amount}</strong></div>
-                //     </div>
-                //     <p style="color:#ef4444; font-size:12px; margin-top:12px;">⚠️ សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ!</p>
-                // `,
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#dc2626',

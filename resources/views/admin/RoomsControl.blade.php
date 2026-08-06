@@ -465,7 +465,7 @@
                     {{ session('message') }}
                 </div>
             @endif
-            <div class="overflow-visible bg-white border border-gray-100 shadow-sm rounded-xl relative">
+            <div class="overflow-hiiden bg-white border border-gray-100 shadow-sm rounded-xl relative">
                 <div class="relative">
 
                     <div id="roomsTableWrapper" class="overflow-x-auto">

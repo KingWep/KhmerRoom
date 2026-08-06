@@ -351,8 +351,9 @@
                                                 @foreach($availableRooms as $room)
                                                     <option value="{{ $room->id }}" data-available="true"
                                                         data-room-number="{{ $room->room_number }}" data-floor="{{ $room->floor }}"
+                                                        data-price="{{ $room->price }}"
                                                         {{ old('room_id') == $room->id ? 'selected' : '' }}>
-                                                        បន្ទប់លេខ {{ $room->room_number }} (ជាន់ទី {{ $room->floor }})
+                                                        បន្ទប់លេខ {{ $room->room_number }} (ជាន់ទី {{ $room->floor }}) - ${{ number_format($room->price, 2) }}
                                                     </option>
                                                 @endforeach
                                             @endif
@@ -361,8 +362,9 @@
                                                     @if(!$availableRooms->contains('id', $room->id))
                                                         <option value="{{ $room->id }}" data-available="false"
                                                             data-room-number="{{ $room->room_number }}" data-floor="{{ $room->floor }}"
+                                                            data-price="{{ $room->price }}"
                                                             style="display:none;">
-                                                            បន្ទប់លេខ {{ $room->room_number }} (ជាន់ទី {{ $room->floor }})
+                                                            បន្ទប់លេខ {{ $room->room_number }} (ជាន់ទី {{ $room->floor }}) - ${{ number_format($room->price, 2) }}
                                                         </option>
                                                     @endif
                                                 @endforeach
@@ -412,7 +414,7 @@
                                         <div class="input-group">
                                             <span
                                                 class="input-group-text bg-gray-50 border-gray-200 text-slate-500 font-bold">$</span>
-                                            <input type="number" name="rent_amount" value="{{ old('rent_amount') }}" min="0"
+                                            <input type="number" name="rent_amount" id="rentAmountInput" value="{{ old('rent_amount') }}" min="0"
                                                 step="0.01" required
                                                 class="form-control h-11 border-gray-200 focus:ring-4 focus:ring-emerald-100"
                                                 placeholder="0.00">
@@ -671,6 +673,7 @@
                 const statusField = document.getElementById('statusField');
                 const statusSelect = document.getElementById('statusSelect');
                 const roomSelect = document.getElementById('roomSelect');
+                const rentAmountInput = document.getElementById('rentAmountInput');
 
                 // View Modal Elements
                 const viewModal = document.getElementById('viewModal');
@@ -684,6 +687,18 @@
                 const tenantTableBody = document.getElementById('tenantTableBody');
 
                 if (!openBtn || !closeBtn || !cancelBtn || !rentalModal || !rentalForm) return;
+
+                // Auto-fill rent amount when room is selected
+                if (roomSelect && rentAmountInput) {
+                    roomSelect.addEventListener('change', function() {
+                        const selectedOption = this.options[this.selectedIndex];
+                        if (this.value && selectedOption.dataset.price) {
+                            rentAmountInput.value = parseFloat(selectedOption.dataset.price).toFixed(2);
+                        } else {
+                            rentAmountInput.value = '';
+                        }
+                    });
+                }
 
                 // Search functionality for Tenants and Rooms
                 if (tenantSearch && tenantTableBody) {
