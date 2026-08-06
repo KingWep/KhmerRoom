@@ -123,7 +123,7 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr
-                                class="bg-background-light dark:bg-[#233d3a] border-b border-[#dce5e4] dark:border-[#2a4542]">
+                                class="bg-blue-500 dark:bg-[#233d3a] border-b border-[#dce5e4] dark:border-[#2a4542]">
                                 <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-[#658683]">ឈ្មោះអ្នកជួល
                                     (Tenant)</th>
                                 <th class="px-6 py-4 text-xs font-bold uppercase tracking-wider text-[#658683]">
